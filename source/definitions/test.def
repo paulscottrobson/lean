@@ -1,4 +1,16 @@
+//
+//		Constants
+//
+B 	A = <const>
+	lda 	#<low>
 
+BW	R = <const>
+	lda 	#<low>
+	ldx 	#<high>
+
+S 	A = <var>
+		lda 	<addr>
+			
 //
 //		Save
 //
