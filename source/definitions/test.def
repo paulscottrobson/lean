@@ -1,0 +1,49 @@
+
+//
+//		Save
+//
+I 	<var> = R		
+		sta <addr>; stx <next>
+S 	<var> = R
+		sta <addr>		
+S	<var> = A
+		sta <addr>
+//
+//		More complex examples for adding variables:
+//
+S 	A+<var>	
+		clc;adc <addr>
+S 	R+<var>
+		clc;adc <addr>;bcc *+3;inx
+I	R+<var>	
+		clc;adc <addr>;pha;txa;adc <next>;tax;pla
+
+//
+//		Adding constants:
+//
+B 	A+<const>	
+		clc;adc# <low>
+B 	R+<const>	
+		clc;adc #<low>;bcc *+3;inx
+W 	R+<const>	
+		clc;adc #<low>
+		pha;txa;adc #<high>;tax;pla
+
+//
+//		Procedure Definition/invocation/End
+//
+* 	proc 			
+//		[exec:procedure_def]
+P	<proc>()	
+		jsr <addr>
+*	endproc			
+//		[exec:endproc]
+//
+//		Condition
+//		
+B 		R>=<const>?
+		cpx #0
+		[data] ; bpl *
+		[iszero]
+
+		

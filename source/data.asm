@@ -1,0 +1,123 @@
+; ******************************************************************************
+; ******************************************************************************
+;
+;		Name : 		data.asm
+;		Purpose : 	Data Allocation
+;		Author : 	Paul Robson (paul@robsons.org.uk)
+;		Created : 	27th October 2019
+;
+; ******************************************************************************
+; ******************************************************************************
+
+		* = $00
+
+ProgramStart = $0801 						; where source code starts.
+UserDictionary = $B800 						; user dictionary
+CodeMemory = $BC00 							; where object code goes.
+AssemblerStack = $063F 						; compiler stack space.
+VariableMemory = $0700
+
+LINEBUFFSIZE = 64
+VALBUFFSIZE = 128
+
+lineBuffer = $0640	 						; current line, match encoded.
+valueBuffer = $0680 						; buffer for associated values.
+
+; ******************************************************************************
+;
+;							These need to be in page zero
+;
+; ******************************************************************************
+
+scanPtr:	.word ?							; BASIC scan position.
+aStackPtr:	.word ? 						; compiler stack.
+dictPtr:	.word ? 						; dictionary pointer
+genPtr:		.word ? 						; code generation pointer
+varPtr: 	.word ?							; next free variable pointer.
+
+zTemp0:		.word ? 						; temps.
+zTemp1:		.word ? 
+zTemp2:		.word ? 
+zTemp3:		.word ? 
+
+lastCreate:	.word ? 						; last created dictionary word
+
+codePtr:	.word ? 						; code pointer
+
+; ******************************************************************************
+;
+;						These do not need to be in page zero
+;
+; ******************************************************************************
+
+codeBank:	.byte ?							; code bank
+
+originalSP:			.byte ? 				; 6502 stack on entry.
+
+lastDefine:			.word ? 				; last defined word.
+
+lineNumber:			.word ? 				; current line number
+
+identStart:			.byte ? 				; start offset of current identifier
+
+dirLowByte:			.byte ?					; values returned from search
+dirHighByte:		.byte ?
+dirBank:			.byte ?
+dirLength:			.byte ?
+
+valueBufferPos:		.byte ? 				; position in value buffer.
+
+genPos: 			.byte ? 				; position in line buffer, generation.
+
+generateVar:		.word ? 				; variables used in set value
+
+elementData:		.fill 3 				; data from matched constant/identifier
+
+codeBackup:			.fill 3 				; backup code pointer.
+
+varSize:			.byte ? 				; size of current variable.
+
+; ******************************************************************************
+;
+;								 C64 Basic Tokens
+;
+; ******************************************************************************
+
+REM_TOKEN = $8F 							; C64 REM Token
+
+; ******************************************************************************
+;
+;							Generation control values
+;
+; ******************************************************************************
+
+TRANS_EXEC = $73
+TRANS_SETV = $83
+TRANS_HIGH = $93	
+TRANS_LOW = $A3 			
+TRANS_LOWNEXT = $B3
+
+; ******************************************************************************
+;
+;							Structure Control Markers
+;
+; ******************************************************************************
+
+SCM_TOP = '*'								; top of stack marker.
+SCM_PROC = 'P'								; procedure marker
+SCM_REPEAT = 'R'							; repeat marker
+SCM_FOR = 'F' 								; for marker
+SCM_IF = 'I'								; if/else/endif marker.
+
+; ******************************************************************************
+;
+;								65C02 opcodes
+;	
+; ******************************************************************************
+
+CPU_RETURN = $60 							; RTS opcode.
+CPU_PHA = $48 								; PHA
+CPU_PLA = $68 								; PLA
+CPU_DECA = $3A 								; DEC A
+CPU_BNE = $D0								; BNE
+CPU_BRA = $80								; BRA

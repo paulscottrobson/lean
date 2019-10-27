@@ -1,0 +1,8 @@
+word vera.low=$9f20
+byte vera.hi=$9f22
+byte vera.data=$9f23
+
+
+proc test()
+R=2 -R R.abs
+endproc
