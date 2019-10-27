@@ -36,10 +36,12 @@ _ADCCheck:
 		bne 	_ADCCheck 					; checked the whole identifier.
 		;
 		lda 	zTemp0 						; work out copy from, into zTemp1
+		pha
 		clc
 		adc 	(zTemp0)
 		sta 	zTemp1
 		lda 	zTemp0+1
+		pha
 		adc 	#0
 		sta 	zTemp1+1
 _ADCopyOverwrite:		
@@ -60,6 +62,12 @@ _ADCopyOverwrite:
 		sta 	dictPtr+1
 		lda 	#0							; mark end as not copied in loop
 		sta 	(dictPtr)
+		;
+		pla 								; restore original position.
+		sta 	zTemp0+1
+		pla
+		sta 	zTemp0
+		; 
 		bra 	_ADCLoop 					; and continue from same position.
 		;
 		;		Go to next

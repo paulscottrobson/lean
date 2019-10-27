@@ -36,11 +36,11 @@ VariableDeclare:
 		;		Variable declaration loop
 		;
 _VDLoop:
-		lda 	#"B"						; get W or B
+		lda 	#"S"						; get I or S
 		ldx 	varSize
 		dex
 		beq 	_VDNotWord
-		lda 	#"W"
+		lda 	#"I"
 _VDNotWord:
 		pha
 		jsr 	EGetUnknownIdentifier 		; get an unknown identifier.

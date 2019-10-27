@@ -31,5 +31,5 @@ _NoCarry:
 ;
 derror 	.macro
 		jsr 	ErrorHandler
-		.text 	"BRIEF:",\1,$00
+		.text 	"LEAN:",\1,$00
 		.endm

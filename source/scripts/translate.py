@@ -45,8 +45,6 @@ class Match(object):
 		h.write("\t.byte {0}_END-{0}-1\n".format(self.label))
 		for cmd in [x.strip().lower() for x in self.getCode().split(";") if x.strip() != ""]:
 			if cmd == "[data]":
-				h.write("\t.byte ${0:02x}\n".format(Match.C_ISZERO))
-			elif cmd == "[iszero]":
 				h.write("\t.byte ${0:02x}\n".format(Match.C_SETDATA))
 			elif cmd.startswith("[exec:") and cmd.endswith("]"):
 				n = matchBook.addExecutable(cmd[6:-1])
@@ -161,11 +159,11 @@ class MatchBook(object):
 		for k in keys:
 			m = self.matches[k]
 			self.generateDictionaryEntry(h,'M',m.getLabel(),"0",m.getEncodedMatch())
-		self.createTestVariable(h,'v_ab1','S',0x604)
-		self.createTestVariable(h,'v_zw2','I',0x64)
-		self.createTestVariable(h,'v_aw3','I',0x614)
-		self.createTestVariable(h,'v_zb4','S',0xF4)
-		self.createTestVariable(h,'pdemo','P',0xFFD2)
+		#self.createTestVariable(h,'v_ab1','S',0x604)
+		#self.createTestVariable(h,'v_zw2','I',0x64)
+		#self.createTestVariable(h,'v_aw3','I',0x614)
+		#self.createTestVariable(h,'v_zb4','S',0xF4)
+		#self.createTestVariable(h,'pdemo','P',0xFFD2)
 		h.write(";\n\t.byte\t$00\n")
 	#
 	#		Generate dictionary entry

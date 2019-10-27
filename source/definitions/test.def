@@ -33,17 +33,37 @@ W 	R+<const>
 //		Procedure Definition/invocation/End
 //
 * 	proc 			
-//		[exec:procedure_def]
+		[exec:procedure_def]
 P	<proc>()	
 		jsr <addr>
 *	endproc			
-//		[exec:endproc]
+		[exec:endproc]
 //
 //		Condition
 //		
-B 		R>=<const>?
+* 		R+?
 		cpx #0
 		[data] ; bpl *
-		[iszero]
-
-		
+//
+//		Miscellany
+//
+* 	byte 			
+		[exec:byteVar]
+* 	word 			
+		[exec:wordVar]		
+*	remove.locals
+		[exec:dictionarycrunch]		
+* 	repeat
+		[exec:repeat]
+* 	until 			
+		[exec:until]
+*	a.for
+		[exec:afor]
+*	next
+		[exec:next]
+*	if
+		[exec:if]			
+*	else
+		[exec:else]			
+* 	endif
+		[exec:endif]			
