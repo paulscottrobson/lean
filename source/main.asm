@@ -20,7 +20,7 @@
 		jsr 	LoadBasicCode
 
 		jsr 	StackReset 						; reset convert stack.
-;		jsr 	VariableReset 					; reset variable memory.
+		jsr 	VariableReset 					; reset variable memory.
 		jsr 	DictionaryReset 				; reset user dictionary
 		jsr 	CodeReset 						; reset code output.
 		jsr 	ScannerReset 					; reset scanner
@@ -70,20 +70,20 @@ _NoExecute:
 		.include 	"lean/scanner.asm"			; scans BASIC code for dotREM code
 		.include 	"lean/process.asm"			; process to line.
 		.include 	"lean/generate.asm"			; generator searches.
-;		.include 	"lean/extract.asm"			; get translated objects.
+		.include 	"lean/extract.asm"			; get translated objects.
 
 		.include 	"dictionary/create.asm"		; dictionary create.
 		.include 	"dictionary/search.asm" 	; dictionary search.
-;
+
 		.include 	"support/code.asm"			; code writing routines.
 		.include 	"support/error.asm"			; error routines
 
-;		.include 	"actions/procedure.asm" 	; action : procedure.
-;		.include 	"actions/if.asm"			; action : if
-;		.include 	"actions/repeat.asm"		; action : repeat
-;		.include 	"actions/for.asm"			; action : for
-;		.include 	"actions/variables.asm"		; action : byte/word
-;		.include 	"actions/crunch.asm" 		; action : dictionary crunch.
+		.include 	"actions/procedure.asm" 	; action : procedure.
+		.include 	"actions/if.asm"			; action : if
+		.include 	"actions/repeat.asm"		; action : repeat
+		.include 	"actions/for.asm"			; action : for
+		.include 	"actions/variables.asm"		; action : byte/word
+		.include 	"actions/crunch.asm" 		; action : dictionary crunch.
 
 		.include 	"utility/tostring.asm"		; int -> str
 		.include 	"utility/tointeger.asm"		; str -> int

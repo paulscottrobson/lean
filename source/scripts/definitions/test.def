@@ -40,7 +40,7 @@ P	<proc>()
 //
 //		Condition
 //		
-B 		R>=<const>?
+B 		R+?
 		cpx #0
 		[data] ; bpl *
 		[iszero]

@@ -1,7 +1,7 @@
 TODO
 ====
--	[IsZero] check
-- 	Port structures/actions
+-	Condition
+-	[IsZero] check/special case
 -	Test structures/actions
 - 	Write definitions outline
 -	Write definitions list.
