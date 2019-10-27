@@ -9,8 +9,9 @@
 ; ******************************************************************************
 ; ******************************************************************************
 
-		.include 	"data.asm"
-		.include 	"macros.inc"
+		.include 	"data.asm" 					; data & constants
+		.include 	"generated/cgconst.inc" 	; constants shared with translator
+		.include 	"macros.inc" 				; macros
 
 		* = $A000
 
@@ -28,10 +29,9 @@
 		;	
 AsmLoop:
 		jsr 	ScannerFind 					; next thing in code
-		.byte 	$FF
 		bcc 	AsmEnd 							; nothing more
 		jsr 	ProcessLineToBuffer 			; convert it.
-;		jsr 	GeneratorSearch 				; check it for generators
+		jsr 	GeneratorSearch 				; check it for generators
 		bra 	AsmLoop 						; and keep going.
 AsmEnd:	 
 		lda 	#SCM_TOP 						; check structures are done
@@ -69,7 +69,7 @@ _NoExecute:
 
 		.include 	"lean/scanner.asm"			; scans BASIC code for dotREM code
 		.include 	"lean/process.asm"			; process to line.
-;		.include 	"lean/generate.asm"			; generator searches.
+		.include 	"lean/generate.asm"			; generator searches.
 ;		.include 	"lean/extract.asm"			; get translated objects.
 
 		.include 	"dictionary/create.asm"		; dictionary create.

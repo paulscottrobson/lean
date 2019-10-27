@@ -20,7 +20,7 @@ L10001_END:
 ;
 L10002:
 	.byte L10002_END-L10002-1
-	jsr $63
+	jsr $7363
 L10002_END:
 ;
 ;		** * = r:L [l=R] **
@@ -35,22 +35,22 @@ L10003_END:
 ;
 L10004:
 	.byte L10004_END-L10004-1
-	sta $7363
-	stx $7383
+	sta $63
+	stx $83
 L10004_END:
 ;
 ;		** * = r:C [c=R] **
 ;
 L10005:
 	.byte L10005_END-L10005-1
-	sta $63
+	sta $7363
 L10005_END:
 ;
 ;		** * = a:C [c=A] **
 ;
 L10006:
 	.byte L10006_END-L10006-1
-	sta $63
+	sta $7363
 L10006_END:
 ;
 ;		** r>=*?:B [R>=b?] **
@@ -104,10 +104,10 @@ L10010_END:
 L10011:
 	.byte L10011_END-L10011-1
 	clc
-	adc $7363
+	adc $63
 	pha
 	txa
-	adc $7383
+	adc $83
 	tax
 	pla
 L10011_END:
@@ -117,7 +117,7 @@ L10011_END:
 L10012:
 	.byte L10012_END-L10012-1
 	clc
-	adc $63
+	adc $7363
 	bcc *+3
 	inx
 L10012_END:
@@ -157,7 +157,7 @@ L10016_END:
 L10017:
 	.byte L10017_END-L10017-1
 	clc
-	adc $63
+	adc $7363
 L10017_END:
 ;
 ;		** a+*:B [A+b] **

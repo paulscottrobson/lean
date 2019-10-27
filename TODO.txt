@@ -1,9 +1,9 @@
 TODO
 ====
--	Port generation
--	Test generation
+-	[IsZero] check
 - 	Port structures/actions
 -	Test structures/actions
+- 	Write definitions outline
 -	Write definitions list.
 -	Write definitions testing as we go
 

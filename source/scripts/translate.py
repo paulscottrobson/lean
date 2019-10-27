@@ -52,7 +52,7 @@ class Match(object):
 				n = matchBook.addExecutable(cmd[6:-1])
 				h.write("\t.byte ${0:02x},${1:02x}\n".format(Match.C_EXEC,n))
 			else:
-				absolute = (self.classType == "L" or self.classType == "I")
+				absolute = (self.classType == "L" or self.classType == "C" or self.classType == "P")
 				cmd = cmd.replace("<low>","${0:02x}".format(Match.C_LOW))
 				cmd = cmd.replace("<high>","${0:02x}".format(Match.C_HIGH))
 				addr = Match.C_LOW+Match.C_HIGH*256 if absolute else Match.C_LOW
