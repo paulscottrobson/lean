@@ -1,8 +1,1 @@
-word vera.low=$9f20
-byte vera.hi=$9f22
-byte vera.data=$9f23
-
-
-proc test()
-R=2 -R R.abs
-endproc
+hello 42 [v_ab1] [v_zw2] pdemo() [v_aw3] [v_zb4] $20A -22

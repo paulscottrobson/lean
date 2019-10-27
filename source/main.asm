@@ -30,7 +30,7 @@ AsmLoop:
 		jsr 	ScannerFind 					; next thing in code
 		.byte 	$FF
 		bcc 	AsmEnd 							; nothing more
-;		jsr 	ProcessLineToBuffer 			; convert it.
+		jsr 	ProcessLineToBuffer 			; convert it.
 ;		jsr 	GeneratorSearch 				; check it for generators
 		bra 	AsmLoop 						; and keep going.
 AsmEnd:	 
@@ -68,7 +68,7 @@ _NoExecute:
 ; ******************************************************************************
 
 		.include 	"lean/scanner.asm"			; scans BASIC code for dotREM code
-;		.include 	"lean/process.asm"			; process to line.
+		.include 	"lean/process.asm"			; process to line.
 ;		.include 	"lean/generate.asm"			; generator searches.
 ;		.include 	"lean/extract.asm"			; get translated objects.
 

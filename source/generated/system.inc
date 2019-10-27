@@ -344,23 +344,41 @@ SystemDictionary:
 	.byte	3
 	.byte	$c1,$ab,$e2
 ;
-;		**** VA1 ****
+;		**** V_AB1 ****
 ;
-	.byte	9
+	.byte	11
 	.byte	'S'
 	.word	$604
 	.byte	0
-	.byte	3
-	.byte	$56,$41,$b1
+	.byte	5
+	.byte	$56,$5f,$41,$42,$b1
 ;
-;		**** VZ2 ****
+;		**** V_ZW2 ****
 ;
-	.byte	9
+	.byte	11
 	.byte	'I'
 	.word	$64
 	.byte	0
-	.byte	3
-	.byte	$56,$5a,$b2
+	.byte	5
+	.byte	$56,$5f,$5a,$57,$b2
+;
+;		**** V_AW3 ****
+;
+	.byte	11
+	.byte	'I'
+	.word	$614
+	.byte	0
+	.byte	5
+	.byte	$56,$5f,$41,$57,$b3
+;
+;		**** V_ZB4 ****
+;
+	.byte	11
+	.byte	'S'
+	.word	$f4
+	.byte	0
+	.byte	5
+	.byte	$56,$5f,$5a,$42,$b4
 ;
 ;		**** PDEMO ****
 ;

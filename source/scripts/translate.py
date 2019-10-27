@@ -161,8 +161,10 @@ class MatchBook(object):
 		for k in keys:
 			m = self.matches[k]
 			self.generateDictionaryEntry(h,'M',m.getLabel(),"0",m.getEncodedMatch())
-		self.createTestVariable(h,'va1','S',0x604)
-		self.createTestVariable(h,'vz2','I',0x64)
+		self.createTestVariable(h,'v_ab1','S',0x604)
+		self.createTestVariable(h,'v_zw2','I',0x64)
+		self.createTestVariable(h,'v_aw3','I',0x614)
+		self.createTestVariable(h,'v_zb4','S',0xF4)
 		self.createTestVariable(h,'pdemo','P',0xFFD2)
 		h.write(";\n\t.byte\t$00\n")
 	#
