@@ -77,7 +77,23 @@ _PLTTryConstant:
 		ply
 		bra 	_PLTConvert
 		;
+		;		Found a constant. Check if followed by a '-' - we use postfix minus
+		;
 _PLTAttachIdentifier:		
+		stx 	zTemp0 						; save XY
+		sty 	zTemp0+1
+		plx 								; restore current position
+		ply
+		lda 	(scanPtr),y 				; next character
+		cmp 	#"-" 					
+		bne 	_PLTNotMinus
+		jsr 	_PLTNegateZTemp0 			; negate zTemp0
+		iny 								; skip it if '-'
+_PLTNotMinus:		
+		phy 								; save current positions
+		phx
+		ldx 	zTemp0 						; restore XY number
+		ldy 	zTemp0+1
 		;
 		;		Store the constant attached to position 'identStart'
 		;
@@ -135,6 +151,15 @@ _PLTError:
 _PLTBuffer:
 		derror 	"LINE SIZE"		
 
+_PLTNegateZTemp0:
+		sec 								; negate zTemp0
+		lda 	#0
+		sbc 	zTemp0
+		sta 	zTemp0
+		lda 	#0
+		sbc 	zTemp0+1
+		sta 	zTemp0+1
+		rts
 
 ; ******************************************************************************
 ;

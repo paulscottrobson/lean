@@ -1,12 +1,14 @@
 TODO
 ====
-- 	Write definitions outline
 -	Write definitions list.
 -	Write definitions testing as we go
--	Sole constant loading A/R
+- 	Write code with it.
 
-Fixes
-=====
-- support -ve numbers
-	postfix negative.
-	42- 
+List
+====
+Register load and save R A Y
+Default mandatory stuff. Recheck it.
+Binary Operations
+Unary Operations
+Unary Variable Operations
+Constants

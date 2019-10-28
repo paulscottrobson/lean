@@ -1,10 +1,2 @@
-word bd@$7F23
-byte bb@$7F09
-proc do.summat()
-	A = 0 R = 0
-	Y = 42
-endproc
 
-proc main()
-	do.summat(1,bb)
-endproc
+proc main() R = 42- R=1- endproc
