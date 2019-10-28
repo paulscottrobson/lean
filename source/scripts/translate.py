@@ -103,10 +103,10 @@ class MatchBook(object):
 		src = [x.rstrip().upper() for x in src if x.rstrip() != ""]
 		src = [x if x.startswith(" ") else "|"+x for x in src]			# | seperator
 		src = ";".join(src)												# stick together
-		src = re.split("(\\|[PSICLBW\\*]+\\s+.*?)\\;",src)					# split up
+		src = re.split("(\\|[ZPSICLBW\\*]+\\s+.*?)\\;",src)					# split up
 		src = [x for x in src if x != ""]								# remove blanks.
 		while len(src) != 0:
-			m = re.match("^\\|([PSICLBW\\*]+)\\s*(.*?)$",src[0])			# check the header.
+			m = re.match("^\\|([ZPSICLBW\\*]+)\\s*(.*?)$",src[0])			# check the header.
 			assert m is not None,"Bad Header "+src[0]
 			src.pop(0)													# remove it
 			body = ""
@@ -117,6 +117,8 @@ class MatchBook(object):
 				typeList.append('C') 									# absolute versions.
 			if m.group(1).find("I") >= 0:
 				typeList.append('L')
+			if typeList[0] == 'Z' and len(typeList) == 1:
+				typeList = ['S']
 			while len(typeList) != 0:
 				match = Match(typeList.pop(),m.group(2),body) 			# get compressed
 				key = match.getKey()									# store in matches

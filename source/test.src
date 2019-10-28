@@ -1,2 +1,11 @@
+byte zb1@$04
+word zw1@$14
+byte ab1@$1234
+word aw1@$2CDE
 
-proc main() R = 42- R=1- endproc
+proc main()
+
+zb1[y]=R
+zb1[y]=A
+
+endproc

@@ -1,0 +1,44 @@
+// ******************************************************************************
+// ******************************************************************************
+//
+//		Name : 		system.def
+//		Purpose : 	System words, mostly actions.
+//		Author : 	Paul Robson (paul@robsons.org.uk)
+//		Created : 	28th October 2019
+//
+// ******************************************************************************
+// ******************************************************************************
+
+// ******************************************************************************
+//
+//			System words, all actions, required for the coded words to work.
+//
+// ******************************************************************************
+
+* 	byte 			
+		[exec:byteVar]
+* 	word 			
+		[exec:wordVar]		
+*	remove.locals
+		[exec:dictionarycrunch]		
+* 	repeat
+		[exec:repeat]
+* 	until 			
+		[exec:until]
+*	a.for
+		[exec:afor]
+*	next
+		[exec:next]
+*	if
+		[exec:if]			
+*	else
+		[exec:else]			
+* 	endif
+		[exec:endif]			
+* 	proc 			
+		[exec:procedure_def]
+P	<proc>
+		[exec:call]
+*	endproc			
+		[exec:endproc]
+

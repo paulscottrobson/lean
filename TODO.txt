@@ -3,11 +3,12 @@ TODO
 -	Write definitions list.
 -	Write definitions testing as we go
 - 	Write code with it.
+-  	R.For ?
 
 List
 ====
-Register load and save R A Y
 Default mandatory stuff. Recheck it.
+Register transfers R/A/Y
 Binary Operations
 Unary Operations
 Unary Variable Operations
