@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.54.1900 listing file
 ; 64tass -Wall -q -c -o lean.prg -L lean.lst main.asm
-; Mon Oct 28 16:08:46 2019
+; Mon Oct 28 16:17:58 2019
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -81,7 +81,7 @@
 
 .a000	ba		tsx				tsx 									; save SP
 .a001	86 17		stx $17				stx 	originalSP
-.a003	20 9b aa	jsr $aa9b			jsr 	LoadBasicCode
+.a003	20 df aa	jsr $aadf			jsr 	LoadBasicCode
 .a006	20 0d a8	jsr $a80d			jsr 	StackReset 						; reset convert stack.
 .a009	20 4c a6	jsr $a64c			jsr 	VariableReset 					; reset variable memory.
 .a00c	20 95 a3	jsr $a395			jsr 	DictionaryReset 				; reset user dictionary
@@ -438,9 +438,9 @@
 .a252	b1 06		lda ($06),y			lda 	(genPtr),y 					; read the execution ID
 .a254	0a		asl a				asl 	a 							; index into table.
 .a255	aa		tax				tax
-.a256	bd 0e a9	lda $a90e,x			lda 	ExecutableVectorTable,x 	; read jump vector
+.a256	bd 1c a9	lda $a91c,x			lda 	ExecutableVectorTable,x 	; read jump vector
 .a259	85 0a		sta $0a				sta 	zTemp0
-.a25b	bd 0f a9	lda $a90f,x			lda 	ExecutableVectorTable+1,x
+.a25b	bd 1d a9	lda $a91d,x			lda 	ExecutableVectorTable+1,x
 .a25e	85 0b		sta $0b				sta 	zTemp0+1
 .a260	20 67 a2	jsr $a267			jsr 	_GSCallzTemp0 				; call routine
 .a263	7a		ply				ply 								; restore XY
@@ -671,7 +671,7 @@
 .a3ba	20 c9 a3	jsr $a3c9			jsr 	DSSearch
 .a3bd	b0 07		bcs $a3c6			bcs 	_DSCExit
 .a3bf					_DSCOnly:
-.a3bf	a2 28		ldx #$28			ldx 	#SystemDictionary & $FF
+.a3bf	a2 36		ldx #$36			ldx 	#SystemDictionary & $FF
 .a3c1	a0 a9		ldy #$a9			ldy 	#SystemDictionary >> 8
 .a3c3	20 c9 a3	jsr $a3c9			jsr 	DSSearch
 .a3c6					_DSCExit:
@@ -1472,397 +1472,457 @@
 .a8b2	a0 63		ldy #$63		ldy  #$63
 .a8b4					L10013_END:
 .a8b4					L10014:
->a8b4	02					.byte L10014_END-L10014-1
->a8b5	a3 01					.byte $a3,$01
-.a8b7					L10014_END:
-.a8b7					L10015:
->a8b7	02					.byte L10015_END-L10015-1
->a8b8	a3 02					.byte $a3,$02
-.a8ba					L10015_END:
-.a8ba					L10016:
->a8ba	02					.byte L10016_END-L10016-1
->a8bb	a3 03					.byte $a3,$03
-.a8bd					L10016_END:
-.a8bd					L10017:
->a8bd	02					.byte L10017_END-L10017-1
->a8be	a3 04					.byte $a3,$04
-.a8c0					L10017_END:
-.a8c0					L10018:
->a8c0	04					.byte L10018_END-L10018-1
-.a8c1	a9 63		lda #$63		lda  #$63
-.a8c3	a2 73		ldx #$73		ldx  #$73
-.a8c5					L10018_END:
-.a8c5					L10019:
->a8c5	07					.byte L10019_END-L10019-1
-.a8c6	c8		iny			iny
-.a8c7	b1 63		lda ($63),y		lda  ($63),y
-.a8c9	aa		tax			tax
-.a8ca	88		dey			dey
+>a8b4	01					.byte L10014_END-L10014-1
+.a8b5	a8		tay			tay
+.a8b6					L10014_END:
+.a8b6					L10015:
+>a8b6	01					.byte L10015_END-L10015-1
+.a8b7	a8		tay			tay
+.a8b8					L10015_END:
+.a8b8					L10016:
+>a8b8	02					.byte L10016_END-L10016-1
+>a8b9	a3 01					.byte $a3,$01
+.a8bb					L10016_END:
+.a8bb					L10017:
+>a8bb	02					.byte L10017_END-L10017-1
+>a8bc	a3 02					.byte $a3,$02
+.a8be					L10017_END:
+.a8be					L10018:
+>a8be	02					.byte L10018_END-L10018-1
+>a8bf	a3 03					.byte $a3,$03
+.a8c1					L10018_END:
+.a8c1					L10019:
+>a8c1	02					.byte L10019_END-L10019-1
+>a8c2	a3 04					.byte $a3,$04
+.a8c4					L10019_END:
+.a8c4					L10020:
+>a8c4	04					.byte L10020_END-L10020-1
+.a8c5	a9 63		lda #$63		lda  #$63
+.a8c7	a2 73		ldx #$73		ldx  #$73
+.a8c9					L10020_END:
+.a8c9					L10021:
+>a8c9	07					.byte L10021_END-L10021-1
+.a8ca	c8		iny			iny
 .a8cb	b1 63		lda ($63),y		lda  ($63),y
-.a8cd					L10019_END:
-.a8cd					L10020:
->a8cd	04					.byte L10020_END-L10020-1
-.a8ce	a5 63		lda $63			lda  $63
-.a8d0	a2 00		ldx #$00		ldx  #0
-.a8d2					L10020_END:
-.a8d2					L10021:
->a8d2	06					.byte L10021_END-L10021-1
-.a8d3	ad 63 73	lda $7363		lda  $7363
-.a8d6	ae 83 73	ldx $7383		ldx  $7383
-.a8d9					L10021_END:
-.a8d9					L10022:
->a8d9	04					.byte L10022_END-L10022-1
-.a8da	a5 63		lda $63			lda  $63
-.a8dc	a6 83		ldx $83			ldx  $83
-.a8de					L10022_END:
-.a8de					L10023:
->a8de	05					.byte L10023_END-L10023-1
-.a8df	ad 63 73	lda $7363		lda  $7363
-.a8e2	a2 00		ldx #$00		ldx  #0
-.a8e4					L10023_END:
-.a8e4					L10024:
->a8e4	04					.byte L10024_END-L10024-1
-.a8e5	a9 63		lda #$63		lda  #$63
-.a8e7	a2 73		ldx #$73		ldx  #$73
-.a8e9					L10024_END:
-.a8e9					L10025:
->a8e9	02					.byte L10025_END-L10025-1
->a8ea	a3 05					.byte $a3,$05
-.a8ec					L10025_END:
-.a8ec					L10026:
->a8ec	02					.byte L10026_END-L10026-1
->a8ed	a3 06					.byte $a3,$06
-.a8ef					L10026_END:
-.a8ef					L10027:
->a8ef	02					.byte L10027_END-L10027-1
->a8f0	a3 07					.byte $a3,$07
-.a8f2					L10027_END:
-.a8f2					L10028:
->a8f2	02					.byte L10028_END-L10028-1
->a8f3	a3 08					.byte $a3,$08
-.a8f5					L10028_END:
-.a8f5					L10029:
->a8f5	02					.byte L10029_END-L10029-1
->a8f6	a3 09					.byte $a3,$09
-.a8f8					L10029_END:
-.a8f8					L10030:
->a8f8	02					.byte L10030_END-L10030-1
->a8f9	a3 0a					.byte $a3,$0a
-.a8fb					L10030_END:
-.a8fb					L10031:
->a8fb	02					.byte L10031_END-L10031-1
->a8fc	a3 0b					.byte $a3,$0b
-.a8fe					L10031_END:
-.a8fe					L10032:
->a8fe	02					.byte L10032_END-L10032-1
-.a8ff	b1 63		lda ($63),y		lda  ($63),y
-.a901					L10032_END:
-.a901					L10033:
->a901	02					.byte L10033_END-L10033-1
-.a902	a5 63		lda $63			lda  $63
-.a904					L10033_END:
-.a904					L10034:
->a904	03					.byte L10034_END-L10034-1
-.a905	ad 63 73	lda $7363		lda  $7363
-.a908					L10034_END:
-.a908					L10035:
->a908	02					.byte L10035_END-L10035-1
-.a909	a9 63		lda #$63		lda  #$63
-.a90b					L10035_END:
-.a90b					L10036:
->a90b	02					.byte L10036_END-L10036-1
->a90c	a3 0c					.byte $a3,$0c
-.a90e					L10036_END:
-.a90e					ExecutableVectorTable:
->a90e	20 a5					.word Action_call                      ; 0
->a910	59 a6					.word Action_wordvar                   ; 1
->a912	09 a6					.word Action_until                     ; 2
->a914	00 a6					.word Action_repeat                    ; 3
->a916	c8 a6					.word Action_dictionarycrunch          ; 4
->a918	db a4					.word Action_procedure_def             ; 5
->a91a	30 a6					.word Action_next                      ; 6
->a91c	9b a5					.word Action_if                        ; 7
->a91e	10 a5					.word Action_endproc                   ; 8
->a920	d2 a5					.word Action_endif                     ; 9
->a922	b0 a5					.word Action_else                      ; 10
->a924	55 a6					.word Action_bytevar                   ; 11
->a926	1d a6					.word Action_afor                      ; 12
-.a928					SystemDictionary:
->a928	0c					.byte	12
->a929	4d					.byte	'M'
->a92a	79 a8					.word	L10000
->a92c	00					.byte	0
->a92d	06					.byte	6
->a92e	f3 db d9 dd bd d2			.byte	$f3,$db,$d9,$dd,$bd,$d2
->a934	0c					.byte	12
->a935	4d					.byte	'M'
->a936	83 a8					.word	L10001
->a938	00					.byte	0
->a939	06					.byte	6
->a93a	f3 db d9 dd bd c1			.byte	$f3,$db,$d9,$dd,$bd,$c1
->a940	09					.byte	9
->a941	4d					.byte	'M'
->a942	86 a8					.word	L10002
->a944	00					.byte	0
->a945	03					.byte	3
->a946	f3 bd d9				.byte	$f3,$bd,$d9
->a949	09					.byte	9
->a94a	4d					.byte	'M'
->a94b	89 a8					.word	L10003
->a94d	00					.byte	0
->a94e	03					.byte	3
->a94f	f3 bd d2				.byte	$f3,$bd,$d2
->a952	09					.byte	9
->a953	4d					.byte	'M'
->a954	8c a8					.word	L10004
->a956	00					.byte	0
->a957	03					.byte	3
->a958	f3 bd c1				.byte	$f3,$bd,$c1
->a95b	07					.byte	7
->a95c	4d					.byte	'M'
->a95d	8f a8					.word	L10005
->a95f	00					.byte	0
->a960	01					.byte	1
->a961	f0					.byte	$f0
->a962	09					.byte	9
->a963	4d					.byte	'M'
->a964	92 a8					.word	L10006
->a966	00					.byte	0
->a967	03					.byte	3
->a968	ec bd d2				.byte	$ec,$bd,$d2
->a96b	09					.byte	9
->a96c	4d					.byte	'M'
->a96d	99 a8					.word	L10007
->a96f	00					.byte	0
->a970	03					.byte	3
->a971	e9 bd d2				.byte	$e9,$bd,$d2
->a974	09					.byte	9
->a975	4d					.byte	'M'
->a976	9e a8					.word	L10008
->a978	00					.byte	0
->a979	03					.byte	3
->a97a	e3 bd d9				.byte	$e3,$bd,$d9
->a97d	09					.byte	9
->a97e	4d					.byte	'M'
->a97f	a2 a8					.word	L10009
->a981	00					.byte	0
->a982	03					.byte	3
->a983	e3 bd d2				.byte	$e3,$bd,$d2
->a986	09					.byte	9
->a987	4d					.byte	'M'
->a988	a6 a8					.word	L10010
->a98a	00					.byte	0
->a98b	03					.byte	3
->a98c	e3 bd c1				.byte	$e3,$bd,$c1
->a98f	09					.byte	9
->a990	4d					.byte	'M'
->a991	aa a8					.word	L10011
->a993	00					.byte	0
->a994	03					.byte	3
->a995	d9 bd f3				.byte	$d9,$bd,$f3
->a998	09					.byte	9
->a999	4d					.byte	'M'
->a99a	ad a8					.word	L10012
->a99c	00					.byte	0
->a99d	03					.byte	3
->a99e	d9 bd e3				.byte	$d9,$bd,$e3
->a9a1	09					.byte	9
->a9a2	4d					.byte	'M'
->a9a3	b1 a8					.word	L10013
->a9a5	00					.byte	0
->a9a6	03					.byte	3
->a9a7	d9 bd e2				.byte	$d9,$bd,$e2
->a9aa	0a					.byte	10
->a9ab	4d					.byte	'M'
->a9ac	b4 a8					.word	L10014
->a9ae	00					.byte	0
->a9af	04					.byte	4
->a9b0	57 4f 52 c4				.byte	$57,$4f,$52,$c4
->a9b4	0b					.byte	11
->a9b5	4d					.byte	'M'
->a9b6	b7 a8					.word	L10015
->a9b8	00					.byte	0
->a9b9	05					.byte	5
->a9ba	55 4e 54 49 cc				.byte	$55,$4e,$54,$49,$cc
->a9bf	0c					.byte	12
->a9c0	4d					.byte	'M'
->a9c1	ba a8					.word	L10016
->a9c3	00					.byte	0
->a9c4	06					.byte	6
->a9c5	52 45 50 45 41 d4			.byte	$52,$45,$50,$45,$41,$d4
->a9cb	13					.byte	19
->a9cc	4d					.byte	'M'
->a9cd	bd a8					.word	L10017
->a9cf	00					.byte	0
->a9d0	0d					.byte	13
->a9d1	52 45 4d 4f 56 45 2e 4c			.byte	$52,$45,$4d,$4f,$56,$45,$2e,$4c,$4f,$43,$41,$4c,$d3
->a9d9	4f 43 41 4c d3
->a9de	09					.byte	9
->a9df	4d					.byte	'M'
->a9e0	c0 a8					.word	L10018
->a9e2	00					.byte	0
->a9e3	03					.byte	3
->a9e4	d2 bd f7				.byte	$d2,$bd,$f7
->a9e7	0c					.byte	12
->a9e8	4d					.byte	'M'
->a9e9	c5 a8					.word	L10019
->a9eb	00					.byte	0
->a9ec	06					.byte	6
->a9ed	d2 bd f3 db d9 dd			.byte	$d2,$bd,$f3,$db,$d9,$dd
->a9f3	09					.byte	9
->a9f4	4d					.byte	'M'
->a9f5	cd a8					.word	L10020
->a9f7	00					.byte	0
->a9f8	03					.byte	3
->a9f9	d2 bd f3				.byte	$d2,$bd,$f3
->a9fc	09					.byte	9
->a9fd	4d					.byte	'M'
->a9fe	d2 a8					.word	L10021
->aa00	00					.byte	0
->aa01	03					.byte	3
->aa02	d2 bd ec				.byte	$d2,$bd,$ec
->aa05	09					.byte	9
->aa06	4d					.byte	'M'
->aa07	d9 a8					.word	L10022
->aa09	00					.byte	0
->aa0a	03					.byte	3
->aa0b	d2 bd e9				.byte	$d2,$bd,$e9
->aa0e	09					.byte	9
->aa0f	4d					.byte	'M'
->aa10	de a8					.word	L10023
->aa12	00					.byte	0
->aa13	03					.byte	3
->aa14	d2 bd e3				.byte	$d2,$bd,$e3
->aa17	09					.byte	9
->aa18	4d					.byte	'M'
->aa19	e4 a8					.word	L10024
->aa1b	00					.byte	0
->aa1c	03					.byte	3
->aa1d	d2 bd e2				.byte	$d2,$bd,$e2
->aa20	0a					.byte	10
->aa21	4d					.byte	'M'
->aa22	e9 a8					.word	L10025
->aa24	00					.byte	0
->aa25	04					.byte	4
->aa26	50 52 4f c3				.byte	$50,$52,$4f,$c3
->aa2a	0a					.byte	10
->aa2b	4d					.byte	'M'
->aa2c	ec a8					.word	L10026
->aa2e	00					.byte	0
->aa2f	04					.byte	4
->aa30	4e 45 58 d4				.byte	$4e,$45,$58,$d4
->aa34	08					.byte	8
->aa35	4d					.byte	'M'
->aa36	ef a8					.word	L10027
->aa38	00					.byte	0
->aa39	02					.byte	2
->aa3a	49 c6					.byte	$49,$c6
->aa3c	0d					.byte	13
->aa3d	4d					.byte	'M'
->aa3e	f2 a8					.word	L10028
->aa40	00					.byte	0
->aa41	07					.byte	7
->aa42	45 4e 44 50 52 4f c3			.byte	$45,$4e,$44,$50,$52,$4f,$c3
->aa49	0b					.byte	11
+.a8cd	aa		tax			tax
+.a8ce	88		dey			dey
+.a8cf	b1 63		lda ($63),y		lda  ($63),y
+.a8d1					L10021_END:
+.a8d1					L10022:
+>a8d1	04					.byte L10022_END-L10022-1
+.a8d2	a5 63		lda $63			lda  $63
+.a8d4	a2 00		ldx #$00		ldx  #0
+.a8d6					L10022_END:
+.a8d6					L10023:
+>a8d6	06					.byte L10023_END-L10023-1
+.a8d7	ad 63 73	lda $7363		lda  $7363
+.a8da	ae 83 73	ldx $7383		ldx  $7383
+.a8dd					L10023_END:
+.a8dd					L10024:
+>a8dd	04					.byte L10024_END-L10024-1
+.a8de	a5 63		lda $63			lda  $63
+.a8e0	a6 83		ldx $83			ldx  $83
+.a8e2					L10024_END:
+.a8e2					L10025:
+>a8e2	05					.byte L10025_END-L10025-1
+.a8e3	ad 63 73	lda $7363		lda  $7363
+.a8e6	a2 00		ldx #$00		ldx  #0
+.a8e8					L10025_END:
+.a8e8					L10026:
+>a8e8	04					.byte L10026_END-L10026-1
+.a8e9	a9 63		lda #$63		lda  #$63
+.a8eb	a2 73		ldx #$73		ldx  #$73
+.a8ed					L10026_END:
+.a8ed					L10027:
+>a8ed	03					.byte L10027_END-L10027-1
+.a8ee	98		tya			tya
+.a8ef	a2 00		ldx #$00		ldx  #0
+.a8f1					L10027_END:
+.a8f1					L10028:
+>a8f1	02					.byte L10028_END-L10028-1
+.a8f2	a2 00		ldx #$00		ldx  #0
+.a8f4					L10028_END:
+.a8f4					L10029:
+>a8f4	02					.byte L10029_END-L10029-1
+>a8f5	a3 05					.byte $a3,$05
+.a8f7					L10029_END:
+.a8f7					L10030:
+>a8f7	02					.byte L10030_END-L10030-1
+>a8f8	a3 06					.byte $a3,$06
+.a8fa					L10030_END:
+.a8fa					L10031:
+>a8fa	02					.byte L10031_END-L10031-1
+>a8fb	a3 07					.byte $a3,$07
+.a8fd					L10031_END:
+.a8fd					L10032:
+>a8fd	02					.byte L10032_END-L10032-1
+>a8fe	a3 08					.byte $a3,$08
+.a900					L10032_END:
+.a900					L10033:
+>a900	02					.byte L10033_END-L10033-1
+>a901	a3 09					.byte $a3,$09
+.a903					L10033_END:
+.a903					L10034:
+>a903	02					.byte L10034_END-L10034-1
+>a904	a3 0a					.byte $a3,$0a
+.a906					L10034_END:
+.a906					L10035:
+>a906	02					.byte L10035_END-L10035-1
+>a907	a3 0b					.byte $a3,$0b
+.a909					L10035_END:
+.a909					L10036:
+>a909	02					.byte L10036_END-L10036-1
+.a90a	b1 63		lda ($63),y		lda  ($63),y
+.a90c					L10036_END:
+.a90c					L10037:
+>a90c	02					.byte L10037_END-L10037-1
+.a90d	a5 63		lda $63			lda  $63
+.a90f					L10037_END:
+.a90f					L10038:
+>a90f	03					.byte L10038_END-L10038-1
+.a910	ad 63 73	lda $7363		lda  $7363
+.a913					L10038_END:
+.a913					L10039:
+>a913	02					.byte L10039_END-L10039-1
+.a914	a9 63		lda #$63		lda  #$63
+.a916					L10039_END:
+.a916					L10040:
+>a916	01					.byte L10040_END-L10040-1
+.a917	98		tya			tya
+.a918					L10040_END:
+.a918					L10041:
+>a918	00					.byte L10041_END-L10041-1
+.a919					L10041_END:
+.a919					L10042:
+>a919	02					.byte L10042_END-L10042-1
+>a91a	a3 0c					.byte $a3,$0c
+.a91c					L10042_END:
+.a91c					ExecutableVectorTable:
+>a91c	20 a5					.word Action_call                      ; 0
+>a91e	59 a6					.word Action_wordvar                   ; 1
+>a920	09 a6					.word Action_until                     ; 2
+>a922	00 a6					.word Action_repeat                    ; 3
+>a924	c8 a6					.word Action_dictionarycrunch          ; 4
+>a926	db a4					.word Action_procedure_def             ; 5
+>a928	30 a6					.word Action_next                      ; 6
+>a92a	9b a5					.word Action_if                        ; 7
+>a92c	10 a5					.word Action_endproc                   ; 8
+>a92e	d2 a5					.word Action_endif                     ; 9
+>a930	b0 a5					.word Action_else                      ; 10
+>a932	55 a6					.word Action_bytevar                   ; 11
+>a934	1d a6					.word Action_afor                      ; 12
+.a936					SystemDictionary:
+>a936	0c					.byte	12
+>a937	4d					.byte	'M'
+>a938	79 a8					.word	L10000
+>a93a	00					.byte	0
+>a93b	06					.byte	6
+>a93c	f3 db d9 dd bd d2			.byte	$f3,$db,$d9,$dd,$bd,$d2
+>a942	0c					.byte	12
+>a943	4d					.byte	'M'
+>a944	83 a8					.word	L10001
+>a946	00					.byte	0
+>a947	06					.byte	6
+>a948	f3 db d9 dd bd c1			.byte	$f3,$db,$d9,$dd,$bd,$c1
+>a94e	09					.byte	9
+>a94f	4d					.byte	'M'
+>a950	86 a8					.word	L10002
+>a952	00					.byte	0
+>a953	03					.byte	3
+>a954	f3 bd d9				.byte	$f3,$bd,$d9
+>a957	09					.byte	9
+>a958	4d					.byte	'M'
+>a959	89 a8					.word	L10003
+>a95b	00					.byte	0
+>a95c	03					.byte	3
+>a95d	f3 bd d2				.byte	$f3,$bd,$d2
+>a960	09					.byte	9
+>a961	4d					.byte	'M'
+>a962	8c a8					.word	L10004
+>a964	00					.byte	0
+>a965	03					.byte	3
+>a966	f3 bd c1				.byte	$f3,$bd,$c1
+>a969	07					.byte	7
+>a96a	4d					.byte	'M'
+>a96b	8f a8					.word	L10005
+>a96d	00					.byte	0
+>a96e	01					.byte	1
+>a96f	f0					.byte	$f0
+>a970	09					.byte	9
+>a971	4d					.byte	'M'
+>a972	92 a8					.word	L10006
+>a974	00					.byte	0
+>a975	03					.byte	3
+>a976	ec bd d2				.byte	$ec,$bd,$d2
+>a979	09					.byte	9
+>a97a	4d					.byte	'M'
+>a97b	99 a8					.word	L10007
+>a97d	00					.byte	0
+>a97e	03					.byte	3
+>a97f	e9 bd d2				.byte	$e9,$bd,$d2
+>a982	09					.byte	9
+>a983	4d					.byte	'M'
+>a984	9e a8					.word	L10008
+>a986	00					.byte	0
+>a987	03					.byte	3
+>a988	e3 bd d9				.byte	$e3,$bd,$d9
+>a98b	09					.byte	9
+>a98c	4d					.byte	'M'
+>a98d	a2 a8					.word	L10009
+>a98f	00					.byte	0
+>a990	03					.byte	3
+>a991	e3 bd d2				.byte	$e3,$bd,$d2
+>a994	09					.byte	9
+>a995	4d					.byte	'M'
+>a996	a6 a8					.word	L10010
+>a998	00					.byte	0
+>a999	03					.byte	3
+>a99a	e3 bd c1				.byte	$e3,$bd,$c1
+>a99d	09					.byte	9
+>a99e	4d					.byte	'M'
+>a99f	aa a8					.word	L10011
+>a9a1	00					.byte	0
+>a9a2	03					.byte	3
+>a9a3	d9 bd f3				.byte	$d9,$bd,$f3
+>a9a6	09					.byte	9
+>a9a7	4d					.byte	'M'
+>a9a8	ad a8					.word	L10012
+>a9aa	00					.byte	0
+>a9ab	03					.byte	3
+>a9ac	d9 bd e3				.byte	$d9,$bd,$e3
+>a9af	09					.byte	9
+>a9b0	4d					.byte	'M'
+>a9b1	b1 a8					.word	L10013
+>a9b3	00					.byte	0
+>a9b4	03					.byte	3
+>a9b5	d9 bd e2				.byte	$d9,$bd,$e2
+>a9b8	09					.byte	9
+>a9b9	4d					.byte	'M'
+>a9ba	b4 a8					.word	L10014
+>a9bc	00					.byte	0
+>a9bd	03					.byte	3
+>a9be	d9 bd d2				.byte	$d9,$bd,$d2
+>a9c1	09					.byte	9
+>a9c2	4d					.byte	'M'
+>a9c3	b6 a8					.word	L10015
+>a9c5	00					.byte	0
+>a9c6	03					.byte	3
+>a9c7	d9 bd c1				.byte	$d9,$bd,$c1
+>a9ca	0a					.byte	10
+>a9cb	4d					.byte	'M'
+>a9cc	b8 a8					.word	L10016
+>a9ce	00					.byte	0
+>a9cf	04					.byte	4
+>a9d0	57 4f 52 c4				.byte	$57,$4f,$52,$c4
+>a9d4	0b					.byte	11
+>a9d5	4d					.byte	'M'
+>a9d6	bb a8					.word	L10017
+>a9d8	00					.byte	0
+>a9d9	05					.byte	5
+>a9da	55 4e 54 49 cc				.byte	$55,$4e,$54,$49,$cc
+>a9df	0c					.byte	12
+>a9e0	4d					.byte	'M'
+>a9e1	be a8					.word	L10018
+>a9e3	00					.byte	0
+>a9e4	06					.byte	6
+>a9e5	52 45 50 45 41 d4			.byte	$52,$45,$50,$45,$41,$d4
+>a9eb	13					.byte	19
+>a9ec	4d					.byte	'M'
+>a9ed	c1 a8					.word	L10019
+>a9ef	00					.byte	0
+>a9f0	0d					.byte	13
+>a9f1	52 45 4d 4f 56 45 2e 4c			.byte	$52,$45,$4d,$4f,$56,$45,$2e,$4c,$4f,$43,$41,$4c,$d3
+>a9f9	4f 43 41 4c d3
+>a9fe	09					.byte	9
+>a9ff	4d					.byte	'M'
+>aa00	c4 a8					.word	L10020
+>aa02	00					.byte	0
+>aa03	03					.byte	3
+>aa04	d2 bd f7				.byte	$d2,$bd,$f7
+>aa07	0c					.byte	12
+>aa08	4d					.byte	'M'
+>aa09	c9 a8					.word	L10021
+>aa0b	00					.byte	0
+>aa0c	06					.byte	6
+>aa0d	d2 bd f3 db d9 dd			.byte	$d2,$bd,$f3,$db,$d9,$dd
+>aa13	09					.byte	9
+>aa14	4d					.byte	'M'
+>aa15	d1 a8					.word	L10022
+>aa17	00					.byte	0
+>aa18	03					.byte	3
+>aa19	d2 bd f3				.byte	$d2,$bd,$f3
+>aa1c	09					.byte	9
+>aa1d	4d					.byte	'M'
+>aa1e	d6 a8					.word	L10023
+>aa20	00					.byte	0
+>aa21	03					.byte	3
+>aa22	d2 bd ec				.byte	$d2,$bd,$ec
+>aa25	09					.byte	9
+>aa26	4d					.byte	'M'
+>aa27	dd a8					.word	L10024
+>aa29	00					.byte	0
+>aa2a	03					.byte	3
+>aa2b	d2 bd e9				.byte	$d2,$bd,$e9
+>aa2e	09					.byte	9
+>aa2f	4d					.byte	'M'
+>aa30	e2 a8					.word	L10025
+>aa32	00					.byte	0
+>aa33	03					.byte	3
+>aa34	d2 bd e3				.byte	$d2,$bd,$e3
+>aa37	09					.byte	9
+>aa38	4d					.byte	'M'
+>aa39	e8 a8					.word	L10026
+>aa3b	00					.byte	0
+>aa3c	03					.byte	3
+>aa3d	d2 bd e2				.byte	$d2,$bd,$e2
+>aa40	09					.byte	9
+>aa41	4d					.byte	'M'
+>aa42	ed a8					.word	L10027
+>aa44	00					.byte	0
+>aa45	03					.byte	3
+>aa46	d2 bd d9				.byte	$d2,$bd,$d9
+>aa49	09					.byte	9
 >aa4a	4d					.byte	'M'
->aa4b	f5 a8					.word	L10029
+>aa4b	f1 a8					.word	L10028
 >aa4d	00					.byte	0
->aa4e	05					.byte	5
->aa4f	45 4e 44 49 c6				.byte	$45,$4e,$44,$49,$c6
->aa54	0a					.byte	10
->aa55	4d					.byte	'M'
->aa56	f8 a8					.word	L10030
->aa58	00					.byte	0
->aa59	04					.byte	4
->aa5a	45 4c 53 c5				.byte	$45,$4c,$53,$c5
->aa5e	0a					.byte	10
->aa5f	4d					.byte	'M'
->aa60	fb a8					.word	L10031
->aa62	00					.byte	0
->aa63	04					.byte	4
->aa64	42 59 54 c5				.byte	$42,$59,$54,$c5
->aa68	0c					.byte	12
->aa69	4d					.byte	'M'
->aa6a	fe a8					.word	L10032
->aa6c	00					.byte	0
->aa6d	06					.byte	6
->aa6e	c1 bd f3 db d9 dd			.byte	$c1,$bd,$f3,$db,$d9,$dd
->aa74	09					.byte	9
->aa75	4d					.byte	'M'
->aa76	01 a9					.word	L10033
->aa78	00					.byte	0
->aa79	03					.byte	3
->aa7a	c1 bd f3				.byte	$c1,$bd,$f3
->aa7d	09					.byte	9
->aa7e	4d					.byte	'M'
->aa7f	04 a9					.word	L10034
->aa81	00					.byte	0
->aa82	03					.byte	3
->aa83	c1 bd e3				.byte	$c1,$bd,$e3
->aa86	09					.byte	9
+>aa4e	03					.byte	3
+>aa4f	d2 bd c1				.byte	$d2,$bd,$c1
+>aa52	0a					.byte	10
+>aa53	4d					.byte	'M'
+>aa54	f4 a8					.word	L10029
+>aa56	00					.byte	0
+>aa57	04					.byte	4
+>aa58	50 52 4f c3				.byte	$50,$52,$4f,$c3
+>aa5c	0a					.byte	10
+>aa5d	4d					.byte	'M'
+>aa5e	f7 a8					.word	L10030
+>aa60	00					.byte	0
+>aa61	04					.byte	4
+>aa62	4e 45 58 d4				.byte	$4e,$45,$58,$d4
+>aa66	08					.byte	8
+>aa67	4d					.byte	'M'
+>aa68	fa a8					.word	L10031
+>aa6a	00					.byte	0
+>aa6b	02					.byte	2
+>aa6c	49 c6					.byte	$49,$c6
+>aa6e	0d					.byte	13
+>aa6f	4d					.byte	'M'
+>aa70	fd a8					.word	L10032
+>aa72	00					.byte	0
+>aa73	07					.byte	7
+>aa74	45 4e 44 50 52 4f c3			.byte	$45,$4e,$44,$50,$52,$4f,$c3
+>aa7b	0b					.byte	11
+>aa7c	4d					.byte	'M'
+>aa7d	00 a9					.word	L10033
+>aa7f	00					.byte	0
+>aa80	05					.byte	5
+>aa81	45 4e 44 49 c6				.byte	$45,$4e,$44,$49,$c6
+>aa86	0a					.byte	10
 >aa87	4d					.byte	'M'
->aa88	08 a9					.word	L10035
+>aa88	03 a9					.word	L10034
 >aa8a	00					.byte	0
->aa8b	03					.byte	3
->aa8c	c1 bd e2				.byte	$c1,$bd,$e2
->aa8f	0b					.byte	11
->aa90	4d					.byte	'M'
->aa91	0b a9					.word	L10036
->aa93	00					.byte	0
->aa94	05					.byte	5
->aa95	41 2e 46 4f d2				.byte	$41,$2e,$46,$4f,$d2
->aa9a	00					.byte	$00
+>aa8b	04					.byte	4
+>aa8c	45 4c 53 c5				.byte	$45,$4c,$53,$c5
+>aa90	0a					.byte	10
+>aa91	4d					.byte	'M'
+>aa92	06 a9					.word	L10035
+>aa94	00					.byte	0
+>aa95	04					.byte	4
+>aa96	42 59 54 c5				.byte	$42,$59,$54,$c5
+>aa9a	0c					.byte	12
+>aa9b	4d					.byte	'M'
+>aa9c	09 a9					.word	L10036
+>aa9e	00					.byte	0
+>aa9f	06					.byte	6
+>aaa0	c1 bd f3 db d9 dd			.byte	$c1,$bd,$f3,$db,$d9,$dd
+>aaa6	09					.byte	9
+>aaa7	4d					.byte	'M'
+>aaa8	0c a9					.word	L10037
+>aaaa	00					.byte	0
+>aaab	03					.byte	3
+>aaac	c1 bd f3				.byte	$c1,$bd,$f3
+>aaaf	09					.byte	9
+>aab0	4d					.byte	'M'
+>aab1	0f a9					.word	L10038
+>aab3	00					.byte	0
+>aab4	03					.byte	3
+>aab5	c1 bd e3				.byte	$c1,$bd,$e3
+>aab8	09					.byte	9
+>aab9	4d					.byte	'M'
+>aaba	13 a9					.word	L10039
+>aabc	00					.byte	0
+>aabd	03					.byte	3
+>aabe	c1 bd e2				.byte	$c1,$bd,$e2
+>aac1	09					.byte	9
+>aac2	4d					.byte	'M'
+>aac3	16 a9					.word	L10040
+>aac5	00					.byte	0
+>aac6	03					.byte	3
+>aac7	c1 bd d9				.byte	$c1,$bd,$d9
+>aaca	09					.byte	9
+>aacb	4d					.byte	'M'
+>aacc	18 a9					.word	L10041
+>aace	00					.byte	0
+>aacf	03					.byte	3
+>aad0	c1 bd d2				.byte	$c1,$bd,$d2
+>aad3	0b					.byte	11
+>aad4	4d					.byte	'M'
+>aad5	19 a9					.word	L10042
+>aad7	00					.byte	0
+>aad8	05					.byte	5
+>aad9	41 2e 46 4f d2				.byte	$41,$2e,$46,$4f,$d2
+>aade	00					.byte	$00
 
 ;******  Return to file: main.asm
 
 
 ;******  Processing file: utility/loadcode.asm
 
-.aa9b					LoadBasicCode:
-.aa9b	a9 ca		lda #$ca			lda 	#(LBCTest) & $FF
-.aa9d	85 0a		sta $0a				sta 	zTemp0
-.aa9f	a9 aa		lda #$aa			lda 	#(LBCTest) >> 8
-.aaa1	85 0b		sta $0b				sta 	zTemp0+1
-.aaa3	a9 01		lda #$01			lda 	#($801) & $FF
-.aaa5	85 0c		sta $0c				sta 	zTemp1
-.aaa7	a9 08		lda #$08			lda 	#($801) >> 8
-.aaa9	85 0d		sta $0d				sta 	zTemp1+1
-.aaab					_LBCCopy:
-.aaab	a0 02		ldy #$02			ldy 	#2							; skip over the loading address
-.aaad	b1 0a		lda ($0a),y			lda 	(zTemp0),y 					; skips first two bytes :)
-.aaaf	92 0c		sta ($0c)			sta 	(zTemp1)
-.aab1	e6 0a		inc $0a				inc 	zTemp0
-.aab3	d0 02		bne $aab7			bne 	_NoCarry
-.aab5	e6 0b		inc $0b				inc 	zTemp0+1
-.aab7					_NoCarry:
-.aab7	e6 0c		inc $0c				inc 	zTemp1
-.aab9	d0 02		bne $aabd			bne 	_NoCarry
-.aabb	e6 0d		inc $0d				inc 	zTemp1+1
-.aabd					_NoCarry:
-.aabd	a5 0a		lda $0a				lda 	zTemp0
-.aabf	c9 7a		cmp #$7a			cmp 	#LBCTestEnd & $FF
-.aac1	d0 e8		bne $aaab			bne 	_LBCCopy
-.aac3	a5 0b		lda $0b				lda 	zTemp0+1
-.aac5	c9 ab		cmp #$ab			cmp 	#LBCTestEnd >> 8
-.aac7	d0 e2		bne $aaab			bne 	_LBCCopy
-.aac9	60		rts				rts
-.aaca					LBCTest:
->aaca	01 08 0c 08 e8 03 99 c7				.binary 	"../generated/test.prg"
->aad2	28 31 34 29 00 17 08 f2 03 9e 34 30 39 36 30 00
->aae2	2b 08 fc 03 8f 2e 20 42 59 54 45 20 5a 42 31 40
->aaf2	24 30 34 00 3f 08 06 04 8f 2e 20 57 4f 52 44 20
->ab02	5a 57 31 40 24 31 34 00 55 08 10 04 8f 2e 20 42
->ab12	59 54 45 20 41 42 31 40 24 31 32 33 34 00 6b 08
->ab22	1a 04 8f 2e 20 57 4f 52 44 20 41 57 31 40 24 32
->ab32	43 44 45 00 7e 08 24 04 8f 2e 20 50 52 4f 43 20
->ab42	4d 41 49 4e 28 29 00 8e 08 2e 04 8f 2e 20 5a 42
->ab52	31 5b 59 5d 3d 52 00 9e 08 38 04 8f 2e 20 5a 42
->ab62	31 5b 59 5d 3d 41 00 ad 08 42 04 8f 2e 20 45 4e
->ab72	44 50 52 4f 43 00 00 00
-.ab7a					LBCTestEnd:
+.aadf					LoadBasicCode:
+.aadf	a9 0e		lda #$0e			lda 	#(LBCTest) & $FF
+.aae1	85 0a		sta $0a				sta 	zTemp0
+.aae3	a9 ab		lda #$ab			lda 	#(LBCTest) >> 8
+.aae5	85 0b		sta $0b				sta 	zTemp0+1
+.aae7	a9 01		lda #$01			lda 	#($801) & $FF
+.aae9	85 0c		sta $0c				sta 	zTemp1
+.aaeb	a9 08		lda #$08			lda 	#($801) >> 8
+.aaed	85 0d		sta $0d				sta 	zTemp1+1
+.aaef					_LBCCopy:
+.aaef	a0 02		ldy #$02			ldy 	#2							; skip over the loading address
+.aaf1	b1 0a		lda ($0a),y			lda 	(zTemp0),y 					; skips first two bytes :)
+.aaf3	92 0c		sta ($0c)			sta 	(zTemp1)
+.aaf5	e6 0a		inc $0a				inc 	zTemp0
+.aaf7	d0 02		bne $aafb			bne 	_NoCarry
+.aaf9	e6 0b		inc $0b				inc 	zTemp0+1
+.aafb					_NoCarry:
+.aafb	e6 0c		inc $0c				inc 	zTemp1
+.aafd	d0 02		bne $ab01			bne 	_NoCarry
+.aaff	e6 0d		inc $0d				inc 	zTemp1+1
+.ab01					_NoCarry:
+.ab01	a5 0a		lda $0a				lda 	zTemp0
+.ab03	c9 c0		cmp #$c0			cmp 	#LBCTestEnd & $FF
+.ab05	d0 e8		bne $aaef			bne 	_LBCCopy
+.ab07	a5 0b		lda $0b				lda 	zTemp0+1
+.ab09	c9 ab		cmp #$ab			cmp 	#LBCTestEnd >> 8
+.ab0b	d0 e2		bne $aaef			bne 	_LBCCopy
+.ab0d	60		rts				rts
+.ab0e					LBCTest:
+>ab0e	01 08 0c 08 e8 03 99 c7				.binary 	"../generated/test.prg"
+>ab16	28 31 34 29 00 17 08 f2 03 9e 34 30 39 36 30 00
+>ab26	2b 08 fc 03 8f 2e 20 42 59 54 45 20 5a 42 31 40
+>ab36	24 30 34 00 3f 08 06 04 8f 2e 20 57 4f 52 44 20
+>ab46	5a 57 31 40 24 31 34 00 55 08 10 04 8f 2e 20 42
+>ab56	59 54 45 20 41 42 31 40 24 31 32 33 34 00 6b 08
+>ab66	1a 04 8f 2e 20 57 4f 52 44 20 41 57 31 40 24 32
+>ab76	43 44 45 00 7e 08 24 04 8f 2e 20 50 52 4f 43 20
+>ab86	4d 41 49 4e 28 29 00 95 08 2e 04 8f 2e 20 52 20
+>ab96	3d 20 24 43 44 31 32 20 59 3d 24 34 35 00 a0 08
+>aba6	38 04 8f 2e 20 59 3d 52 00 af 08 42 04 8f 2e 20
+>abb6	45 4e 44 50 52 4f 43 00 00 00
+.abc0					LBCTestEnd:
 
 ;******  Return to file: main.asm
 
-.ab7a					EndCode:
+.abc0					EndCode:
 
 ;******  End of listing

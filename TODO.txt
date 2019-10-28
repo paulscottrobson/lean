@@ -1,15 +1,15 @@
 TODO
 ====
--	Write definitions list.
 -	Write definitions testing as we go
 - 	Write code with it.
 -  	R.For ?
+- 	Strings (process bit)
 
 List
 ====
-Default mandatory stuff. Recheck it.
-Register transfers R/A/Y
+Recheck mandatory stuff.
 Binary Operations
 Unary Operations
 Unary Variable Operations
-Constants
+Conditionals
+Stand alone Constants

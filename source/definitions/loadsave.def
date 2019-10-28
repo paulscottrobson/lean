@@ -96,4 +96,4 @@ Z 		<var>[y] = R
 			sta 	(<addr>),y
 			dey
 			lda 	(<addr>),y
-			
+				

@@ -5,7 +5,7 @@ word aw1@$2CDE
 
 proc main()
 
-zb1[y]=R
-zb1[y]=A
+R = $CD12 Y=$45
+Y=R
 
 endproc
