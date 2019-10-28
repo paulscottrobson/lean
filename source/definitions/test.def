@@ -10,7 +10,24 @@ BW	R = <const>
 
 S 	A = <var>
 		lda 	<addr>
+//
+//		Required for parameters
+//
 			
+B 	Y = <const>
+		ldy 	#<low>
+
+S 	Y = <var>
+		ldy 	<addr>
+
+S 	R = <var>
+		lda 	<addr>
+		ldx 	#0
+
+I 	R = <var>
+		lda 	<addr>
+		ldx 	<next>
+
 //
 //		Save
 //
@@ -44,12 +61,7 @@ W 	R+<const>
 //
 //		Procedure Definition/invocation/End
 //
-* 	proc 			
-		[exec:procedure_def]
-P	<proc>()	
-		jsr <addr>
-*	endproc			
-		[exec:endproc]
+
 //
 //		Condition
 //		
@@ -79,3 +91,9 @@ P	<proc>()
 		[exec:else]			
 * 	endif
 		[exec:endif]			
+* 	proc 			
+		[exec:procedure_def]
+P	<proc>
+		[exec:call]
+*	endproc			
+		[exec:endproc]

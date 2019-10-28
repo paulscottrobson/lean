@@ -78,7 +78,8 @@ _NoExecute:
 		.include 	"support/code.asm"			; code writing routines.
 		.include 	"support/error.asm"			; error routines
 
-		.include 	"actions/procedure.asm" 	; action : procedure.
+		.include 	"actions/procedure.asm" 	; action : procedure define
+		.include 	"actions/call.asm"			; action : procedure call
 		.include 	"actions/if.asm"			; action : if
 		.include 	"actions/repeat.asm"		; action : repeat
 		.include 	"actions/for.asm"			; action : for

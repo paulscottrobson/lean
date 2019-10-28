@@ -1,0 +1,53 @@
+
+byte vera.hi@$9f22,vera.data@$9f23
+word vera.lo@$9f20
+
+proc make.sprite()
+R=0 vera.lo=R A=$11 vera.hi=A
+A=64 A.FOR
+	A = 64 A.FOR
+		vera.data=A
+	Next
+Next
+endproc
+
+byte pos
+
+proc delay()
+	A=255 a.for next
+endproc
+
+proc main.app() 
+make.sprite()
+
+A=$F vera.hi=A  R=$4000 vera.lo=R A=1 vera.data=A
+
+R=$5000 vera.lo=R A=$1F vera.hi=A
+
+A=0 vera.data=A
+A=$88 vera.data=A
+A = 20 vera.data = A
+A = 0 vera.data = A
+A = 40 vera.data = A
+A = 0 vera.data = A
+A = $0C vera.data = A
+A = $A0 vera.data = A
+
+A=255
+ A.FOR
+A=255 A.FOR
+	pos=A 
+	R=$5002 
+	vera.lo = R 
+	A=pos 
+	vera.data=A
+	R=$5004
+	vera.lo = R 
+	A=pos 
+	vera.data=A
+	delay()
+NEXT
+NEXT
+
+endproc
+

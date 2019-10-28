@@ -3,12 +3,10 @@ TODO
 - 	Write definitions outline
 -	Write definitions list.
 -	Write definitions testing as we go
--	Simple parameters taking R and Y as values - macros ??
 -	Sole constant loading A/R
 
 Fixes
 =====
 - support -ve numbers
-	? how do you tell R-12 vs -12 .... you can't 
-		main issue is constants R = <const> could do R = -<const> (etc)
-		with special coding ?
+	postfix negative.
+	42- 

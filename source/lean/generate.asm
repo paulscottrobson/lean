@@ -14,11 +14,24 @@ GeneratorSearch:
 		;
 		;		Main Generator loop.
 		;
-_GSLoop:ldx 	genPos
+_GSNextItem:
+		ldx 	genPos
 		lda 	lineBuffer,x
 		beq 	_GSExit
+		jsr 	GenerateOne
+		bra 	_GSNextItem
+_GSExit:
+		rts
+
+; ******************************************************************************
+;
+;					Compile a single element, whatever it is
+;
+; ******************************************************************************
+
+GenerateOne:
 		lda 	genPos 						; point XY to the next thing
-		clc
+		clc 								; the actual address in the line buffer.
 		adc 	#lineBuffer & $FF
 		tax
 		ldy 	#lineBuffer >> 8
@@ -29,6 +42,9 @@ _GSNoCarry:
 		bcs 	_GSFound
 _GSError:			
 		derror 	"SYNTAX?"
+		;
+		;		Found something, check it is a match.
+		;
 _GSFound:
 		cmp 	#"M"						; check it's a match.
 		bne 	_GSError		
@@ -85,8 +101,6 @@ _GSContinue:
 		dex
 		bne 	_GSGenerate
 _GSNext:
-		bra 	_GSLoop 		
-_GSExit:
 		rts
 		;
 		;		Code execution special case.

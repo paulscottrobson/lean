@@ -109,3 +109,4 @@ CPU_PLA = $68 								; PLA
 CPU_DECA = $3A 								; DEC A
 CPU_BNE = $D0								; BNE
 CPU_BRA = $80								; BRA
+CPU_JSR = $20 								; JSR 
