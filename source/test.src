@@ -5,7 +5,9 @@ word aw1@$2CDE
 
 proc main()
 
-R = $CD12 Y=$45
-Y=R
+R+zb1[y]
+A+zb1[y]
 
 endproc
+
+remove.locals

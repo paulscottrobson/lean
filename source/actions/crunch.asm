@@ -47,15 +47,18 @@ _ADCCheck:
 _ADCopyOverwrite:		
 		lda 	(zTemp1) 					; byte copy
 		sta 	(zTemp0)
-		inc16 	zTemp0 						; bump pointers
-		inc16 	zTemp1
 		lda 	zTemp1 						; until the upper address = dictionary top
 		cmp 	dictPtr
-		bne 	_ADCopyOverwrite
+		bne 	_ADCNextCopy
 		lda 	zTemp1+1
 		cmp 	dictPtr+1
-		bne 	_ADCopyOverwrite
+		beq 	_ADCRemoved
+_ADCNextCopy:
+		inc16 	zTemp0 						; bump pointers
+		inc16 	zTemp1
+		bra 	_ADCopyOverwrite
 		;
+_ADCRemoved:		
 		lda 	zTemp0 						; copy from position is new top.
 		sta 	dictPtr
 		lda 	zTemp0+1

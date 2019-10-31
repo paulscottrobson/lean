@@ -4,12 +4,13 @@ TODO
 - 	Write code with it.
 -  	R.For ?
 - 	Strings (process bit)
+-	Reset compilation on start, but forget afterwards.
+-	Runtime support ?
 
-List
-====
-Recheck mandatory stuff.
-Binary Operations
-Unary Operations
+Definitions List
+================
+Unary Operations 1+ 1- 2+ 2- << >>
+Stack Operations
 Unary Variable Operations
 Conditionals
 Stand alone Constants
