@@ -67,15 +67,15 @@ S 	A*<var>
 //
 // ******************************************************************************
 
-Z 		A * <var>[y]
-		eor 	(<addr>),y
+I 		A * <var>[y]
+		eor 	(<addr> & $FF),y
 
-Z 		R * <var>[y]
-		eor 	(<addr>),y
+I		R * <var>[y]
+		eor 	(<addr> & $FF),y
 		pha
 		txa
 		iny		
-		eor 	(<addr>),y
+		eor 	(<addr> & $FF),y
 		dey
 		tax
 		pla

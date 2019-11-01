@@ -77,17 +77,17 @@ S 	A-<var>
 //
 // ******************************************************************************
 
-Z 		A - <var>[y]
+I 		A - <var>[y]
 		sec
-		sbc 	(<addr>),y
+		sbc 	(<addr>& $FF),y
 
-Z 		R - <var>[y]
+I 		R - <var>[y]
 		sec
-		sbc 	(<addr>),y
+		sbc 	(<addr>& $FF),y
 		pha
 		txa
 		iny		
-		sbc 	(<addr>),y
+		sbc 	(<addr>& $FF),y
 		dey
 		tax
 		pla

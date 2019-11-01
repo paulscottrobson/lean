@@ -23,7 +23,7 @@ class Match(object):
 		assert len(classType) == 1 and "PSICLBW*".find(classType) >= 0
 		self.classType = classType
 		self.match = match.lower()
-		self.match = self.match.replace("<proc>","*").replace("<const>","*").replace("<var>","*")
+		self.match = self.match.replace("<proc>","|").replace("<const>","|").replace("<var>","|")
 		assert match != ""
 		self.code = code.strip()
 		self.label = None
@@ -33,7 +33,7 @@ class Match(object):
 	#
 	def getEncodedMatch(self):
 		s = self.match.strip().upper().replace(" ","")
-		s = s.replace("*",self.classType.lower())
+		s = s.replace("|",self.classType.lower())
 		return s
 	#
 	#		Render.

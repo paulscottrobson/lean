@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.54.1900 listing file
 ; 64tass -Wall -q -c -D loadbas=1 -o lean.prg -L lean.lst main.asm
-; Fri Nov  1 20:38:12 2019
+; Fri Nov  1 21:46:11 2019
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -12,7 +12,7 @@
 ;******  Processing input file: main.asm
 
 =$0801					ProgramStart = $0801 						; where source code starts.
-=$b92d					UserDictionary = EndCode 					; user dictionary
+=$ba5b					UserDictionary = EndCode 					; user dictionary
 =$a000					CodeMemory = $A000 							; where object code goes.
 =$01					CodePage = $01 								; page for code memory.
 =$063f					AssemblerStack = $063F 						; compiler stack space.
@@ -108,7 +108,7 @@
 .a029	95 00		sta $00,x			sta 	$00,x
 .a02b	ca		dex				dex
 .a02c	10 f8		bpl $a026			bpl 	_RCCopy
-.a02e	20 5a b2	jsr $b25a			jsr 	LoadBasicCode
+.a02e	20 64 b3	jsr $b364			jsr 	LoadBasicCode
 .a031	20 ab a3	jsr $a3ab			jsr 	BankCopyCode 					; copy banked code to RAM space.
 .a034	20 e6 a8	jsr $a8e6			jsr 	StackReset 						; reset convert stack.
 .a037	20 2a a7	jsr $a72a			jsr 	VariableReset 					; reset variable memory.
@@ -468,9 +468,9 @@
 .a290	b1 16		lda ($16),y			lda 	(genPtr),y 					; read the execution ID
 .a292	0a		asl a				asl 	a 							; index into table.
 .a293	aa		tax				tax
-.a294	bd 7c ac	lda $ac7c,x			lda 	ExecutableVectorTable,x 	; read jump vector
+.a294	bd de ac	lda $acde,x			lda 	ExecutableVectorTable,x 	; read jump vector
 .a297	85 1a		sta $1a				sta 	zTemp0
-.a299	bd 7d ac	lda $ac7d,x			lda 	ExecutableVectorTable+1,x
+.a299	bd df ac	lda $acdf,x			lda 	ExecutableVectorTable+1,x
 .a29c	85 1b		sta $1b				sta 	zTemp0+1
 .a29e	20 a5 a2	jsr $a2a5			jsr 	_GSCallzTemp0 				; call routine
 .a2a1	7a		ply				ply 								; restore XY
@@ -728,11 +728,11 @@
 ;******  Processing file: dictionary/search.asm
 
 .a420					DictionaryReset:
-.a420	a9 2d		lda #$2d			lda 	#(UserDictionary) & $FF
+.a420	a9 5b		lda #$5b			lda 	#(UserDictionary) & $FF
 .a422	85 14		sta $14				sta 	dictPtr
-.a424	a9 b9		lda #$b9			lda 	#(UserDictionary) >> 8
+.a424	a9 ba		lda #$ba			lda 	#(UserDictionary) >> 8
 .a426	85 15		sta $15				sta 	dictPtr+1
-.a428	9c 2d b9	stz $b92d			stz 	UserDictionary
+.a428	9c 5b ba	stz $ba5b			stz 	UserDictionary
 .a42b	60		rts				rts
 .a42c					DictionarySearchSystemOnly:
 .a42c	38		sec				sec
@@ -752,12 +752,12 @@
 .a43c	85 1b		sta $1b				sta 	zTemp0+1 					; in zTemp0
 .a43e	28		plp				plp
 .a43f	b0 09		bcs $a44a			bcs 	_DSCOnly
-.a441	a2 2d		ldx #$2d			ldx 	#UserDictionary & $FF
-.a443	a0 b9		ldy #$b9			ldy 	#UserDictionary >> 8
+.a441	a2 5b		ldx #$5b			ldx 	#UserDictionary & $FF
+.a443	a0 ba		ldy #$ba			ldy 	#UserDictionary >> 8
 .a445	20 54 a4	jsr $a454			jsr 	DSSearch
 .a448	b0 07		bcs $a451			bcs 	_DSCExit
 .a44a					_DSCOnly:
-.a44a	a2 98		ldx #$98			ldx 	#SystemDictionary & $FF
+.a44a	a2 fa		ldx #$fa			ldx 	#SystemDictionary & $FF
 .a44c	a0 ac		ldy #$ac			ldy 	#SystemDictionary >> 8
 .a44e	20 54 a4	jsr $a454			jsr 	DSSearch
 .a451					_DSCExit:
@@ -1258,9 +1258,9 @@
 ;******  Processing file: actions/crunch.asm
 
 .a7a6					Action_DictionaryCrunch:
-.a7a6	a9 2d		lda #$2d			lda 	#(UserDictionary) & $FF
+.a7a6	a9 5b		lda #$5b			lda 	#(UserDictionary) & $FF
 .a7a8	85 1a		sta $1a				sta 	zTemp0
-.a7aa	a9 b9		lda #$b9			lda 	#(UserDictionary) >> 8
+.a7aa	a9 ba		lda #$ba			lda 	#(UserDictionary) >> 8
 .a7ac	85 1b		sta $1b				sta 	zTemp0+1
 .a7ae					_ADCLoop:
 .a7ae	b2 1a		lda ($1a)			lda 	(zTemp0) 					; reached end of dictionary
@@ -1540,38 +1540,38 @@
 .a955	a2 73		ldx #$73		ldx  #$73
 .a957					L10000_END:
 .a957					L10001:
->a957	09					.byte L10001_END-L10001-1
-.a958	91 63		sta ($63),y		sta  ($63),y
-.a95a	c8		iny			iny
-.a95b	8a		txa			txa
-.a95c	91 63		sta ($63),y		sta  ($63),y
-.a95e	88		dey			dey
-.a95f	b1 63		lda ($63),y		lda  ($63),y
-.a961					L10001_END:
-.a961					L10002:
->a961	02					.byte L10002_END-L10002-1
-.a962	91 63		sta ($63),y		sta  ($63),y
-.a964					L10002_END:
-.a964					L10003:
->a964	02					.byte L10003_END-L10003-1
-.a965	84 63		sty $63			sty  $63
-.a967					L10003_END:
-.a967					L10004:
->a967	02					.byte L10004_END-L10004-1
-.a968	85 63		sta $63			sta  $63
-.a96a					L10004_END:
-.a96a					L10005:
->a96a	02					.byte L10005_END-L10005-1
-.a96b	85 63		sta $63			sta  $63
-.a96d					L10005_END:
-.a96d					L10006:
->a96d	04					.byte L10006_END-L10006-1
-.a96e	a5 63		lda $63			lda  $63
-.a970	a2 00		ldx #$00		ldx  #0
+>a957	02					.byte L10001_END-L10001-1
+.a958	84 63		sty $63			sty  $63
+.a95a					L10001_END:
+.a95a					L10002:
+>a95a	02					.byte L10002_END-L10002-1
+.a95b	85 63		sta $63			sta  $63
+.a95d					L10002_END:
+.a95d					L10003:
+>a95d	02					.byte L10003_END-L10003-1
+.a95e	85 63		sta $63			sta  $63
+.a960					L10003_END:
+.a960					L10004:
+>a960	04					.byte L10004_END-L10004-1
+.a961	a5 63		lda $63			lda  $63
+.a963	a2 00		ldx #$00		ldx  #0
+.a965					L10004_END:
+.a965					L10005:
+>a965	02					.byte L10005_END-L10005-1
+>a966	a3 00					.byte $a3,$00
+.a968					L10005_END:
+.a968					L10006:
+>a968	09					.byte L10006_END-L10006-1
+.a969	91 63		sta ($63),y		sta  ($7363& $ff),y
+.a96b	c8		iny			iny
+.a96c	8a		txa			txa
+.a96d	91 63		sta ($63),y		sta  ($7363& $ff),y
+.a96f	88		dey			dey
+.a970	b1 63		lda ($63),y		lda  ($7363& $ff),y
 .a972					L10006_END:
 .a972					L10007:
 >a972	02					.byte L10007_END-L10007-1
->a973	a3 00					.byte $a3,$00
+.a973	91 63		sta ($63),y		sta  ($7363& $ff),y
 .a975					L10007_END:
 .a975					L10008:
 >a975	06					.byte L10008_END-L10008-1
@@ -1584,1919 +1584,2109 @@
 .a980	ae 83 73	ldx $7383		ldx  $7383
 .a983					L10009_END:
 .a983					L10010:
->a983	04					.byte L10010_END-L10010-1
-.a984	85 63		sta $63			sta  $63
-.a986	86 83		stx $83			stx  $83
-.a988					L10010_END:
-.a988					L10011:
->a988	04					.byte L10011_END-L10011-1
-.a989	a5 63		lda $63			lda  $63
-.a98b	a6 83		ldx $83			ldx  $83
-.a98d					L10011_END:
-.a98d					L10012:
->a98d	03					.byte L10012_END-L10012-1
-.a98e	8c 63 73	sty $7363		sty  $7363
-.a991					L10012_END:
-.a991					L10013:
->a991	03					.byte L10013_END-L10013-1
-.a992	8d 63 73	sta $7363		sta  $7363
-.a995					L10013_END:
-.a995					L10014:
->a995	03					.byte L10014_END-L10014-1
-.a996	8d 63 73	sta $7363		sta  $7363
-.a999					L10014_END:
-.a999					L10015:
->a999	05					.byte L10015_END-L10015-1
-.a99a	ad 63 73	lda $7363		lda  $7363
-.a99d	a2 00		ldx #$00		ldx  #0
-.a99f					L10015_END:
-.a99f					L10016:
->a99f	04					.byte L10016_END-L10016-1
-.a9a0	a9 63		lda #$63		lda  #$63
-.a9a2	a2 73		ldx #$73		ldx  #$73
-.a9a4					L10016_END:
-.a9a4					L10017:
->a9a4	07					.byte L10017_END-L10017-1
-.a9a5	8a		txa			txa
-.a9a6	49 ff		eor #$ff		eor  #$ff
-.a9a8	aa		tax			tax
-.a9a9	68		pla			pla
-.a9aa	49 ff		eor #$ff		eor  #$ff
+>a983	09					.byte L10010_END-L10010-1
+.a984	91 63		sta ($63),y		sta  ($63& $ff),y
+.a986	c8		iny			iny
+.a987	8a		txa			txa
+.a988	91 63		sta ($63),y		sta  ($63& $ff),y
+.a98a	88		dey			dey
+.a98b	b1 63		lda ($63),y		lda  ($63& $ff),y
+.a98d					L10010_END:
+.a98d					L10011:
+>a98d	02					.byte L10011_END-L10011-1
+.a98e	91 63		sta ($63),y		sta  ($63& $ff),y
+.a990					L10011_END:
+.a990					L10012:
+>a990	04					.byte L10012_END-L10012-1
+.a991	85 63		sta $63			sta  $63
+.a993	86 83		stx $83			stx  $83
+.a995					L10012_END:
+.a995					L10013:
+>a995	04					.byte L10013_END-L10013-1
+.a996	a5 63		lda $63			lda  $63
+.a998	a6 83		ldx $83			ldx  $83
+.a99a					L10013_END:
+.a99a					L10014:
+>a99a	03					.byte L10014_END-L10014-1
+.a99b	8c 63 73	sty $7363		sty  $7363
+.a99e					L10014_END:
+.a99e					L10015:
+>a99e	03					.byte L10015_END-L10015-1
+.a99f	8d 63 73	sta $7363		sta  $7363
+.a9a2					L10015_END:
+.a9a2					L10016:
+>a9a2	03					.byte L10016_END-L10016-1
+.a9a3	8d 63 73	sta $7363		sta  $7363
+.a9a6					L10016_END:
+.a9a6					L10017:
+>a9a6	05					.byte L10017_END-L10017-1
+.a9a7	ad 63 73	lda $7363		lda  $7363
+.a9aa	a2 00		ldx #$00		ldx  #0
 .a9ac					L10017_END:
 .a9ac					L10018:
->a9ac	02					.byte L10018_END-L10018-1
-.a9ad	49 ff		eor #$ff		eor  #$ff
-.a9af					L10018_END:
-.a9af					L10019:
->a9af	02					.byte L10019_END-L10019-1
-.a9b0	a4 63		ldy $63			ldy  $63
-.a9b2					L10019_END:
-.a9b2					L10020:
->a9b2	03					.byte L10020_END-L10020-1
-.a9b3	ac 63 73	ldy $7363		ldy  $7363
-.a9b6					L10020_END:
-.a9b6					L10021:
->a9b6	02					.byte L10021_END-L10021-1
-.a9b7	a0 63		ldy #$63		ldy  #$63
-.a9b9					L10021_END:
-.a9b9					L10022:
->a9b9	01					.byte L10022_END-L10022-1
-.a9ba	a8		tay			tay
-.a9bb					L10022_END:
-.a9bb					L10023:
->a9bb	01					.byte L10023_END-L10023-1
-.a9bc	a8		tay			tay
-.a9bd					L10023_END:
-.a9bd					L10024:
->a9bd	01					.byte L10024_END-L10024-1
-.a9be	5a		phy			phy
-.a9bf					L10024_END:
-.a9bf					L10025:
->a9bf	02					.byte L10025_END-L10025-1
->a9c0	a3 01					.byte $a3,$01
-.a9c2					L10025_END:
-.a9c2					L10026:
->a9c2	02					.byte L10026_END-L10026-1
->a9c3	a3 02					.byte $a3,$02
-.a9c5					L10026_END:
-.a9c5					L10027:
->a9c5	01					.byte L10027_END-L10027-1
-.a9c6	7a		ply			ply
-.a9c7					L10027_END:
-.a9c7					L10028:
->a9c7	03					.byte L10028_END-L10028-1
-.a9c8	7a		ply			ply
-.a9c9	fa		plx			plx
-.a9ca	68		pla			pla
-.a9cb					L10028_END:
-.a9cb					L10029:
->a9cb	02					.byte L10029_END-L10029-1
-.a9cc	fa		plx			plx
-.a9cd	68		pla			pla
-.a9ce					L10029_END:
-.a9ce					L10030:
->a9ce	01					.byte L10030_END-L10030-1
-.a9cf	68		pla			pla
-.a9d0					L10030_END:
-.a9d0					L10031:
->a9d0	08					.byte L10031_END-L10031-1
-.a9d1	49 63		eor #$63		eor  #$63
-.a9d3	48		pha			pha
-.a9d4	8a		txa			txa
-.a9d5	49 73		eor #$73		eor  #$73
-.a9d7	aa		tax			tax
-.a9d8	68		pla			pla
-.a9d9					L10031_END:
-.a9d9					L10032:
->a9d9	0a					.byte L10032_END-L10032-1
-.a9da	51 63		eor ($63),y		eor  ($63),y
-.a9dc	48		pha			pha
-.a9dd	8a		txa			txa
-.a9de	c8		iny			iny
-.a9df	51 63		eor ($63),y		eor  ($63),y
-.a9e1	88		dey			dey
-.a9e2	aa		tax			tax
-.a9e3	68		pla			pla
-.a9e4					L10032_END:
-.a9e4					L10033:
->a9e4	02					.byte L10033_END-L10033-1
-.a9e5	45 63		eor $63			eor  $63
-.a9e7					L10033_END:
-.a9e7					L10034:
->a9e7	0a					.byte L10034_END-L10034-1
-.a9e8	4d 63 73	eor $7363		eor  $7363
-.a9eb	48		pha			pha
-.a9ec	8a		txa			txa
-.a9ed	4d 83 73	eor $7383		eor  $7383
-.a9f0	aa		tax			tax
-.a9f1	68		pla			pla
-.a9f2					L10034_END:
-.a9f2					L10035:
->a9f2	08					.byte L10035_END-L10035-1
-.a9f3	45 63		eor $63			eor  $63
-.a9f5	48		pha			pha
-.a9f6	8a		txa			txa
-.a9f7	45 83		eor $83			eor  $83
-.a9f9	aa		tax			tax
-.a9fa	68		pla			pla
-.a9fb					L10035_END:
-.a9fb					L10036:
->a9fb	03					.byte L10036_END-L10036-1
-.a9fc	4d 63 73	eor $7363		eor  $7363
-.a9ff					L10036_END:
-.a9ff					L10037:
->a9ff	02					.byte L10037_END-L10037-1
-.aa00	49 63		eor #$63		eor  #$63
-.aa02					L10037_END:
-.aa02					L10038:
->aa02	02					.byte L10038_END-L10038-1
->aa03	a3 03					.byte $a3,$03
-.aa05					L10038_END:
-.aa05					L10039:
->aa05	02					.byte L10039_END-L10039-1
->aa06	a3 04					.byte $a3,$04
-.aa08					L10039_END:
-.aa08					L10040:
->aa08	03					.byte L10040_END-L10040-1
-.aa09	48		pha			pha
-.aa0a	da		phx			phx
-.aa0b	5a		phy			phy
-.aa0c					L10040_END:
-.aa0c					L10041:
->aa0c	04					.byte L10041_END-L10041-1
-.aa0d	a9 63		lda #$63		lda  #$63
-.aa0f	a2 73		ldx #$73		ldx  #$73
-.aa11					L10041_END:
-.aa11					L10042:
->aa11	07					.byte L10042_END-L10042-1
-.aa12	c8		iny			iny
-.aa13	b1 63		lda ($63),y		lda  ($63),y
-.aa15	aa		tax			tax
-.aa16	88		dey			dey
-.aa17	b1 63		lda ($63),y		lda  ($63),y
-.aa19					L10042_END:
-.aa19					L10043:
->aa19	04					.byte L10043_END-L10043-1
-.aa1a	a5 63		lda $63			lda  $63
-.aa1c	a2 00		ldx #$00		ldx  #0
-.aa1e					L10043_END:
-.aa1e					L10044:
->aa1e	06					.byte L10044_END-L10044-1
-.aa1f	ad 63 73	lda $7363		lda  $7363
-.aa22	ae 83 73	ldx $7383		ldx  $7383
-.aa25					L10044_END:
-.aa25					L10045:
->aa25	04					.byte L10045_END-L10045-1
-.aa26	a5 63		lda $63			lda  $63
-.aa28	a6 83		ldx $83			ldx  $83
-.aa2a					L10045_END:
-.aa2a					L10046:
->aa2a	05					.byte L10046_END-L10046-1
-.aa2b	ad 63 73	lda $7363		lda  $7363
-.aa2e	a2 00		ldx #$00		ldx  #0
-.aa30					L10046_END:
-.aa30					L10047:
->aa30	04					.byte L10047_END-L10047-1
-.aa31	a9 63		lda #$63		lda  #$63
-.aa33	a2 73		ldx #$73		ldx  #$73
-.aa35					L10047_END:
-.aa35					L10048:
->aa35	03					.byte L10048_END-L10048-1
-.aa36	98		tya			tya
-.aa37	a2 00		ldx #$00		ldx  #0
-.aa39					L10048_END:
-.aa39					L10049:
->aa39	02					.byte L10049_END-L10049-1
-.aa3a	a2 00		ldx #$00		ldx  #0
-.aa3c					L10049_END:
-.aa3c					L10050:
->aa3c	09					.byte L10050_END-L10050-1
-.aa3d	c9 00		cmp #$00		cmp #0
-.aa3f	d0 02		bne $aa43		bne *+4
-.aa41	e0 00		cpx #$00		cpx #0
->aa43	93					.byte $93
-.aa44	f0 fe		beq $aa44		beq *
-.aa46					L10050_END:
-.aa46					L10051:
->aa46	09					.byte L10051_END-L10051-1
-.aa47	c9 00		cmp #$00		cmp #0
-.aa49	d0 02		bne $aa4d		bne *+4
-.aa4b	e0 00		cpx #$00		cpx #0
->aa4d	93					.byte $93
-.aa4e	d0 fe		bne $aa4e		bne *
-.aa50					L10051_END:
-.aa50					L10052:
->aa50	08					.byte L10052_END-L10052-1
-.aa51	09 63		ora #$63		ora  #$63
-.aa53	48		pha			pha
-.aa54	8a		txa			txa
-.aa55	09 73		ora #$73		ora  #$73
-.aa57	aa		tax			tax
-.aa58	68		pla			pla
-.aa59					L10052_END:
-.aa59					L10053:
->aa59	0a					.byte L10053_END-L10053-1
-.aa5a	11 63		ora ($63),y		ora  ($63),y
-.aa5c	48		pha			pha
-.aa5d	8a		txa			txa
-.aa5e	c8		iny			iny
-.aa5f	11 63		ora ($63),y		ora  ($63),y
-.aa61	88		dey			dey
-.aa62	aa		tax			tax
-.aa63	68		pla			pla
-.aa64					L10053_END:
-.aa64					L10054:
->aa64	02					.byte L10054_END-L10054-1
-.aa65	05 63		ora $63			ora  $63
-.aa67					L10054_END:
-.aa67					L10055:
->aa67	0a					.byte L10055_END-L10055-1
-.aa68	0d 63 73	ora $7363		ora  $7363
-.aa6b	48		pha			pha
-.aa6c	8a		txa			txa
-.aa6d	0d 83 73	ora $7383		ora  $7383
-.aa70	aa		tax			tax
-.aa71	68		pla			pla
-.aa72					L10055_END:
-.aa72					L10056:
->aa72	08					.byte L10056_END-L10056-1
-.aa73	05 63		ora $63			ora  $63
-.aa75	48		pha			pha
-.aa76	8a		txa			txa
-.aa77	05 83		ora $83			ora  $83
-.aa79	aa		tax			tax
-.aa7a	68		pla			pla
-.aa7b					L10056_END:
-.aa7b					L10057:
->aa7b	03					.byte L10057_END-L10057-1
-.aa7c	0d 63 73	ora $7363		ora  $7363
-.aa7f					L10057_END:
-.aa7f					L10058:
->aa7f	02					.byte L10058_END-L10058-1
-.aa80	09 63		ora #$63		ora  #$63
-.aa82					L10058_END:
-.aa82					L10059:
->aa82	03					.byte L10059_END-L10059-1
-.aa83	48		pha			pha
-.aa84	8a		txa			txa
-.aa85	fa		plx			plx
-.aa86					L10059_END:
-.aa86					L10060:
->aa86	02					.byte L10060_END-L10060-1
->aa87	a3 05					.byte $a3,$05
-.aa89					L10060_END:
-.aa89					L10061:
->aa89	09					.byte L10061_END-L10061-1
-.aa8a	38		sec			sec
-.aa8b	e9 63		sbc #$63		sbc  #$63
-.aa8d	48		pha			pha
-.aa8e	8a		txa			txa
-.aa8f	e9 73		sbc #$73		sbc  #$73
-.aa91	aa		tax			tax
-.aa92	68		pla			pla
-.aa93					L10061_END:
-.aa93					L10062:
->aa93	0b					.byte L10062_END-L10062-1
-.aa94	38		sec			sec
-.aa95	f1 63		sbc ($63),y		sbc  ($63),y
-.aa97	48		pha			pha
-.aa98	8a		txa			txa
-.aa99	c8		iny			iny
-.aa9a	f1 63		sbc ($63),y		sbc  ($63),y
-.aa9c	88		dey			dey
-.aa9d	aa		tax			tax
-.aa9e	68		pla			pla
-.aa9f					L10062_END:
-.aa9f					L10063:
->aa9f	06					.byte L10063_END-L10063-1
-.aaa0	38		sec			sec
-.aaa1	e5 63		sbc $63			sbc  $63
-.aaa3	b0 01		bcs $aaa6		bcs  *+3
-.aaa5	ca		dex			dex
-.aaa6					L10063_END:
-.aaa6					L10064:
->aaa6	0b					.byte L10064_END-L10064-1
-.aaa7	38		sec			sec
-.aaa8	ed 63 73	sbc $7363		sbc  $7363
-.aaab	48		pha			pha
-.aaac	8a		txa			txa
-.aaad	ed 83 73	sbc $7383		sbc  $7383
-.aab0	aa		tax			tax
-.aab1	68		pla			pla
-.aab2					L10064_END:
-.aab2					L10065:
->aab2	09					.byte L10065_END-L10065-1
-.aab3	38		sec			sec
-.aab4	e5 63		sbc $63			sbc  $63
-.aab6	48		pha			pha
-.aab7	8a		txa			txa
-.aab8	e5 83		sbc $83			sbc  $83
-.aaba	aa		tax			tax
-.aabb	68		pla			pla
-.aabc					L10065_END:
-.aabc					L10066:
->aabc	07					.byte L10066_END-L10066-1
-.aabd	38		sec			sec
-.aabe	ed 63 73	sbc $7363		sbc  $7363
-.aac1	b0 01		bcs $aac4		bcs  *+3
-.aac3	ca		dex			dex
-.aac4					L10066_END:
-.aac4					L10067:
->aac4	06					.byte L10067_END-L10067-1
-.aac5	38		sec			sec
-.aac6	e9 63		sbc #$63		sbc  #$63
-.aac8	b0 01		bcs $aacb		bcs  *+3
-.aaca	ca		dex			dex
-.aacb					L10067_END:
-.aacb					L10068:
->aacb	05					.byte L10068_END-L10068-1
-.aacc	e0 00		cpx #$00		cpx #0
->aace	93					.byte $93
-.aacf	30 fe		bmi $aacf		bmi *
-.aad1					L10068_END:
-.aad1					L10069:
->aad1	02					.byte L10069_END-L10069-1
+>a9ac	04					.byte L10018_END-L10018-1
+.a9ad	a9 63		lda #$63		lda  #$63
+.a9af	a2 73		ldx #$73		ldx  #$73
+.a9b1					L10018_END:
+.a9b1					L10019:
+>a9b1	07					.byte L10019_END-L10019-1
+.a9b2	8a		txa			txa
+.a9b3	49 ff		eor #$ff		eor  #$ff
+.a9b5	aa		tax			tax
+.a9b6	68		pla			pla
+.a9b7	49 ff		eor #$ff		eor  #$ff
+.a9b9					L10019_END:
+.a9b9					L10020:
+>a9b9	02					.byte L10020_END-L10020-1
+.a9ba	49 ff		eor #$ff		eor  #$ff
+.a9bc					L10020_END:
+.a9bc					L10021:
+>a9bc	02					.byte L10021_END-L10021-1
+.a9bd	a4 63		ldy $63			ldy  $63
+.a9bf					L10021_END:
+.a9bf					L10022:
+>a9bf	03					.byte L10022_END-L10022-1
+.a9c0	ac 63 73	ldy $7363		ldy  $7363
+.a9c3					L10022_END:
+.a9c3					L10023:
+>a9c3	02					.byte L10023_END-L10023-1
+.a9c4	a0 63		ldy #$63		ldy  #$63
+.a9c6					L10023_END:
+.a9c6					L10024:
+>a9c6	01					.byte L10024_END-L10024-1
+.a9c7	a8		tay			tay
+.a9c8					L10024_END:
+.a9c8					L10025:
+>a9c8	01					.byte L10025_END-L10025-1
+.a9c9	a8		tay			tay
+.a9ca					L10025_END:
+.a9ca					L10026:
+>a9ca	01					.byte L10026_END-L10026-1
+.a9cb	5a		phy			phy
+.a9cc					L10026_END:
+.a9cc					L10027:
+>a9cc	02					.byte L10027_END-L10027-1
+>a9cd	a3 01					.byte $a3,$01
+.a9cf					L10027_END:
+.a9cf					L10028:
+>a9cf	02					.byte L10028_END-L10028-1
+>a9d0	a3 02					.byte $a3,$02
+.a9d2					L10028_END:
+.a9d2					L10029:
+>a9d2	01					.byte L10029_END-L10029-1
+.a9d3	7a		ply			ply
+.a9d4					L10029_END:
+.a9d4					L10030:
+>a9d4	03					.byte L10030_END-L10030-1
+.a9d5	7a		ply			ply
+.a9d6	fa		plx			plx
+.a9d7	68		pla			pla
+.a9d8					L10030_END:
+.a9d8					L10031:
+>a9d8	02					.byte L10031_END-L10031-1
+.a9d9	fa		plx			plx
+.a9da	68		pla			pla
+.a9db					L10031_END:
+.a9db					L10032:
+>a9db	01					.byte L10032_END-L10032-1
+.a9dc	68		pla			pla
+.a9dd					L10032_END:
+.a9dd					L10033:
+>a9dd	02					.byte L10033_END-L10033-1
+>a9de	a3 03					.byte $a3,$03
+.a9e0					L10033_END:
+.a9e0					L10034:
+>a9e0	02					.byte L10034_END-L10034-1
+>a9e1	a3 04					.byte $a3,$04
+.a9e3					L10034_END:
+.a9e3					L10035:
+>a9e3	03					.byte L10035_END-L10035-1
+.a9e4	48		pha			pha
+.a9e5	da		phx			phx
+.a9e6	5a		phy			phy
+.a9e7					L10035_END:
+.a9e7					L10036:
+>a9e7	04					.byte L10036_END-L10036-1
+.a9e8	a9 63		lda #$63		lda  #$63
+.a9ea	a2 73		ldx #$73		ldx  #$73
+.a9ec					L10036_END:
+.a9ec					L10037:
+>a9ec	04					.byte L10037_END-L10037-1
+.a9ed	a5 63		lda $63			lda  $63
+.a9ef	a2 00		ldx #$00		ldx  #0
+.a9f1					L10037_END:
+.a9f1					L10038:
+>a9f1	07					.byte L10038_END-L10038-1
+.a9f2	c8		iny			iny
+.a9f3	b1 63		lda ($63),y		lda  ($7363& $ff),y
+.a9f5	aa		tax			tax
+.a9f6	88		dey			dey
+.a9f7	b1 63		lda ($63),y		lda  ($7363& $ff),y
+.a9f9					L10038_END:
+.a9f9					L10039:
+>a9f9	06					.byte L10039_END-L10039-1
+.a9fa	ad 63 73	lda $7363		lda  $7363
+.a9fd	ae 83 73	ldx $7383		ldx  $7383
+.aa00					L10039_END:
+.aa00					L10040:
+>aa00	07					.byte L10040_END-L10040-1
+.aa01	c8		iny			iny
+.aa02	b1 63		lda ($63),y		lda  ($63& $ff),y
+.aa04	aa		tax			tax
+.aa05	88		dey			dey
+.aa06	b1 63		lda ($63),y		lda  ($63& $ff),y
+.aa08					L10040_END:
+.aa08					L10041:
+>aa08	04					.byte L10041_END-L10041-1
+.aa09	a5 63		lda $63			lda  $63
+.aa0b	a6 83		ldx $83			ldx  $83
+.aa0d					L10041_END:
+.aa0d					L10042:
+>aa0d	05					.byte L10042_END-L10042-1
+.aa0e	ad 63 73	lda $7363		lda  $7363
+.aa11	a2 00		ldx #$00		ldx  #0
+.aa13					L10042_END:
+.aa13					L10043:
+>aa13	04					.byte L10043_END-L10043-1
+.aa14	a9 63		lda #$63		lda  #$63
+.aa16	a2 73		ldx #$73		ldx  #$73
+.aa18					L10043_END:
+.aa18					L10044:
+>aa18	03					.byte L10044_END-L10044-1
+.aa19	98		tya			tya
+.aa1a	a2 00		ldx #$00		ldx  #0
+.aa1c					L10044_END:
+.aa1c					L10045:
+>aa1c	02					.byte L10045_END-L10045-1
+.aa1d	a2 00		ldx #$00		ldx  #0
+.aa1f					L10045_END:
+.aa1f					L10046:
+>aa1f	09					.byte L10046_END-L10046-1
+.aa20	c9 00		cmp #$00		cmp #0
+.aa22	d0 02		bne $aa26		bne *+4
+.aa24	e0 00		cpx #$00		cpx #0
+>aa26	93					.byte $93
+.aa27	f0 fe		beq $aa27		beq *
+.aa29					L10046_END:
+.aa29					L10047:
+>aa29	09					.byte L10047_END-L10047-1
+.aa2a	c9 00		cmp #$00		cmp #0
+.aa2c	d0 02		bne $aa30		bne *+4
+.aa2e	e0 00		cpx #$00		cpx #0
+>aa30	93					.byte $93
+.aa31	d0 fe		bne $aa31		bne *
+.aa33					L10047_END:
+.aa33					L10048:
+>aa33	08					.byte L10048_END-L10048-1
+.aa34	09 63		ora #$63		ora  #$63
+.aa36	48		pha			pha
+.aa37	8a		txa			txa
+.aa38	09 73		ora #$73		ora  #$73
+.aa3a	aa		tax			tax
+.aa3b	68		pla			pla
+.aa3c					L10048_END:
+.aa3c					L10049:
+>aa3c	02					.byte L10049_END-L10049-1
+.aa3d	05 63		ora $63			ora  $63
+.aa3f					L10049_END:
+.aa3f					L10050:
+>aa3f	0a					.byte L10050_END-L10050-1
+.aa40	11 63		ora ($63),y		ora  ($7363& $ff),y
+.aa42	48		pha			pha
+.aa43	8a		txa			txa
+.aa44	c8		iny			iny
+.aa45	11 63		ora ($63),y		ora  ($7363& $ff),y
+.aa47	88		dey			dey
+.aa48	aa		tax			tax
+.aa49	68		pla			pla
+.aa4a					L10050_END:
+.aa4a					L10051:
+>aa4a	0a					.byte L10051_END-L10051-1
+.aa4b	0d 63 73	ora $7363		ora  $7363
+.aa4e	48		pha			pha
+.aa4f	8a		txa			txa
+.aa50	0d 83 73	ora $7383		ora  $7383
+.aa53	aa		tax			tax
+.aa54	68		pla			pla
+.aa55					L10051_END:
+.aa55					L10052:
+>aa55	0a					.byte L10052_END-L10052-1
+.aa56	11 63		ora ($63),y		ora  ($63& $ff),y
+.aa58	48		pha			pha
+.aa59	8a		txa			txa
+.aa5a	c8		iny			iny
+.aa5b	11 63		ora ($63),y		ora  ($63& $ff),y
+.aa5d	88		dey			dey
+.aa5e	aa		tax			tax
+.aa5f	68		pla			pla
+.aa60					L10052_END:
+.aa60					L10053:
+>aa60	08					.byte L10053_END-L10053-1
+.aa61	05 63		ora $63			ora  $63
+.aa63	48		pha			pha
+.aa64	8a		txa			txa
+.aa65	05 83		ora $83			ora  $83
+.aa67	aa		tax			tax
+.aa68	68		pla			pla
+.aa69					L10053_END:
+.aa69					L10054:
+>aa69	03					.byte L10054_END-L10054-1
+.aa6a	0d 63 73	ora $7363		ora  $7363
+.aa6d					L10054_END:
+.aa6d					L10055:
+>aa6d	02					.byte L10055_END-L10055-1
+.aa6e	09 63		ora #$63		ora  #$63
+.aa70					L10055_END:
+.aa70					L10056:
+>aa70	03					.byte L10056_END-L10056-1
+.aa71	48		pha			pha
+.aa72	8a		txa			txa
+.aa73	fa		plx			plx
+.aa74					L10056_END:
+.aa74					L10057:
+>aa74	02					.byte L10057_END-L10057-1
+>aa75	a3 05					.byte $a3,$05
+.aa77					L10057_END:
+.aa77					L10058:
+>aa77	09					.byte L10058_END-L10058-1
+.aa78	38		sec			sec
+.aa79	e9 63		sbc #$63		sbc  #$63
+.aa7b	48		pha			pha
+.aa7c	8a		txa			txa
+.aa7d	e9 73		sbc #$73		sbc  #$73
+.aa7f	aa		tax			tax
+.aa80	68		pla			pla
+.aa81					L10058_END:
+.aa81					L10059:
+>aa81	06					.byte L10059_END-L10059-1
+.aa82	38		sec			sec
+.aa83	e5 63		sbc $63			sbc  $63
+.aa85	b0 01		bcs $aa88		bcs  *+3
+.aa87	ca		dex			dex
+.aa88					L10059_END:
+.aa88					L10060:
+>aa88	0b					.byte L10060_END-L10060-1
+.aa89	38		sec			sec
+.aa8a	f1 63		sbc ($63),y		sbc  ($7363& $ff),y
+.aa8c	48		pha			pha
+.aa8d	8a		txa			txa
+.aa8e	c8		iny			iny
+.aa8f	f1 63		sbc ($63),y		sbc  ($7363& $ff),y
+.aa91	88		dey			dey
+.aa92	aa		tax			tax
+.aa93	68		pla			pla
+.aa94					L10060_END:
+.aa94					L10061:
+>aa94	0b					.byte L10061_END-L10061-1
+.aa95	38		sec			sec
+.aa96	ed 63 73	sbc $7363		sbc  $7363
+.aa99	48		pha			pha
+.aa9a	8a		txa			txa
+.aa9b	ed 83 73	sbc $7383		sbc  $7383
+.aa9e	aa		tax			tax
+.aa9f	68		pla			pla
+.aaa0					L10061_END:
+.aaa0					L10062:
+>aaa0	0b					.byte L10062_END-L10062-1
+.aaa1	38		sec			sec
+.aaa2	f1 63		sbc ($63),y		sbc  ($63& $ff),y
+.aaa4	48		pha			pha
+.aaa5	8a		txa			txa
+.aaa6	c8		iny			iny
+.aaa7	f1 63		sbc ($63),y		sbc  ($63& $ff),y
+.aaa9	88		dey			dey
+.aaaa	aa		tax			tax
+.aaab	68		pla			pla
+.aaac					L10062_END:
+.aaac					L10063:
+>aaac	09					.byte L10063_END-L10063-1
+.aaad	38		sec			sec
+.aaae	e5 63		sbc $63			sbc  $63
+.aab0	48		pha			pha
+.aab1	8a		txa			txa
+.aab2	e5 83		sbc $83			sbc  $83
+.aab4	aa		tax			tax
+.aab5	68		pla			pla
+.aab6					L10063_END:
+.aab6					L10064:
+>aab6	07					.byte L10064_END-L10064-1
+.aab7	38		sec			sec
+.aab8	ed 63 73	sbc $7363		sbc  $7363
+.aabb	b0 01		bcs $aabe		bcs  *+3
+.aabd	ca		dex			dex
+.aabe					L10064_END:
+.aabe					L10065:
+>aabe	06					.byte L10065_END-L10065-1
+.aabf	38		sec			sec
+.aac0	e9 63		sbc #$63		sbc  #$63
+.aac2	b0 01		bcs $aac5		bcs  *+3
+.aac4	ca		dex			dex
+.aac5					L10065_END:
+.aac5					L10066:
+>aac5	05					.byte L10066_END-L10066-1
+.aac6	e0 00		cpx #$00		cpx #0
+>aac8	93					.byte $93
+.aac9	30 fe		bmi $aac9		bmi *
+.aacb					L10066_END:
+.aacb					L10067:
+>aacb	02					.byte L10067_END-L10067-1
+.aacc	48		pha			pha
+.aacd	da		phx			phx
+.aace					L10067_END:
+.aace					L10068:
+>aace	09					.byte L10068_END-L10068-1
+.aacf	18		clc			clc
+.aad0	69 63		adc #$63		adc  #$63
 .aad2	48		pha			pha
-.aad3	da		phx			phx
-.aad4					L10069_END:
-.aad4					L10070:
->aad4	09					.byte L10070_END-L10070-1
-.aad5	18		clc			clc
-.aad6	69 63		adc #$63		adc  #$63
-.aad8	48		pha			pha
-.aad9	8a		txa			txa
-.aada	69 73		adc #$73		adc  #$73
-.aadc	aa		tax			tax
-.aadd	68		pla			pla
-.aade					L10070_END:
-.aade					L10071:
->aade	0b					.byte L10071_END-L10071-1
-.aadf	18		clc			clc
-.aae0	71 63		adc ($63),y		adc  ($63),y
-.aae2	48		pha			pha
-.aae3	8a		txa			txa
-.aae4	c8		iny			iny
-.aae5	71 63		adc ($63),y		adc  ($63),y
-.aae7	88		dey			dey
-.aae8	aa		tax			tax
-.aae9	68		pla			pla
-.aaea					L10071_END:
-.aaea					L10072:
->aaea	06					.byte L10072_END-L10072-1
-.aaeb	18		clc			clc
-.aaec	65 63		adc $63			adc  $63
-.aaee	90 01		bcc $aaf1		bcc  *+3
-.aaf0	e8		inx			inx
-.aaf1					L10072_END:
-.aaf1					L10073:
->aaf1	0b					.byte L10073_END-L10073-1
-.aaf2	18		clc			clc
-.aaf3	6d 63 73	adc $7363		adc  $7363
-.aaf6	48		pha			pha
-.aaf7	8a		txa			txa
-.aaf8	6d 83 73	adc $7383		adc  $7383
-.aafb	aa		tax			tax
-.aafc	68		pla			pla
-.aafd					L10073_END:
-.aafd					L10074:
->aafd	09					.byte L10074_END-L10074-1
-.aafe	18		clc			clc
-.aaff	65 63		adc $63			adc  $63
-.ab01	48		pha			pha
-.ab02	8a		txa			txa
-.ab03	65 83		adc $83			adc  $83
-.ab05	aa		tax			tax
-.ab06	68		pla			pla
-.ab07					L10074_END:
-.ab07					L10075:
->ab07	07					.byte L10075_END-L10075-1
-.ab08	18		clc			clc
-.ab09	6d 63 73	adc $7363		adc  $7363
-.ab0c	90 01		bcc $ab0f		bcc  *+3
-.ab0e	e8		inx			inx
-.ab0f					L10075_END:
-.ab0f					L10076:
->ab0f	06					.byte L10076_END-L10076-1
-.ab10	18		clc			clc
-.ab11	69 63		adc #$63		adc  #$63
-.ab13	90 01		bcc $ab16		bcc  *+3
-.ab15	e8		inx			inx
-.ab16					L10076_END:
-.ab16					L10077:
->ab16	05					.byte L10077_END-L10077-1
-.ab17	e0 00		cpx #$00		cpx #0
->ab19	93					.byte $93
-.ab1a	10 fe		bpl $ab1a		bpl *
-.ab1c					L10077_END:
-.ab1c					L10078:
->ab1c	08					.byte L10078_END-L10078-1
-.ab1d	29 63		and #$63		and  #$63
-.ab1f	48		pha			pha
-.ab20	8a		txa			txa
-.ab21	29 73		and #$73		and  #$73
-.ab23	aa		tax			tax
-.ab24	68		pla			pla
-.ab25					L10078_END:
-.ab25					L10079:
->ab25	0a					.byte L10079_END-L10079-1
-.ab26	31 63		and ($63),y		and  ($63),y
-.ab28	48		pha			pha
-.ab29	8a		txa			txa
-.ab2a	c8		iny			iny
-.ab2b	31 63		and ($63),y		and  ($63),y
-.ab2d	88		dey			dey
-.ab2e	aa		tax			tax
-.ab2f	68		pla			pla
-.ab30					L10079_END:
-.ab30					L10080:
->ab30	04					.byte L10080_END-L10080-1
-.ab31	25 63		and $63			and  $63
-.ab33	a2 00		ldx #$00		ldx  #0
-.ab35					L10080_END:
-.ab35					L10081:
->ab35	0a					.byte L10081_END-L10081-1
-.ab36	2d 63 73	and $7363		and  $7363
-.ab39	48		pha			pha
-.ab3a	8a		txa			txa
-.ab3b	2d 83 73	and $7383		and  $7383
-.ab3e	aa		tax			tax
-.ab3f	68		pla			pla
-.ab40					L10081_END:
-.ab40					L10082:
->ab40	08					.byte L10082_END-L10082-1
-.ab41	25 63		and $63			and  $63
-.ab43	48		pha			pha
-.ab44	8a		txa			txa
-.ab45	25 83		and $83			and  $83
-.ab47	aa		tax			tax
-.ab48	68		pla			pla
-.ab49					L10082_END:
-.ab49					L10083:
->ab49	05					.byte L10083_END-L10083-1
-.ab4a	2d 63 73	and $7363		and  $7363
-.ab4d	a2 00		ldx #$00		ldx  #0
-.ab4f					L10083_END:
-.ab4f					L10084:
->ab4f	04					.byte L10084_END-L10084-1
-.ab50	29 63		and #$63		and  #$63
-.ab52	a2 00		ldx #$00		ldx  #0
-.ab54					L10084_END:
-.ab54					L10085:
->ab54	02					.byte L10085_END-L10085-1
->ab55	a3 06					.byte $a3,$06
-.ab57					L10085_END:
-.ab57					L10086:
->ab57	02					.byte L10086_END-L10086-1
->ab58	a3 07					.byte $a3,$07
-.ab5a					L10086_END:
-.ab5a					L10087:
->ab5a	02					.byte L10087_END-L10087-1
->ab5b	a3 08					.byte $a3,$08
-.ab5d					L10087_END:
-.ab5d					L10088:
->ab5d	02					.byte L10088_END-L10088-1
->ab5e	a3 09					.byte $a3,$09
-.ab60					L10088_END:
-.ab60					L10089:
->ab60	02					.byte L10089_END-L10089-1
->ab61	a3 0a					.byte $a3,$0a
-.ab63					L10089_END:
-.ab63					L10090:
->ab63	02					.byte L10090_END-L10090-1
->ab64	a3 0b					.byte $a3,$0b
-.ab66					L10090_END:
-.ab66					L10091:
->ab66	03					.byte L10091_END-L10091-1
->ab67	93					.byte $93
-.ab68	b0 fe		bcs $ab68		bcs  *
-.ab6a					L10091_END:
-.ab6a					L10092:
->ab6a	03					.byte L10092_END-L10092-1
->ab6b	93					.byte $93
-.ab6c	90 fe		bcc $ab6c		bcc  *
-.ab6e					L10092_END:
-.ab6e					L10093:
->ab6e	02					.byte L10093_END-L10093-1
->ab6f	a3 0c					.byte $a3,$0c
-.ab71					L10093_END:
-.ab71					L10094:
->ab71	01					.byte L10094_END-L10094-1
->ab72	ff					.byte  $ff
-.ab73					L10094_END:
-.ab73					L10095:
->ab73	02					.byte L10095_END-L10095-1
-.ab74	51 63		eor ($63),y		eor  ($63),y
-.ab76					L10095_END:
-.ab76					L10096:
->ab76	02					.byte L10096_END-L10096-1
-.ab77	45 63		eor $63			eor  $63
-.ab79					L10096_END:
-.ab79					L10097:
->ab79	03					.byte L10097_END-L10097-1
-.ab7a	4d 63 73	eor $7363		eor  $7363
-.ab7d					L10097_END:
-.ab7d					L10098:
->ab7d	02					.byte L10098_END-L10098-1
-.ab7e	49 63		eor #$63		eor  #$63
-.ab80					L10098_END:
-.ab80					L10099:
->ab80	02					.byte L10099_END-L10099-1
-.ab81	b1 63		lda ($63),y		lda  ($63),y
-.ab83					L10099_END:
-.ab83					L10100:
->ab83	02					.byte L10100_END-L10100-1
-.ab84	a5 63		lda $63			lda  $63
-.ab86					L10100_END:
-.ab86					L10101:
->ab86	03					.byte L10101_END-L10101-1
-.ab87	ad 63 73	lda $7363		lda  $7363
-.ab8a					L10101_END:
-.ab8a					L10102:
->ab8a	02					.byte L10102_END-L10102-1
-.ab8b	a9 63		lda #$63		lda  #$63
-.ab8d					L10102_END:
-.ab8d					L10103:
->ab8d	01					.byte L10103_END-L10103-1
-.ab8e	98		tya			tya
-.ab8f					L10103_END:
-.ab8f					L10104:
->ab8f	00					.byte L10104_END-L10104-1
-.ab90					L10104_END:
-.ab90					L10105:
->ab90	05					.byte L10105_END-L10105-1
-.ab91	c9 00		cmp #$00		cmp #0
->ab93	93					.byte $93
-.ab94	f0 fe		beq $ab94		beq *
-.ab96					L10105_END:
-.ab96					L10106:
->ab96	05					.byte L10106_END-L10106-1
-.ab97	c9 00		cmp #$00		cmp #0
->ab99	93					.byte $93
-.ab9a	d0 fe		bne $ab9a		bne *
-.ab9c					L10106_END:
-.ab9c					L10107:
->ab9c	02					.byte L10107_END-L10107-1
-.ab9d	11 63		ora ($63),y		ora  ($63),y
-.ab9f					L10107_END:
-.ab9f					L10108:
->ab9f	02					.byte L10108_END-L10108-1
-.aba0	05 63		ora $63			ora  $63
-.aba2					L10108_END:
-.aba2					L10109:
->aba2	03					.byte L10109_END-L10109-1
-.aba3	0d 63 73	ora $7363		ora  $7363
-.aba6					L10109_END:
-.aba6					L10110:
->aba6	02					.byte L10110_END-L10110-1
-.aba7	09 63		ora #$63		ora  #$63
-.aba9					L10110_END:
-.aba9					L10111:
->aba9	02					.byte L10111_END-L10111-1
->abaa	a3 0d					.byte $a3,$0d
-.abac					L10111_END:
-.abac					L10112:
->abac	03					.byte L10112_END-L10112-1
-.abad	38		sec			sec
-.abae	f1 63		sbc ($63),y		sbc  ($63),y
-.abb0					L10112_END:
-.abb0					L10113:
->abb0	03					.byte L10113_END-L10113-1
-.abb1	38		sec			sec
-.abb2	e5 63		sbc $63			sbc  $63
-.abb4					L10113_END:
-.abb4					L10114:
->abb4	04					.byte L10114_END-L10114-1
-.abb5	38		sec			sec
-.abb6	ed 63 73	sbc $7363		sbc  $7363
-.abb9					L10114_END:
-.abb9					L10115:
->abb9	03					.byte L10115_END-L10115-1
-.abba	38		sec			sec
-.abbb	e9 63		sbc #$63		sbc  #$63
-.abbd					L10115_END:
-.abbd					L10116:
->abbd	05					.byte L10116_END-L10116-1
-.abbe	c9 00		cmp #$00		cmp #0
->abc0	93					.byte $93
-.abc1	30 fe		bmi $abc1		bmi *
-.abc3					L10116_END:
-.abc3					L10117:
->abc3	01					.byte L10117_END-L10117-1
-.abc4	48		pha			pha
-.abc5					L10117_END:
-.abc5					L10118:
->abc5	03					.byte L10118_END-L10118-1
-.abc6	18		clc			clc
-.abc7	71 63		adc ($63),y		adc  ($63),y
-.abc9					L10118_END:
-.abc9					L10119:
->abc9	03					.byte L10119_END-L10119-1
-.abca	18		clc			clc
-.abcb	65 63		adc $63			adc  $63
-.abcd					L10119_END:
-.abcd					L10120:
->abcd	04					.byte L10120_END-L10120-1
-.abce	18		clc			clc
-.abcf	6d 63 73	adc $7363		adc  $7363
-.abd2					L10120_END:
-.abd2					L10121:
->abd2	03					.byte L10121_END-L10121-1
-.abd3	18		clc			clc
-.abd4	69 63		adc #$63		adc  #$63
-.abd6					L10121_END:
-.abd6					L10122:
->abd6	05					.byte L10122_END-L10122-1
-.abd7	c9 00		cmp #$00		cmp #0
->abd9	93					.byte $93
-.abda	10 fe		bpl $abda		bpl *
-.abdc					L10122_END:
-.abdc					L10123:
->abdc	02					.byte L10123_END-L10123-1
-.abdd	31 63		and ($63),y		and  ($63),y
-.abdf					L10123_END:
-.abdf					L10124:
->abdf	02					.byte L10124_END-L10124-1
-.abe0	25 63		and $63			and  $63
-.abe2					L10124_END:
-.abe2					L10125:
->abe2	03					.byte L10125_END-L10125-1
-.abe3	2d 63 73	and $7363		and  $7363
-.abe6					L10125_END:
-.abe6					L10126:
->abe6	02					.byte L10126_END-L10126-1
-.abe7	29 63		and #$63		and  #$63
-.abe9					L10126_END:
-.abe9					L10127:
->abe9	02					.byte L10127_END-L10127-1
-.abea	46 63		lsr $63			lsr  $63
-.abec					L10127_END:
-.abec					L10128:
->abec	06					.byte L10128_END-L10128-1
-.abed	4e 83 73	lsr $7383		lsr  $7383
-.abf0	6e 63 73	ror $7363		ror  $7363
-.abf3					L10128_END:
-.abf3					L10129:
->abf3	04					.byte L10129_END-L10129-1
-.abf4	46 83		lsr $83			lsr  $83
-.abf6	66 63		ror $63			ror  $63
-.abf8					L10129_END:
-.abf8					L10130:
->abf8	03					.byte L10130_END-L10130-1
-.abf9	4e 63 73	lsr $7363		lsr  $7363
-.abfc					L10130_END:
-.abfc					L10131:
->abfc	06					.byte L10131_END-L10131-1
-.abfd	48		pha			pha
-.abfe	8a		txa			txa
-.abff	4a		lsr a			lsr  a
-.ac00	aa		tax			tax
-.ac01	68		pla			pla
-.ac02	6a		ror a			ror  a
-.ac03					L10131_END:
-.ac03					L10132:
->ac03	01					.byte L10132_END-L10132-1
-.ac04	4a		lsr a			lsr  a
-.ac05					L10132_END:
-.ac05					L10133:
->ac05	02					.byte L10133_END-L10133-1
-.ac06	06 63		asl $63			asl  $63
-.ac08					L10133_END:
-.ac08					L10134:
->ac08	06					.byte L10134_END-L10134-1
-.ac09	0e 63 73	asl $7363		asl  $7363
-.ac0c	2e 83 73	rol $7383		rol  $7383
-.ac0f					L10134_END:
-.ac0f					L10135:
->ac0f	04					.byte L10135_END-L10135-1
-.ac10	06 63		asl $63			asl  $63
-.ac12	26 83		rol $83			rol  $83
-.ac14					L10135_END:
-.ac14					L10136:
->ac14	03					.byte L10136_END-L10136-1
-.ac15	0e 63 73	asl $7363		asl  $7363
-.ac18					L10136_END:
-.ac18					L10137:
->ac18	06					.byte L10137_END-L10137-1
-.ac19	0a		asl a			asl  a
-.ac1a	48		pha			pha
-.ac1b	8a		txa			txa
-.ac1c	2a		rol a			rol  a
-.ac1d	aa		tax			tax
-.ac1e	68		pla			pla
-.ac1f					L10137_END:
-.ac1f					L10138:
->ac1f	01					.byte L10138_END-L10138-1
-.ac20	0a		asl a			asl  a
-.ac21					L10138_END:
-.ac21					L10139:
->ac21	0b					.byte L10139_END-L10139-1
-.ac22	8a		txa			txa
-.ac23	49 ff		eor #$ff		eor  #$ff
-.ac25	aa		tax			tax
-.ac26	68		pla			pla
-.ac27	49 ff		eor #$ff		eor  #$ff
-.ac29	1a		inc a			inc  a
-.ac2a	d0 01		bne $ac2d		bne  *+3
-.ac2c	e8		inx			inx
-.ac2d					L10139_END:
-.ac2d					L10140:
->ac2d	03					.byte L10140_END-L10140-1
-.ac2e	49 ff		eor #$ff		eor  #$ff
-.ac30	1a		inc a			inc  a
-.ac31					L10140_END:
-.ac31					L10141:
->ac31	02					.byte L10141_END-L10141-1
-.ac32	c6 63		dec $63			dec  $63
-.ac34					L10141_END:
-.ac34					L10142:
->ac34	0d					.byte L10142_END-L10142-1
-.ac35	48		pha			pha
-.ac36	ad 63 73	lda $7363		lda  $7363
-.ac39	d0 03		bne $ac3e		bne  _noborrow
-.ac3b	ce 83 73	dec $7383		dec  $7383
-.ac3e					_noborrow:
-.ac3e	ce 63 73	dec $7363		dec  $7363
-.ac41	68		pla			pla
-.ac42					L10142_END:
-.ac42					L10143:
->ac42	0a					.byte L10143_END-L10143-1
-.ac43	48		pha			pha
-.ac44	a5 63		lda $63			lda  $63
-.ac46	d0 02		bne $ac4a		bne  _noborrow
-.ac48	c6 83		dec $83			dec  $83
-.ac4a					_noborrow:
-.ac4a	c6 63		dec $63			dec  $63
-.ac4c	68		pla			pla
-.ac4d					L10143_END:
-.ac4d					L10144:
->ac4d	03					.byte L10144_END-L10144-1
-.ac4e	ce 63 73	dec $7363		dec  $7363
-.ac51					L10144_END:
-.ac51					L10145:
->ac51	01					.byte L10145_END-L10145-1
-.ac52	88		dey			dey
-.ac53					L10145_END:
-.ac53					L10146:
->ac53	06					.byte L10146_END-L10146-1
-.ac54	c9 00		cmp #$00		cmp  #0
-.ac56	d0 01		bne $ac59		bne  *+3
-.ac58	ca		dex			dex
-.ac59	3a		dec a			dec  a
-.ac5a					L10146_END:
-.ac5a					L10147:
->ac5a	01					.byte L10147_END-L10147-1
-.ac5b	3a		dec a			dec  a
-.ac5c					L10147_END:
-.ac5c					L10148:
->ac5c	02					.byte L10148_END-L10148-1
-.ac5d	e6 63		inc $63			inc  $63
-.ac5f					L10148_END:
-.ac5f					L10149:
->ac5f	08					.byte L10149_END-L10149-1
-.ac60	ee 63 73	inc $7363		inc  $7363
-.ac63	d0 03		bne $ac68		bne  _nocarry
-.ac65	ee 83 73	inc $7383		inc  $7383
-.ac68					_nocarry:
-.ac68					L10149_END:
-.ac68					L10150:
->ac68	06					.byte L10150_END-L10150-1
-.ac69	e6 63		inc $63			inc  $63
-.ac6b	d0 02		bne $ac6f		bne  _nocarry
-.ac6d	e6 83		inc $83			inc  $83
-.ac6f					_nocarry:
-.ac6f					L10150_END:
-.ac6f					L10151:
->ac6f	03					.byte L10151_END-L10151-1
-.ac70	ee 63 73	inc $7363		inc  $7363
-.ac73					L10151_END:
-.ac73					L10152:
->ac73	01					.byte L10152_END-L10152-1
-.ac74	c8		iny			iny
-.ac75					L10152_END:
-.ac75					L10153:
->ac75	04					.byte L10153_END-L10153-1
-.ac76	1a		inc a			inc  a
-.ac77	d0 01		bne $ac7a		bne  *+3
-.ac79	e8		inx			inx
-.ac7a					L10153_END:
-.ac7a					L10154:
->ac7a	01					.byte L10154_END-L10154-1
-.ac7b	1a		inc a			inc  a
-.ac7c					L10154_END:
-.ac7c					ExecutableVectorTable:
->ac7c	a4 a5					.word Action_call                      ; 0
->ac7e	37 a7					.word Action_wordvar                   ; 1
->ac80	8d a6					.word Action_until                     ; 2
->ac82	84 a6					.word Action_repeat                    ; 3
->ac84	a6 a7					.word Action_dictionarycrunch          ; 4
->ac86	b4 a6					.word Action_rfor                      ; 5
->ac88	5d a5					.word Action_procedure_def             ; 6
->ac8a	e5 a6					.word Action_next                      ; 7
->ac8c	1f a6					.word Action_if                        ; 8
->ac8e	94 a5					.word Action_endproc                   ; 9
->ac90	56 a6					.word Action_endif                     ; 10
->ac92	34 a6					.word Action_else                      ; 11
->ac94	33 a7					.word Action_bytevar                   ; 12
->ac96	a1 a6					.word Action_afor                      ; 13
-.ac98					SystemDictionary:
->ac98	07					.byte	7
->ac99	4d					.byte	'M'
->ac9a	52 a9					.word	L10000
->ac9c	00					.byte	0
->ac9d	01					.byte	1
->ac9e	f7					.byte	$f7
->ac9f	0c					.byte	12
->aca0	4d					.byte	'M'
->aca1	57 a9					.word	L10001
->aca3	00					.byte	0
->aca4	06					.byte	6
->aca5	f3 db d9 dd bd d2			.byte	$f3,$db,$d9,$dd,$bd,$d2
->acab	0c					.byte	12
->acac	4d					.byte	'M'
->acad	61 a9					.word	L10002
->acaf	00					.byte	0
->acb0	06					.byte	6
->acb1	f3 db d9 dd bd c1			.byte	$f3,$db,$d9,$dd,$bd,$c1
->acb7	09					.byte	9
->acb8	4d					.byte	'M'
->acb9	64 a9					.word	L10003
->acbb	00					.byte	0
->acbc	03					.byte	3
->acbd	f3 bd d9				.byte	$f3,$bd,$d9
->acc0	09					.byte	9
->acc1	4d					.byte	'M'
->acc2	67 a9					.word	L10004
->acc4	00					.byte	0
->acc5	03					.byte	3
->acc6	f3 bd d2				.byte	$f3,$bd,$d2
->acc9	09					.byte	9
->acca	4d					.byte	'M'
->accb	6a a9					.word	L10005
->accd	00					.byte	0
->acce	03					.byte	3
->accf	f3 bd c1				.byte	$f3,$bd,$c1
->acd2	07					.byte	7
->acd3	4d					.byte	'M'
->acd4	6d a9					.word	L10006
->acd6	00					.byte	0
->acd7	01					.byte	1
->acd8	f3					.byte	$f3
->acd9	07					.byte	7
->acda	4d					.byte	'M'
->acdb	72 a9					.word	L10007
->acdd	00					.byte	0
->acde	01					.byte	1
->acdf	f0					.byte	$f0
->ace0	09					.byte	9
->ace1	4d					.byte	'M'
->ace2	75 a9					.word	L10008
->ace4	00					.byte	0
->ace5	03					.byte	3
->ace6	ec bd d2				.byte	$ec,$bd,$d2
->ace9	07					.byte	7
->acea	4d					.byte	'M'
->aceb	7c a9					.word	L10009
->aced	00					.byte	0
->acee	01					.byte	1
->acef	ec					.byte	$ec
->acf0	09					.byte	9
->acf1	4d					.byte	'M'
->acf2	83 a9					.word	L10010
->acf4	00					.byte	0
->acf5	03					.byte	3
->acf6	e9 bd d2				.byte	$e9,$bd,$d2
->acf9	07					.byte	7
->acfa	4d					.byte	'M'
->acfb	88 a9					.word	L10011
->acfd	00					.byte	0
->acfe	01					.byte	1
->acff	e9					.byte	$e9
->ad00	09					.byte	9
->ad01	4d					.byte	'M'
->ad02	8d a9					.word	L10012
->ad04	00					.byte	0
->ad05	03					.byte	3
->ad06	e3 bd d9				.byte	$e3,$bd,$d9
->ad09	09					.byte	9
->ad0a	4d					.byte	'M'
->ad0b	91 a9					.word	L10013
->ad0d	00					.byte	0
->ad0e	03					.byte	3
->ad0f	e3 bd d2				.byte	$e3,$bd,$d2
->ad12	09					.byte	9
->ad13	4d					.byte	'M'
->ad14	95 a9					.word	L10014
->ad16	00					.byte	0
->ad17	03					.byte	3
->ad18	e3 bd c1				.byte	$e3,$bd,$c1
->ad1b	07					.byte	7
->ad1c	4d					.byte	'M'
->ad1d	99 a9					.word	L10015
->ad1f	00					.byte	0
->ad20	01					.byte	1
->ad21	e3					.byte	$e3
->ad22	07					.byte	7
->ad23	4d					.byte	'M'
->ad24	9f a9					.word	L10016
->ad26	00					.byte	0
->ad27	01					.byte	1
->ad28	e2					.byte	$e2
->ad29	0b					.byte	11
->ad2a	4d					.byte	'M'
->ad2b	a4 a9					.word	L10017
->ad2d	00					.byte	0
->ad2e	05					.byte	5
->ad2f	de 52 50 48 c1				.byte	$de,$52,$50,$48,$c1
->ad34	08					.byte	8
->ad35	4d					.byte	'M'
->ad36	ac a9					.word	L10018
->ad38	00					.byte	0
->ad39	02					.byte	2
->ad3a	de c1					.byte	$de,$c1
->ad3c	09					.byte	9
->ad3d	4d					.byte	'M'
->ad3e	af a9					.word	L10019
->ad40	00					.byte	0
->ad41	03					.byte	3
->ad42	d9 bd f3				.byte	$d9,$bd,$f3
->ad45	09					.byte	9
->ad46	4d					.byte	'M'
->ad47	b2 a9					.word	L10020
->ad49	00					.byte	0
->ad4a	03					.byte	3
->ad4b	d9 bd e3				.byte	$d9,$bd,$e3
->ad4e	09					.byte	9
->ad4f	4d					.byte	'M'
->ad50	b6 a9					.word	L10021
->ad52	00					.byte	0
->ad53	03					.byte	3
->ad54	d9 bd e2				.byte	$d9,$bd,$e2
->ad57	09					.byte	9
->ad58	4d					.byte	'M'
->ad59	b9 a9					.word	L10022
->ad5b	00					.byte	0
->ad5c	03					.byte	3
->ad5d	d9 bd d2				.byte	$d9,$bd,$d2
->ad60	09					.byte	9
->ad61	4d					.byte	'M'
->ad62	bb a9					.word	L10023
->ad64	00					.byte	0
->ad65	03					.byte	3
->ad66	d9 bd c1				.byte	$d9,$bd,$c1
->ad69	0a					.byte	10
->ad6a	4d					.byte	'M'
->ad6b	bd a9					.word	L10024
->ad6d	00					.byte	0
->ad6e	04					.byte	4
->ad6f	d9 ad be d3				.byte	$d9,$ad,$be,$d3
->ad73	0a					.byte	10
+.aad3	8a		txa			txa
+.aad4	69 73		adc #$73		adc  #$73
+.aad6	aa		tax			tax
+.aad7	68		pla			pla
+.aad8					L10068_END:
+.aad8					L10069:
+>aad8	06					.byte L10069_END-L10069-1
+.aad9	18		clc			clc
+.aada	65 63		adc $63			adc  $63
+.aadc	90 01		bcc $aadf		bcc  *+3
+.aade	e8		inx			inx
+.aadf					L10069_END:
+.aadf					L10070:
+>aadf	0b					.byte L10070_END-L10070-1
+.aae0	18		clc			clc
+.aae1	71 63		adc ($63),y		adc  ($7363& $ff),y
+.aae3	48		pha			pha
+.aae4	8a		txa			txa
+.aae5	c8		iny			iny
+.aae6	71 63		adc ($63),y		adc  ($7363& $ff),y
+.aae8	88		dey			dey
+.aae9	aa		tax			tax
+.aaea	68		pla			pla
+.aaeb					L10070_END:
+.aaeb					L10071:
+>aaeb	0b					.byte L10071_END-L10071-1
+.aaec	18		clc			clc
+.aaed	6d 63 73	adc $7363		adc  $7363
+.aaf0	48		pha			pha
+.aaf1	8a		txa			txa
+.aaf2	6d 83 73	adc $7383		adc  $7383
+.aaf5	aa		tax			tax
+.aaf6	68		pla			pla
+.aaf7					L10071_END:
+.aaf7					L10072:
+>aaf7	0b					.byte L10072_END-L10072-1
+.aaf8	18		clc			clc
+.aaf9	71 63		adc ($63),y		adc  ($63& $ff),y
+.aafb	48		pha			pha
+.aafc	8a		txa			txa
+.aafd	c8		iny			iny
+.aafe	71 63		adc ($63),y		adc  ($63& $ff),y
+.ab00	88		dey			dey
+.ab01	aa		tax			tax
+.ab02	68		pla			pla
+.ab03					L10072_END:
+.ab03					L10073:
+>ab03	09					.byte L10073_END-L10073-1
+.ab04	18		clc			clc
+.ab05	65 63		adc $63			adc  $63
+.ab07	48		pha			pha
+.ab08	8a		txa			txa
+.ab09	65 83		adc $83			adc  $83
+.ab0b	aa		tax			tax
+.ab0c	68		pla			pla
+.ab0d					L10073_END:
+.ab0d					L10074:
+>ab0d	07					.byte L10074_END-L10074-1
+.ab0e	18		clc			clc
+.ab0f	6d 63 73	adc $7363		adc  $7363
+.ab12	90 01		bcc $ab15		bcc  *+3
+.ab14	e8		inx			inx
+.ab15					L10074_END:
+.ab15					L10075:
+>ab15	06					.byte L10075_END-L10075-1
+.ab16	18		clc			clc
+.ab17	69 63		adc #$63		adc  #$63
+.ab19	90 01		bcc $ab1c		bcc  *+3
+.ab1b	e8		inx			inx
+.ab1c					L10075_END:
+.ab1c					L10076:
+>ab1c	05					.byte L10076_END-L10076-1
+.ab1d	e0 00		cpx #$00		cpx #0
+>ab1f	93					.byte $93
+.ab20	10 fe		bpl $ab20		bpl *
+.ab22					L10076_END:
+.ab22					L10077:
+>ab22	08					.byte L10077_END-L10077-1
+.ab23	49 63		eor #$63		eor  #$63
+.ab25	48		pha			pha
+.ab26	8a		txa			txa
+.ab27	49 73		eor #$73		eor  #$73
+.ab29	aa		tax			tax
+.ab2a	68		pla			pla
+.ab2b					L10077_END:
+.ab2b					L10078:
+>ab2b	02					.byte L10078_END-L10078-1
+.ab2c	45 63		eor $63			eor  $63
+.ab2e					L10078_END:
+.ab2e					L10079:
+>ab2e	0a					.byte L10079_END-L10079-1
+.ab2f	51 63		eor ($63),y		eor  ($7363 & $ff),y
+.ab31	48		pha			pha
+.ab32	8a		txa			txa
+.ab33	c8		iny			iny
+.ab34	51 63		eor ($63),y		eor  ($7363 & $ff),y
+.ab36	88		dey			dey
+.ab37	aa		tax			tax
+.ab38	68		pla			pla
+.ab39					L10079_END:
+.ab39					L10080:
+>ab39	0a					.byte L10080_END-L10080-1
+.ab3a	4d 63 73	eor $7363		eor  $7363
+.ab3d	48		pha			pha
+.ab3e	8a		txa			txa
+.ab3f	4d 83 73	eor $7383		eor  $7383
+.ab42	aa		tax			tax
+.ab43	68		pla			pla
+.ab44					L10080_END:
+.ab44					L10081:
+>ab44	0a					.byte L10081_END-L10081-1
+.ab45	51 63		eor ($63),y		eor  ($63 & $ff),y
+.ab47	48		pha			pha
+.ab48	8a		txa			txa
+.ab49	c8		iny			iny
+.ab4a	51 63		eor ($63),y		eor  ($63 & $ff),y
+.ab4c	88		dey			dey
+.ab4d	aa		tax			tax
+.ab4e	68		pla			pla
+.ab4f					L10081_END:
+.ab4f					L10082:
+>ab4f	08					.byte L10082_END-L10082-1
+.ab50	45 63		eor $63			eor  $63
+.ab52	48		pha			pha
+.ab53	8a		txa			txa
+.ab54	45 83		eor $83			eor  $83
+.ab56	aa		tax			tax
+.ab57	68		pla			pla
+.ab58					L10082_END:
+.ab58					L10083:
+>ab58	03					.byte L10083_END-L10083-1
+.ab59	4d 63 73	eor $7363		eor  $7363
+.ab5c					L10083_END:
+.ab5c					L10084:
+>ab5c	02					.byte L10084_END-L10084-1
+.ab5d	49 63		eor #$63		eor  #$63
+.ab5f					L10084_END:
+.ab5f					L10085:
+>ab5f	08					.byte L10085_END-L10085-1
+.ab60	29 63		and #$63		and  #$63
+.ab62	48		pha			pha
+.ab63	8a		txa			txa
+.ab64	29 73		and #$73		and  #$73
+.ab66	aa		tax			tax
+.ab67	68		pla			pla
+.ab68					L10085_END:
+.ab68					L10086:
+>ab68	04					.byte L10086_END-L10086-1
+.ab69	25 63		and $63			and  $63
+.ab6b	a2 00		ldx #$00		ldx  #0
+.ab6d					L10086_END:
+.ab6d					L10087:
+>ab6d	0a					.byte L10087_END-L10087-1
+.ab6e	31 63		and ($63),y		and  ($7363& $ff),y
+.ab70	48		pha			pha
+.ab71	8a		txa			txa
+.ab72	c8		iny			iny
+.ab73	31 63		and ($63),y		and  ($7363& $ff),y
+.ab75	88		dey			dey
+.ab76	aa		tax			tax
+.ab77	68		pla			pla
+.ab78					L10087_END:
+.ab78					L10088:
+>ab78	0a					.byte L10088_END-L10088-1
+.ab79	2d 63 73	and $7363		and  $7363
+.ab7c	48		pha			pha
+.ab7d	8a		txa			txa
+.ab7e	2d 83 73	and $7383		and  $7383
+.ab81	aa		tax			tax
+.ab82	68		pla			pla
+.ab83					L10088_END:
+.ab83					L10089:
+>ab83	0a					.byte L10089_END-L10089-1
+.ab84	31 63		and ($63),y		and  ($63& $ff),y
+.ab86	48		pha			pha
+.ab87	8a		txa			txa
+.ab88	c8		iny			iny
+.ab89	31 63		and ($63),y		and  ($63& $ff),y
+.ab8b	88		dey			dey
+.ab8c	aa		tax			tax
+.ab8d	68		pla			pla
+.ab8e					L10089_END:
+.ab8e					L10090:
+>ab8e	08					.byte L10090_END-L10090-1
+.ab8f	25 63		and $63			and  $63
+.ab91	48		pha			pha
+.ab92	8a		txa			txa
+.ab93	25 83		and $83			and  $83
+.ab95	aa		tax			tax
+.ab96	68		pla			pla
+.ab97					L10090_END:
+.ab97					L10091:
+>ab97	05					.byte L10091_END-L10091-1
+.ab98	2d 63 73	and $7363		and  $7363
+.ab9b	a2 00		ldx #$00		ldx  #0
+.ab9d					L10091_END:
+.ab9d					L10092:
+>ab9d	04					.byte L10092_END-L10092-1
+.ab9e	29 63		and #$63		and  #$63
+.aba0	a2 00		ldx #$00		ldx  #0
+.aba2					L10092_END:
+.aba2					L10093:
+>aba2	02					.byte L10093_END-L10093-1
+>aba3	a3 06					.byte $a3,$06
+.aba5					L10093_END:
+.aba5					L10094:
+>aba5	02					.byte L10094_END-L10094-1
+>aba6	a3 07					.byte $a3,$07
+.aba8					L10094_END:
+.aba8					L10095:
+>aba8	02					.byte L10095_END-L10095-1
+>aba9	a3 08					.byte $a3,$08
+.abab					L10095_END:
+.abab					L10096:
+>abab	02					.byte L10096_END-L10096-1
+>abac	a3 09					.byte $a3,$09
+.abae					L10096_END:
+.abae					L10097:
+>abae	02					.byte L10097_END-L10097-1
+>abaf	a3 0a					.byte $a3,$0a
+.abb1					L10097_END:
+.abb1					L10098:
+>abb1	02					.byte L10098_END-L10098-1
+>abb2	a3 0b					.byte $a3,$0b
+.abb4					L10098_END:
+.abb4					L10099:
+>abb4	03					.byte L10099_END-L10099-1
+>abb5	93					.byte $93
+.abb6	b0 fe		bcs $abb6		bcs  *
+.abb8					L10099_END:
+.abb8					L10100:
+>abb8	03					.byte L10100_END-L10100-1
+>abb9	93					.byte $93
+.abba	90 fe		bcc $abba		bcc  *
+.abbc					L10100_END:
+.abbc					L10101:
+>abbc	02					.byte L10101_END-L10101-1
+>abbd	a3 0c					.byte $a3,$0c
+.abbf					L10101_END:
+.abbf					L10102:
+>abbf	01					.byte L10102_END-L10102-1
+>abc0	ff					.byte  $ff
+.abc1					L10102_END:
+.abc1					L10103:
+>abc1	02					.byte L10103_END-L10103-1
+.abc2	a5 63		lda $63			lda  $63
+.abc4					L10103_END:
+.abc4					L10104:
+>abc4	02					.byte L10104_END-L10104-1
+.abc5	b1 63		lda ($63),y		lda  ($7363& $ff),y
+.abc7					L10104_END:
+.abc7					L10105:
+>abc7	02					.byte L10105_END-L10105-1
+.abc8	b1 63		lda ($63),y		lda  ($63& $ff),y
+.abca					L10105_END:
+.abca					L10106:
+>abca	03					.byte L10106_END-L10106-1
+.abcb	ad 63 73	lda $7363		lda  $7363
+.abce					L10106_END:
+.abce					L10107:
+>abce	02					.byte L10107_END-L10107-1
+.abcf	a9 63		lda #$63		lda  #$63
+.abd1					L10107_END:
+.abd1					L10108:
+>abd1	01					.byte L10108_END-L10108-1
+.abd2	98		tya			tya
+.abd3					L10108_END:
+.abd3					L10109:
+>abd3	00					.byte L10109_END-L10109-1
+.abd4					L10109_END:
+.abd4					L10110:
+>abd4	05					.byte L10110_END-L10110-1
+.abd5	c9 00		cmp #$00		cmp #0
+>abd7	93					.byte $93
+.abd8	f0 fe		beq $abd8		beq *
+.abda					L10110_END:
+.abda					L10111:
+>abda	05					.byte L10111_END-L10111-1
+.abdb	c9 00		cmp #$00		cmp #0
+>abdd	93					.byte $93
+.abde	d0 fe		bne $abde		bne *
+.abe0					L10111_END:
+.abe0					L10112:
+>abe0	02					.byte L10112_END-L10112-1
+.abe1	05 63		ora $63			ora  $63
+.abe3					L10112_END:
+.abe3					L10113:
+>abe3	02					.byte L10113_END-L10113-1
+.abe4	11 63		ora ($63),y		ora  ($7363& $ff),y
+.abe6					L10113_END:
+.abe6					L10114:
+>abe6	02					.byte L10114_END-L10114-1
+.abe7	11 63		ora ($63),y		ora  ($63& $ff),y
+.abe9					L10114_END:
+.abe9					L10115:
+>abe9	03					.byte L10115_END-L10115-1
+.abea	0d 63 73	ora $7363		ora  $7363
+.abed					L10115_END:
+.abed					L10116:
+>abed	02					.byte L10116_END-L10116-1
+.abee	09 63		ora #$63		ora  #$63
+.abf0					L10116_END:
+.abf0					L10117:
+>abf0	02					.byte L10117_END-L10117-1
+>abf1	a3 0d					.byte $a3,$0d
+.abf3					L10117_END:
+.abf3					L10118:
+>abf3	03					.byte L10118_END-L10118-1
+.abf4	38		sec			sec
+.abf5	e5 63		sbc $63			sbc  $63
+.abf7					L10118_END:
+.abf7					L10119:
+>abf7	03					.byte L10119_END-L10119-1
+.abf8	38		sec			sec
+.abf9	f1 63		sbc ($63),y		sbc  ($7363& $ff),y
+.abfb					L10119_END:
+.abfb					L10120:
+>abfb	03					.byte L10120_END-L10120-1
+.abfc	38		sec			sec
+.abfd	f1 63		sbc ($63),y		sbc  ($63& $ff),y
+.abff					L10120_END:
+.abff					L10121:
+>abff	04					.byte L10121_END-L10121-1
+.ac00	38		sec			sec
+.ac01	ed 63 73	sbc $7363		sbc  $7363
+.ac04					L10121_END:
+.ac04					L10122:
+>ac04	03					.byte L10122_END-L10122-1
+.ac05	38		sec			sec
+.ac06	e9 63		sbc #$63		sbc  #$63
+.ac08					L10122_END:
+.ac08					L10123:
+>ac08	05					.byte L10123_END-L10123-1
+.ac09	c9 00		cmp #$00		cmp #0
+>ac0b	93					.byte $93
+.ac0c	30 fe		bmi $ac0c		bmi *
+.ac0e					L10123_END:
+.ac0e					L10124:
+>ac0e	01					.byte L10124_END-L10124-1
+.ac0f	48		pha			pha
+.ac10					L10124_END:
+.ac10					L10125:
+>ac10	03					.byte L10125_END-L10125-1
+.ac11	18		clc			clc
+.ac12	65 63		adc $63			adc  $63
+.ac14					L10125_END:
+.ac14					L10126:
+>ac14	03					.byte L10126_END-L10126-1
+.ac15	18		clc			clc
+.ac16	71 63		adc ($63),y		adc  ($7363& $ff),y
+.ac18					L10126_END:
+.ac18					L10127:
+>ac18	03					.byte L10127_END-L10127-1
+.ac19	18		clc			clc
+.ac1a	71 63		adc ($63),y		adc  ($63& $ff),y
+.ac1c					L10127_END:
+.ac1c					L10128:
+>ac1c	04					.byte L10128_END-L10128-1
+.ac1d	18		clc			clc
+.ac1e	6d 63 73	adc $7363		adc  $7363
+.ac21					L10128_END:
+.ac21					L10129:
+>ac21	03					.byte L10129_END-L10129-1
+.ac22	18		clc			clc
+.ac23	69 63		adc #$63		adc  #$63
+.ac25					L10129_END:
+.ac25					L10130:
+>ac25	05					.byte L10130_END-L10130-1
+.ac26	c9 00		cmp #$00		cmp #0
+>ac28	93					.byte $93
+.ac29	10 fe		bpl $ac29		bpl *
+.ac2b					L10130_END:
+.ac2b					L10131:
+>ac2b	02					.byte L10131_END-L10131-1
+.ac2c	45 63		eor $63			eor  $63
+.ac2e					L10131_END:
+.ac2e					L10132:
+>ac2e	02					.byte L10132_END-L10132-1
+.ac2f	51 63		eor ($63),y		eor  ($7363 & $ff),y
+.ac31					L10132_END:
+.ac31					L10133:
+>ac31	02					.byte L10133_END-L10133-1
+.ac32	51 63		eor ($63),y		eor  ($63 & $ff),y
+.ac34					L10133_END:
+.ac34					L10134:
+>ac34	03					.byte L10134_END-L10134-1
+.ac35	4d 63 73	eor $7363		eor  $7363
+.ac38					L10134_END:
+.ac38					L10135:
+>ac38	02					.byte L10135_END-L10135-1
+.ac39	49 63		eor #$63		eor  #$63
+.ac3b					L10135_END:
+.ac3b					L10136:
+>ac3b	02					.byte L10136_END-L10136-1
+.ac3c	25 63		and $63			and  $63
+.ac3e					L10136_END:
+.ac3e					L10137:
+>ac3e	02					.byte L10137_END-L10137-1
+.ac3f	31 63		and ($63),y		and  ($7363& $ff),y
+.ac41					L10137_END:
+.ac41					L10138:
+>ac41	02					.byte L10138_END-L10138-1
+.ac42	31 63		and ($63),y		and  ($63& $ff),y
+.ac44					L10138_END:
+.ac44					L10139:
+>ac44	03					.byte L10139_END-L10139-1
+.ac45	2d 63 73	and $7363		and  $7363
+.ac48					L10139_END:
+.ac48					L10140:
+>ac48	02					.byte L10140_END-L10140-1
+.ac49	29 63		and #$63		and  #$63
+.ac4b					L10140_END:
+.ac4b					L10141:
+>ac4b	02					.byte L10141_END-L10141-1
+.ac4c	46 63		lsr $63			lsr  $63
+.ac4e					L10141_END:
+.ac4e					L10142:
+>ac4e	06					.byte L10142_END-L10142-1
+.ac4f	4e 83 73	lsr $7383		lsr  $7383
+.ac52	6e 63 73	ror $7363		ror  $7363
+.ac55					L10142_END:
+.ac55					L10143:
+>ac55	04					.byte L10143_END-L10143-1
+.ac56	46 83		lsr $83			lsr  $83
+.ac58	66 63		ror $63			ror  $63
+.ac5a					L10143_END:
+.ac5a					L10144:
+>ac5a	03					.byte L10144_END-L10144-1
+.ac5b	4e 63 73	lsr $7363		lsr  $7363
+.ac5e					L10144_END:
+.ac5e					L10145:
+>ac5e	06					.byte L10145_END-L10145-1
+.ac5f	48		pha			pha
+.ac60	8a		txa			txa
+.ac61	4a		lsr a			lsr  a
+.ac62	aa		tax			tax
+.ac63	68		pla			pla
+.ac64	6a		ror a			ror  a
+.ac65					L10145_END:
+.ac65					L10146:
+>ac65	01					.byte L10146_END-L10146-1
+.ac66	4a		lsr a			lsr  a
+.ac67					L10146_END:
+.ac67					L10147:
+>ac67	02					.byte L10147_END-L10147-1
+.ac68	06 63		asl $63			asl  $63
+.ac6a					L10147_END:
+.ac6a					L10148:
+>ac6a	06					.byte L10148_END-L10148-1
+.ac6b	0e 63 73	asl $7363		asl  $7363
+.ac6e	2e 83 73	rol $7383		rol  $7383
+.ac71					L10148_END:
+.ac71					L10149:
+>ac71	04					.byte L10149_END-L10149-1
+.ac72	06 63		asl $63			asl  $63
+.ac74	26 83		rol $83			rol  $83
+.ac76					L10149_END:
+.ac76					L10150:
+>ac76	03					.byte L10150_END-L10150-1
+.ac77	0e 63 73	asl $7363		asl  $7363
+.ac7a					L10150_END:
+.ac7a					L10151:
+>ac7a	06					.byte L10151_END-L10151-1
+.ac7b	0a		asl a			asl  a
+.ac7c	48		pha			pha
+.ac7d	8a		txa			txa
+.ac7e	2a		rol a			rol  a
+.ac7f	aa		tax			tax
+.ac80	68		pla			pla
+.ac81					L10151_END:
+.ac81					L10152:
+>ac81	01					.byte L10152_END-L10152-1
+.ac82	0a		asl a			asl  a
+.ac83					L10152_END:
+.ac83					L10153:
+>ac83	0b					.byte L10153_END-L10153-1
+.ac84	8a		txa			txa
+.ac85	49 ff		eor #$ff		eor  #$ff
+.ac87	aa		tax			tax
+.ac88	68		pla			pla
+.ac89	49 ff		eor #$ff		eor  #$ff
+.ac8b	1a		inc a			inc  a
+.ac8c	d0 01		bne $ac8f		bne  *+3
+.ac8e	e8		inx			inx
+.ac8f					L10153_END:
+.ac8f					L10154:
+>ac8f	03					.byte L10154_END-L10154-1
+.ac90	49 ff		eor #$ff		eor  #$ff
+.ac92	1a		inc a			inc  a
+.ac93					L10154_END:
+.ac93					L10155:
+>ac93	02					.byte L10155_END-L10155-1
+.ac94	c6 63		dec $63			dec  $63
+.ac96					L10155_END:
+.ac96					L10156:
+>ac96	0d					.byte L10156_END-L10156-1
+.ac97	48		pha			pha
+.ac98	ad 63 73	lda $7363		lda  $7363
+.ac9b	d0 03		bne $aca0		bne  _noborrow
+.ac9d	ce 83 73	dec $7383		dec  $7383
+.aca0					_noborrow:
+.aca0	ce 63 73	dec $7363		dec  $7363
+.aca3	68		pla			pla
+.aca4					L10156_END:
+.aca4					L10157:
+>aca4	0a					.byte L10157_END-L10157-1
+.aca5	48		pha			pha
+.aca6	a5 63		lda $63			lda  $63
+.aca8	d0 02		bne $acac		bne  _noborrow
+.acaa	c6 83		dec $83			dec  $83
+.acac					_noborrow:
+.acac	c6 63		dec $63			dec  $63
+.acae	68		pla			pla
+.acaf					L10157_END:
+.acaf					L10158:
+>acaf	03					.byte L10158_END-L10158-1
+.acb0	ce 63 73	dec $7363		dec  $7363
+.acb3					L10158_END:
+.acb3					L10159:
+>acb3	01					.byte L10159_END-L10159-1
+.acb4	88		dey			dey
+.acb5					L10159_END:
+.acb5					L10160:
+>acb5	06					.byte L10160_END-L10160-1
+.acb6	c9 00		cmp #$00		cmp  #0
+.acb8	d0 01		bne $acbb		bne  *+3
+.acba	ca		dex			dex
+.acbb	3a		dec a			dec  a
+.acbc					L10160_END:
+.acbc					L10161:
+>acbc	01					.byte L10161_END-L10161-1
+.acbd	3a		dec a			dec  a
+.acbe					L10161_END:
+.acbe					L10162:
+>acbe	02					.byte L10162_END-L10162-1
+.acbf	e6 63		inc $63			inc  $63
+.acc1					L10162_END:
+.acc1					L10163:
+>acc1	08					.byte L10163_END-L10163-1
+.acc2	ee 63 73	inc $7363		inc  $7363
+.acc5	d0 03		bne $acca		bne  _nocarry
+.acc7	ee 83 73	inc $7383		inc  $7383
+.acca					_nocarry:
+.acca					L10163_END:
+.acca					L10164:
+>acca	06					.byte L10164_END-L10164-1
+.accb	e6 63		inc $63			inc  $63
+.accd	d0 02		bne $acd1		bne  _nocarry
+.accf	e6 83		inc $83			inc  $83
+.acd1					_nocarry:
+.acd1					L10164_END:
+.acd1					L10165:
+>acd1	03					.byte L10165_END-L10165-1
+.acd2	ee 63 73	inc $7363		inc  $7363
+.acd5					L10165_END:
+.acd5					L10166:
+>acd5	01					.byte L10166_END-L10166-1
+.acd6	c8		iny			iny
+.acd7					L10166_END:
+.acd7					L10167:
+>acd7	04					.byte L10167_END-L10167-1
+.acd8	1a		inc a			inc  a
+.acd9	d0 01		bne $acdc		bne  *+3
+.acdb	e8		inx			inx
+.acdc					L10167_END:
+.acdc					L10168:
+>acdc	01					.byte L10168_END-L10168-1
+.acdd	1a		inc a			inc  a
+.acde					L10168_END:
+.acde					ExecutableVectorTable:
+>acde	a4 a5					.word Action_call                      ; 0
+>ace0	37 a7					.word Action_wordvar                   ; 1
+>ace2	8d a6					.word Action_until                     ; 2
+>ace4	84 a6					.word Action_repeat                    ; 3
+>ace6	a6 a7					.word Action_dictionarycrunch          ; 4
+>ace8	b4 a6					.word Action_rfor                      ; 5
+>acea	5d a5					.word Action_procedure_def             ; 6
+>acec	e5 a6					.word Action_next                      ; 7
+>acee	1f a6					.word Action_if                        ; 8
+>acf0	94 a5					.word Action_endproc                   ; 9
+>acf2	56 a6					.word Action_endif                     ; 10
+>acf4	34 a6					.word Action_else                      ; 11
+>acf6	33 a7					.word Action_bytevar                   ; 12
+>acf8	a1 a6					.word Action_afor                      ; 13
+.acfa					SystemDictionary:
+>acfa	07					.byte	7
+>acfb	4d					.byte	'M'
+>acfc	52 a9					.word	L10000
+>acfe	00					.byte	0
+>acff	01					.byte	1
+>ad00	f7					.byte	$f7
+>ad01	09					.byte	9
+>ad02	4d					.byte	'M'
+>ad03	57 a9					.word	L10001
+>ad05	00					.byte	0
+>ad06	03					.byte	3
+>ad07	f3 bd d9				.byte	$f3,$bd,$d9
+>ad0a	09					.byte	9
+>ad0b	4d					.byte	'M'
+>ad0c	5a a9					.word	L10002
+>ad0e	00					.byte	0
+>ad0f	03					.byte	3
+>ad10	f3 bd d2				.byte	$f3,$bd,$d2
+>ad13	09					.byte	9
+>ad14	4d					.byte	'M'
+>ad15	5d a9					.word	L10003
+>ad17	00					.byte	0
+>ad18	03					.byte	3
+>ad19	f3 bd c1				.byte	$f3,$bd,$c1
+>ad1c	07					.byte	7
+>ad1d	4d					.byte	'M'
+>ad1e	60 a9					.word	L10004
+>ad20	00					.byte	0
+>ad21	01					.byte	1
+>ad22	f3					.byte	$f3
+>ad23	07					.byte	7
+>ad24	4d					.byte	'M'
+>ad25	65 a9					.word	L10005
+>ad27	00					.byte	0
+>ad28	01					.byte	1
+>ad29	f0					.byte	$f0
+>ad2a	0c					.byte	12
+>ad2b	4d					.byte	'M'
+>ad2c	68 a9					.word	L10006
+>ad2e	00					.byte	0
+>ad2f	06					.byte	6
+>ad30	ec db d9 dd bd d2			.byte	$ec,$db,$d9,$dd,$bd,$d2
+>ad36	0c					.byte	12
+>ad37	4d					.byte	'M'
+>ad38	72 a9					.word	L10007
+>ad3a	00					.byte	0
+>ad3b	06					.byte	6
+>ad3c	ec db d9 dd bd c1			.byte	$ec,$db,$d9,$dd,$bd,$c1
+>ad42	09					.byte	9
+>ad43	4d					.byte	'M'
+>ad44	75 a9					.word	L10008
+>ad46	00					.byte	0
+>ad47	03					.byte	3
+>ad48	ec bd d2				.byte	$ec,$bd,$d2
+>ad4b	07					.byte	7
+>ad4c	4d					.byte	'M'
+>ad4d	7c a9					.word	L10009
+>ad4f	00					.byte	0
+>ad50	01					.byte	1
+>ad51	ec					.byte	$ec
+>ad52	0c					.byte	12
+>ad53	4d					.byte	'M'
+>ad54	83 a9					.word	L10010
+>ad56	00					.byte	0
+>ad57	06					.byte	6
+>ad58	e9 db d9 dd bd d2			.byte	$e9,$db,$d9,$dd,$bd,$d2
+>ad5e	0c					.byte	12
+>ad5f	4d					.byte	'M'
+>ad60	8d a9					.word	L10011
+>ad62	00					.byte	0
+>ad63	06					.byte	6
+>ad64	e9 db d9 dd bd c1			.byte	$e9,$db,$d9,$dd,$bd,$c1
+>ad6a	09					.byte	9
+>ad6b	4d					.byte	'M'
+>ad6c	90 a9					.word	L10012
+>ad6e	00					.byte	0
+>ad6f	03					.byte	3
+>ad70	e9 bd d2				.byte	$e9,$bd,$d2
+>ad73	07					.byte	7
 >ad74	4d					.byte	'M'
->ad75	bf a9					.word	L10025
+>ad75	95 a9					.word	L10013
 >ad77	00					.byte	0
->ad78	04					.byte	4
->ad79	57 4f 52 c4				.byte	$57,$4f,$52,$c4
->ad7d	0b					.byte	11
->ad7e	4d					.byte	'M'
->ad7f	c2 a9					.word	L10026
->ad81	00					.byte	0
->ad82	05					.byte	5
->ad83	55 4e 54 49 cc				.byte	$55,$4e,$54,$49,$cc
->ad88	0a					.byte	10
->ad89	4d					.byte	'M'
->ad8a	c5 a9					.word	L10027
->ad8c	00					.byte	0
->ad8d	04					.byte	4
->ad8e	d3 ad be d9				.byte	$d3,$ad,$be,$d9
->ad92	0c					.byte	12
->ad93	4d					.byte	'M'
->ad94	c7 a9					.word	L10028
->ad96	00					.byte	0
->ad97	06					.byte	6
->ad98	d3 ad be 52 41 d9			.byte	$d3,$ad,$be,$52,$41,$d9
->ad9e	0a					.byte	10
->ad9f	4d					.byte	'M'
->ada0	cb a9					.word	L10029
->ada2	00					.byte	0
->ada3	04					.byte	4
->ada4	d3 ad be d2				.byte	$d3,$ad,$be,$d2
->ada8	0a					.byte	10
->ada9	4d					.byte	'M'
->adaa	ce a9					.word	L10030
->adac	00					.byte	0
->adad	04					.byte	4
->adae	d3 ad be c1				.byte	$d3,$ad,$be,$c1
->adb2	09					.byte	9
->adb3	4d					.byte	'M'
->adb4	d0 a9					.word	L10031
->adb6	00					.byte	0
->adb7	03					.byte	3
->adb8	d2 f7 f7				.byte	$d2,$f7,$f7
->adbb	0c					.byte	12
->adbc	4d					.byte	'M'
->adbd	d9 a9					.word	L10032
->adbf	00					.byte	0
->adc0	06					.byte	6
->adc1	d2 f3 f3 db d9 dd			.byte	$d2,$f3,$f3,$db,$d9,$dd
->adc7	09					.byte	9
->adc8	4d					.byte	'M'
->adc9	e4 a9					.word	L10033
->adcb	00					.byte	0
->adcc	03					.byte	3
->adcd	d2 f3 f3				.byte	$d2,$f3,$f3
->add0	09					.byte	9
->add1	4d					.byte	'M'
->add2	e7 a9					.word	L10034
->add4	00					.byte	0
->add5	03					.byte	3
->add6	d2 ec ec				.byte	$d2,$ec,$ec
->add9	09					.byte	9
->adda	4d					.byte	'M'
->addb	f2 a9					.word	L10035
->addd	00					.byte	0
->adde	03					.byte	3
->addf	d2 e9 e9				.byte	$d2,$e9,$e9
->ade2	09					.byte	9
->ade3	4d					.byte	'M'
->ade4	fb a9					.word	L10036
->ade6	00					.byte	0
->ade7	03					.byte	3
->ade8	d2 e3 e3				.byte	$d2,$e3,$e3
->adeb	09					.byte	9
->adec	4d					.byte	'M'
->aded	ff a9					.word	L10037
->adef	00					.byte	0
->adf0	03					.byte	3
->adf1	d2 e2 e2				.byte	$d2,$e2,$e2
->adf4	0c					.byte	12
->adf5	4d					.byte	'M'
->adf6	02 aa					.word	L10038
->adf8	00					.byte	0
->adf9	06					.byte	6
->adfa	52 45 50 45 41 d4			.byte	$52,$45,$50,$45,$41,$d4
->ae00	13					.byte	19
->ae01	4d					.byte	'M'
->ae02	05 aa					.word	L10039
->ae04	00					.byte	0
->ae05	0d					.byte	13
->ae06	52 45 4d 4f 56 45 2e 4c			.byte	$52,$45,$4d,$4f,$56,$45,$2e,$4c,$4f,$43,$41,$4c,$d3
->ae0e	4f 43 41 4c d3
->ae13	0c					.byte	12
->ae14	4d					.byte	'M'
->ae15	08 aa					.word	L10040
->ae17	00					.byte	0
->ae18	06					.byte	6
->ae19	52 41 d9 ad be d3			.byte	$52,$41,$d9,$ad,$be,$d3
->ae1f	09					.byte	9
->ae20	4d					.byte	'M'
->ae21	0c aa					.word	L10041
->ae23	00					.byte	0
->ae24	03					.byte	3
->ae25	d2 bd f7				.byte	$d2,$bd,$f7
->ae28	0c					.byte	12
->ae29	4d					.byte	'M'
->ae2a	11 aa					.word	L10042
->ae2c	00					.byte	0
->ae2d	06					.byte	6
->ae2e	d2 bd f3 db d9 dd			.byte	$d2,$bd,$f3,$db,$d9,$dd
->ae34	09					.byte	9
->ae35	4d					.byte	'M'
->ae36	19 aa					.word	L10043
->ae38	00					.byte	0
->ae39	03					.byte	3
->ae3a	d2 bd f3				.byte	$d2,$bd,$f3
->ae3d	09					.byte	9
->ae3e	4d					.byte	'M'
->ae3f	1e aa					.word	L10044
->ae41	00					.byte	0
->ae42	03					.byte	3
->ae43	d2 bd ec				.byte	$d2,$bd,$ec
->ae46	09					.byte	9
->ae47	4d					.byte	'M'
->ae48	25 aa					.word	L10045
->ae4a	00					.byte	0
->ae4b	03					.byte	3
->ae4c	d2 bd e9				.byte	$d2,$bd,$e9
->ae4f	09					.byte	9
->ae50	4d					.byte	'M'
->ae51	2a aa					.word	L10046
->ae53	00					.byte	0
->ae54	03					.byte	3
->ae55	d2 bd e3				.byte	$d2,$bd,$e3
->ae58	09					.byte	9
->ae59	4d					.byte	'M'
->ae5a	30 aa					.word	L10047
->ae5c	00					.byte	0
->ae5d	03					.byte	3
->ae5e	d2 bd e2				.byte	$d2,$bd,$e2
->ae61	09					.byte	9
->ae62	4d					.byte	'M'
->ae63	35 aa					.word	L10048
->ae65	00					.byte	0
->ae66	03					.byte	3
->ae67	d2 bd d9				.byte	$d2,$bd,$d9
->ae6a	09					.byte	9
->ae6b	4d					.byte	'M'
->ae6c	39 aa					.word	L10049
->ae6e	00					.byte	0
->ae6f	03					.byte	3
->ae70	d2 bd c1				.byte	$d2,$bd,$c1
->ae73	09					.byte	9
->ae74	4d					.byte	'M'
->ae75	3c aa					.word	L10050
->ae77	00					.byte	0
->ae78	03					.byte	3
->ae79	d2 bd bf				.byte	$d2,$bd,$bf
->ae7c	0a					.byte	10
->ae7d	4d					.byte	'M'
->ae7e	46 aa					.word	L10051
->ae80	00					.byte	0
->ae81	04					.byte	4
->ae82	d2 bc be bf				.byte	$d2,$bc,$be,$bf
->ae86	09					.byte	9
->ae87	4d					.byte	'M'
->ae88	50 aa					.word	L10052
->ae8a	00					.byte	0
->ae8b	03					.byte	3
->ae8c	d2 ba f7				.byte	$d2,$ba,$f7
->ae8f	0c					.byte	12
->ae90	4d					.byte	'M'
->ae91	59 aa					.word	L10053
->ae93	00					.byte	0
->ae94	06					.byte	6
->ae95	d2 ba f3 db d9 dd			.byte	$d2,$ba,$f3,$db,$d9,$dd
->ae9b	09					.byte	9
->ae9c	4d					.byte	'M'
->ae9d	64 aa					.word	L10054
->ae9f	00					.byte	0
->aea0	03					.byte	3
->aea1	d2 ba f3				.byte	$d2,$ba,$f3
->aea4	09					.byte	9
->aea5	4d					.byte	'M'
->aea6	67 aa					.word	L10055
->aea8	00					.byte	0
->aea9	03					.byte	3
->aeaa	d2 ba ec				.byte	$d2,$ba,$ec
->aead	09					.byte	9
->aeae	4d					.byte	'M'
->aeaf	72 aa					.word	L10056
->aeb1	00					.byte	0
->aeb2	03					.byte	3
->aeb3	d2 ba e9				.byte	$d2,$ba,$e9
->aeb6	09					.byte	9
->aeb7	4d					.byte	'M'
->aeb8	7b aa					.word	L10057
->aeba	00					.byte	0
->aebb	03					.byte	3
->aebc	d2 ba e3				.byte	$d2,$ba,$e3
->aebf	09					.byte	9
->aec0	4d					.byte	'M'
->aec1	7f aa					.word	L10058
->aec3	00					.byte	0
->aec4	03					.byte	3
->aec5	d2 ba e2				.byte	$d2,$ba,$e2
->aec8	0c					.byte	12
->aec9	4d					.byte	'M'
->aeca	82 aa					.word	L10059
->aecc	00					.byte	0
->aecd	06					.byte	6
->aece	52 2e 53 57 41 d0			.byte	$52,$2e,$53,$57,$41,$d0
->aed4	0b					.byte	11
->aed5	4d					.byte	'M'
->aed6	86 aa					.word	L10060
->aed8	00					.byte	0
->aed9	05					.byte	5
->aeda	52 2e 46 4f d2				.byte	$52,$2e,$46,$4f,$d2
->aedf	09					.byte	9
->aee0	4d					.byte	'M'
->aee1	89 aa					.word	L10061
->aee3	00					.byte	0
->aee4	03					.byte	3
->aee5	d2 ad f7				.byte	$d2,$ad,$f7
->aee8	0c					.byte	12
+>ad78	01					.byte	1
+>ad79	e9					.byte	$e9
+>ad7a	09					.byte	9
+>ad7b	4d					.byte	'M'
+>ad7c	9a a9					.word	L10014
+>ad7e	00					.byte	0
+>ad7f	03					.byte	3
+>ad80	e3 bd d9				.byte	$e3,$bd,$d9
+>ad83	09					.byte	9
+>ad84	4d					.byte	'M'
+>ad85	9e a9					.word	L10015
+>ad87	00					.byte	0
+>ad88	03					.byte	3
+>ad89	e3 bd d2				.byte	$e3,$bd,$d2
+>ad8c	09					.byte	9
+>ad8d	4d					.byte	'M'
+>ad8e	a2 a9					.word	L10016
+>ad90	00					.byte	0
+>ad91	03					.byte	3
+>ad92	e3 bd c1				.byte	$e3,$bd,$c1
+>ad95	07					.byte	7
+>ad96	4d					.byte	'M'
+>ad97	a6 a9					.word	L10017
+>ad99	00					.byte	0
+>ad9a	01					.byte	1
+>ad9b	e3					.byte	$e3
+>ad9c	07					.byte	7
+>ad9d	4d					.byte	'M'
+>ad9e	ac a9					.word	L10018
+>ada0	00					.byte	0
+>ada1	01					.byte	1
+>ada2	e2					.byte	$e2
+>ada3	0b					.byte	11
+>ada4	4d					.byte	'M'
+>ada5	b1 a9					.word	L10019
+>ada7	00					.byte	0
+>ada8	05					.byte	5
+>ada9	de 52 50 48 c1				.byte	$de,$52,$50,$48,$c1
+>adae	08					.byte	8
+>adaf	4d					.byte	'M'
+>adb0	b9 a9					.word	L10020
+>adb2	00					.byte	0
+>adb3	02					.byte	2
+>adb4	de c1					.byte	$de,$c1
+>adb6	09					.byte	9
+>adb7	4d					.byte	'M'
+>adb8	bc a9					.word	L10021
+>adba	00					.byte	0
+>adbb	03					.byte	3
+>adbc	d9 bd f3				.byte	$d9,$bd,$f3
+>adbf	09					.byte	9
+>adc0	4d					.byte	'M'
+>adc1	bf a9					.word	L10022
+>adc3	00					.byte	0
+>adc4	03					.byte	3
+>adc5	d9 bd e3				.byte	$d9,$bd,$e3
+>adc8	09					.byte	9
+>adc9	4d					.byte	'M'
+>adca	c3 a9					.word	L10023
+>adcc	00					.byte	0
+>adcd	03					.byte	3
+>adce	d9 bd e2				.byte	$d9,$bd,$e2
+>add1	09					.byte	9
+>add2	4d					.byte	'M'
+>add3	c6 a9					.word	L10024
+>add5	00					.byte	0
+>add6	03					.byte	3
+>add7	d9 bd d2				.byte	$d9,$bd,$d2
+>adda	09					.byte	9
+>addb	4d					.byte	'M'
+>addc	c8 a9					.word	L10025
+>adde	00					.byte	0
+>addf	03					.byte	3
+>ade0	d9 bd c1				.byte	$d9,$bd,$c1
+>ade3	0a					.byte	10
+>ade4	4d					.byte	'M'
+>ade5	ca a9					.word	L10026
+>ade7	00					.byte	0
+>ade8	04					.byte	4
+>ade9	d9 ad be d3				.byte	$d9,$ad,$be,$d3
+>aded	0a					.byte	10
+>adee	4d					.byte	'M'
+>adef	cc a9					.word	L10027
+>adf1	00					.byte	0
+>adf2	04					.byte	4
+>adf3	57 4f 52 c4				.byte	$57,$4f,$52,$c4
+>adf7	0b					.byte	11
+>adf8	4d					.byte	'M'
+>adf9	cf a9					.word	L10028
+>adfb	00					.byte	0
+>adfc	05					.byte	5
+>adfd	55 4e 54 49 cc				.byte	$55,$4e,$54,$49,$cc
+>ae02	0a					.byte	10
+>ae03	4d					.byte	'M'
+>ae04	d2 a9					.word	L10029
+>ae06	00					.byte	0
+>ae07	04					.byte	4
+>ae08	d3 ad be d9				.byte	$d3,$ad,$be,$d9
+>ae0c	0c					.byte	12
+>ae0d	4d					.byte	'M'
+>ae0e	d4 a9					.word	L10030
+>ae10	00					.byte	0
+>ae11	06					.byte	6
+>ae12	d3 ad be 52 41 d9			.byte	$d3,$ad,$be,$52,$41,$d9
+>ae18	0a					.byte	10
+>ae19	4d					.byte	'M'
+>ae1a	d8 a9					.word	L10031
+>ae1c	00					.byte	0
+>ae1d	04					.byte	4
+>ae1e	d3 ad be d2				.byte	$d3,$ad,$be,$d2
+>ae22	0a					.byte	10
+>ae23	4d					.byte	'M'
+>ae24	db a9					.word	L10032
+>ae26	00					.byte	0
+>ae27	04					.byte	4
+>ae28	d3 ad be c1				.byte	$d3,$ad,$be,$c1
+>ae2c	0c					.byte	12
+>ae2d	4d					.byte	'M'
+>ae2e	dd a9					.word	L10033
+>ae30	00					.byte	0
+>ae31	06					.byte	6
+>ae32	52 45 50 45 41 d4			.byte	$52,$45,$50,$45,$41,$d4
+>ae38	13					.byte	19
+>ae39	4d					.byte	'M'
+>ae3a	e0 a9					.word	L10034
+>ae3c	00					.byte	0
+>ae3d	0d					.byte	13
+>ae3e	52 45 4d 4f 56 45 2e 4c			.byte	$52,$45,$4d,$4f,$56,$45,$2e,$4c,$4f,$43,$41,$4c,$d3
+>ae46	4f 43 41 4c d3
+>ae4b	0c					.byte	12
+>ae4c	4d					.byte	'M'
+>ae4d	e3 a9					.word	L10035
+>ae4f	00					.byte	0
+>ae50	06					.byte	6
+>ae51	52 41 d9 ad be d3			.byte	$52,$41,$d9,$ad,$be,$d3
+>ae57	09					.byte	9
+>ae58	4d					.byte	'M'
+>ae59	e7 a9					.word	L10036
+>ae5b	00					.byte	0
+>ae5c	03					.byte	3
+>ae5d	d2 bd f7				.byte	$d2,$bd,$f7
+>ae60	09					.byte	9
+>ae61	4d					.byte	'M'
+>ae62	ec a9					.word	L10037
+>ae64	00					.byte	0
+>ae65	03					.byte	3
+>ae66	d2 bd f3				.byte	$d2,$bd,$f3
+>ae69	0c					.byte	12
+>ae6a	4d					.byte	'M'
+>ae6b	f1 a9					.word	L10038
+>ae6d	00					.byte	0
+>ae6e	06					.byte	6
+>ae6f	d2 bd ec db d9 dd			.byte	$d2,$bd,$ec,$db,$d9,$dd
+>ae75	09					.byte	9
+>ae76	4d					.byte	'M'
+>ae77	f9 a9					.word	L10039
+>ae79	00					.byte	0
+>ae7a	03					.byte	3
+>ae7b	d2 bd ec				.byte	$d2,$bd,$ec
+>ae7e	0c					.byte	12
+>ae7f	4d					.byte	'M'
+>ae80	00 aa					.word	L10040
+>ae82	00					.byte	0
+>ae83	06					.byte	6
+>ae84	d2 bd e9 db d9 dd			.byte	$d2,$bd,$e9,$db,$d9,$dd
+>ae8a	09					.byte	9
+>ae8b	4d					.byte	'M'
+>ae8c	08 aa					.word	L10041
+>ae8e	00					.byte	0
+>ae8f	03					.byte	3
+>ae90	d2 bd e9				.byte	$d2,$bd,$e9
+>ae93	09					.byte	9
+>ae94	4d					.byte	'M'
+>ae95	0d aa					.word	L10042
+>ae97	00					.byte	0
+>ae98	03					.byte	3
+>ae99	d2 bd e3				.byte	$d2,$bd,$e3
+>ae9c	09					.byte	9
+>ae9d	4d					.byte	'M'
+>ae9e	13 aa					.word	L10043
+>aea0	00					.byte	0
+>aea1	03					.byte	3
+>aea2	d2 bd e2				.byte	$d2,$bd,$e2
+>aea5	09					.byte	9
+>aea6	4d					.byte	'M'
+>aea7	18 aa					.word	L10044
+>aea9	00					.byte	0
+>aeaa	03					.byte	3
+>aeab	d2 bd d9				.byte	$d2,$bd,$d9
+>aeae	09					.byte	9
+>aeaf	4d					.byte	'M'
+>aeb0	1c aa					.word	L10045
+>aeb2	00					.byte	0
+>aeb3	03					.byte	3
+>aeb4	d2 bd c1				.byte	$d2,$bd,$c1
+>aeb7	09					.byte	9
+>aeb8	4d					.byte	'M'
+>aeb9	1f aa					.word	L10046
+>aebb	00					.byte	0
+>aebc	03					.byte	3
+>aebd	d2 bd bf				.byte	$d2,$bd,$bf
+>aec0	0a					.byte	10
+>aec1	4d					.byte	'M'
+>aec2	29 aa					.word	L10047
+>aec4	00					.byte	0
+>aec5	04					.byte	4
+>aec6	d2 bc be bf				.byte	$d2,$bc,$be,$bf
+>aeca	09					.byte	9
+>aecb	4d					.byte	'M'
+>aecc	33 aa					.word	L10048
+>aece	00					.byte	0
+>aecf	03					.byte	3
+>aed0	d2 ba f7				.byte	$d2,$ba,$f7
+>aed3	09					.byte	9
+>aed4	4d					.byte	'M'
+>aed5	3c aa					.word	L10049
+>aed7	00					.byte	0
+>aed8	03					.byte	3
+>aed9	d2 ba f3				.byte	$d2,$ba,$f3
+>aedc	0c					.byte	12
+>aedd	4d					.byte	'M'
+>aede	3f aa					.word	L10050
+>aee0	00					.byte	0
+>aee1	06					.byte	6
+>aee2	d2 ba ec db d9 dd			.byte	$d2,$ba,$ec,$db,$d9,$dd
+>aee8	09					.byte	9
 >aee9	4d					.byte	'M'
->aeea	93 aa					.word	L10062
+>aeea	4a aa					.word	L10051
 >aeec	00					.byte	0
->aeed	06					.byte	6
->aeee	d2 ad f3 db d9 dd			.byte	$d2,$ad,$f3,$db,$d9,$dd
->aef4	09					.byte	9
->aef5	4d					.byte	'M'
->aef6	9f aa					.word	L10063
->aef8	00					.byte	0
->aef9	03					.byte	3
->aefa	d2 ad f3				.byte	$d2,$ad,$f3
+>aeed	03					.byte	3
+>aeee	d2 ba ec				.byte	$d2,$ba,$ec
+>aef1	0c					.byte	12
+>aef2	4d					.byte	'M'
+>aef3	55 aa					.word	L10052
+>aef5	00					.byte	0
+>aef6	06					.byte	6
+>aef7	d2 ba e9 db d9 dd			.byte	$d2,$ba,$e9,$db,$d9,$dd
 >aefd	09					.byte	9
 >aefe	4d					.byte	'M'
->aeff	a6 aa					.word	L10064
+>aeff	60 aa					.word	L10053
 >af01	00					.byte	0
 >af02	03					.byte	3
->af03	d2 ad ec				.byte	$d2,$ad,$ec
+>af03	d2 ba e9				.byte	$d2,$ba,$e9
 >af06	09					.byte	9
 >af07	4d					.byte	'M'
->af08	b2 aa					.word	L10065
+>af08	69 aa					.word	L10054
 >af0a	00					.byte	0
 >af0b	03					.byte	3
->af0c	d2 ad e9				.byte	$d2,$ad,$e9
+>af0c	d2 ba e3				.byte	$d2,$ba,$e3
 >af0f	09					.byte	9
 >af10	4d					.byte	'M'
->af11	bc aa					.word	L10066
+>af11	6d aa					.word	L10055
 >af13	00					.byte	0
 >af14	03					.byte	3
->af15	d2 ad e3				.byte	$d2,$ad,$e3
->af18	09					.byte	9
+>af15	d2 ba e2				.byte	$d2,$ba,$e2
+>af18	0c					.byte	12
 >af19	4d					.byte	'M'
->af1a	c4 aa					.word	L10067
+>af1a	70 aa					.word	L10056
 >af1c	00					.byte	0
->af1d	03					.byte	3
->af1e	d2 ad e2				.byte	$d2,$ad,$e2
->af21	09					.byte	9
->af22	4d					.byte	'M'
->af23	cb aa					.word	L10068
->af25	00					.byte	0
->af26	03					.byte	3
->af27	d2 ad bf				.byte	$d2,$ad,$bf
->af2a	0a					.byte	10
->af2b	4d					.byte	'M'
->af2c	d1 aa					.word	L10069
->af2e	00					.byte	0
->af2f	04					.byte	4
->af30	d2 ad be d3				.byte	$d2,$ad,$be,$d3
->af34	09					.byte	9
->af35	4d					.byte	'M'
->af36	d4 aa					.word	L10070
->af38	00					.byte	0
->af39	03					.byte	3
->af3a	d2 ab f7				.byte	$d2,$ab,$f7
->af3d	0c					.byte	12
->af3e	4d					.byte	'M'
->af3f	de aa					.word	L10071
->af41	00					.byte	0
->af42	06					.byte	6
->af43	d2 ab f3 db d9 dd			.byte	$d2,$ab,$f3,$db,$d9,$dd
->af49	09					.byte	9
->af4a	4d					.byte	'M'
->af4b	ea aa					.word	L10072
->af4d	00					.byte	0
->af4e	03					.byte	3
->af4f	d2 ab f3				.byte	$d2,$ab,$f3
->af52	09					.byte	9
->af53	4d					.byte	'M'
->af54	f1 aa					.word	L10073
->af56	00					.byte	0
->af57	03					.byte	3
->af58	d2 ab ec				.byte	$d2,$ab,$ec
->af5b	09					.byte	9
->af5c	4d					.byte	'M'
->af5d	fd aa					.word	L10074
->af5f	00					.byte	0
->af60	03					.byte	3
->af61	d2 ab e9				.byte	$d2,$ab,$e9
->af64	09					.byte	9
->af65	4d					.byte	'M'
->af66	07 ab					.word	L10075
->af68	00					.byte	0
->af69	03					.byte	3
->af6a	d2 ab e3				.byte	$d2,$ab,$e3
->af6d	09					.byte	9
->af6e	4d					.byte	'M'
->af6f	0f ab					.word	L10076
->af71	00					.byte	0
->af72	03					.byte	3
->af73	d2 ab e2				.byte	$d2,$ab,$e2
->af76	09					.byte	9
->af77	4d					.byte	'M'
->af78	16 ab					.word	L10077
->af7a	00					.byte	0
->af7b	03					.byte	3
->af7c	d2 ab bf				.byte	$d2,$ab,$bf
->af7f	09					.byte	9
->af80	4d					.byte	'M'
->af81	1c ab					.word	L10078
->af83	00					.byte	0
->af84	03					.byte	3
->af85	d2 a6 f7				.byte	$d2,$a6,$f7
->af88	0c					.byte	12
->af89	4d					.byte	'M'
->af8a	25 ab					.word	L10079
->af8c	00					.byte	0
->af8d	06					.byte	6
->af8e	d2 a6 f3 db d9 dd			.byte	$d2,$a6,$f3,$db,$d9,$dd
->af94	09					.byte	9
->af95	4d					.byte	'M'
->af96	30 ab					.word	L10080
->af98	00					.byte	0
->af99	03					.byte	3
->af9a	d2 a6 f3				.byte	$d2,$a6,$f3
->af9d	09					.byte	9
->af9e	4d					.byte	'M'
->af9f	35 ab					.word	L10081
->afa1	00					.byte	0
->afa2	03					.byte	3
->afa3	d2 a6 ec				.byte	$d2,$a6,$ec
->afa6	09					.byte	9
->afa7	4d					.byte	'M'
->afa8	40 ab					.word	L10082
->afaa	00					.byte	0
->afab	03					.byte	3
->afac	d2 a6 e9				.byte	$d2,$a6,$e9
->afaf	09					.byte	9
->afb0	4d					.byte	'M'
->afb1	49 ab					.word	L10083
->afb3	00					.byte	0
->afb4	03					.byte	3
->afb5	d2 a6 e3				.byte	$d2,$a6,$e3
->afb8	09					.byte	9
->afb9	4d					.byte	'M'
->afba	4f ab					.word	L10084
->afbc	00					.byte	0
->afbd	03					.byte	3
->afbe	d2 a6 e2				.byte	$d2,$a6,$e2
->afc1	0a					.byte	10
->afc2	4d					.byte	'M'
->afc3	54 ab					.word	L10085
->afc5	00					.byte	0
->afc6	04					.byte	4
->afc7	50 52 4f c3				.byte	$50,$52,$4f,$c3
->afcb	0a					.byte	10
->afcc	4d					.byte	'M'
->afcd	57 ab					.word	L10086
->afcf	00					.byte	0
->afd0	04					.byte	4
->afd1	4e 45 58 d4				.byte	$4e,$45,$58,$d4
->afd5	08					.byte	8
+>af1d	06					.byte	6
+>af1e	52 2e 53 57 41 d0			.byte	$52,$2e,$53,$57,$41,$d0
+>af24	0b					.byte	11
+>af25	4d					.byte	'M'
+>af26	74 aa					.word	L10057
+>af28	00					.byte	0
+>af29	05					.byte	5
+>af2a	52 2e 46 4f d2				.byte	$52,$2e,$46,$4f,$d2
+>af2f	09					.byte	9
+>af30	4d					.byte	'M'
+>af31	77 aa					.word	L10058
+>af33	00					.byte	0
+>af34	03					.byte	3
+>af35	d2 ad f7				.byte	$d2,$ad,$f7
+>af38	09					.byte	9
+>af39	4d					.byte	'M'
+>af3a	81 aa					.word	L10059
+>af3c	00					.byte	0
+>af3d	03					.byte	3
+>af3e	d2 ad f3				.byte	$d2,$ad,$f3
+>af41	0c					.byte	12
+>af42	4d					.byte	'M'
+>af43	88 aa					.word	L10060
+>af45	00					.byte	0
+>af46	06					.byte	6
+>af47	d2 ad ec db d9 dd			.byte	$d2,$ad,$ec,$db,$d9,$dd
+>af4d	09					.byte	9
+>af4e	4d					.byte	'M'
+>af4f	94 aa					.word	L10061
+>af51	00					.byte	0
+>af52	03					.byte	3
+>af53	d2 ad ec				.byte	$d2,$ad,$ec
+>af56	0c					.byte	12
+>af57	4d					.byte	'M'
+>af58	a0 aa					.word	L10062
+>af5a	00					.byte	0
+>af5b	06					.byte	6
+>af5c	d2 ad e9 db d9 dd			.byte	$d2,$ad,$e9,$db,$d9,$dd
+>af62	09					.byte	9
+>af63	4d					.byte	'M'
+>af64	ac aa					.word	L10063
+>af66	00					.byte	0
+>af67	03					.byte	3
+>af68	d2 ad e9				.byte	$d2,$ad,$e9
+>af6b	09					.byte	9
+>af6c	4d					.byte	'M'
+>af6d	b6 aa					.word	L10064
+>af6f	00					.byte	0
+>af70	03					.byte	3
+>af71	d2 ad e3				.byte	$d2,$ad,$e3
+>af74	09					.byte	9
+>af75	4d					.byte	'M'
+>af76	be aa					.word	L10065
+>af78	00					.byte	0
+>af79	03					.byte	3
+>af7a	d2 ad e2				.byte	$d2,$ad,$e2
+>af7d	09					.byte	9
+>af7e	4d					.byte	'M'
+>af7f	c5 aa					.word	L10066
+>af81	00					.byte	0
+>af82	03					.byte	3
+>af83	d2 ad bf				.byte	$d2,$ad,$bf
+>af86	0a					.byte	10
+>af87	4d					.byte	'M'
+>af88	cb aa					.word	L10067
+>af8a	00					.byte	0
+>af8b	04					.byte	4
+>af8c	d2 ad be d3				.byte	$d2,$ad,$be,$d3
+>af90	09					.byte	9
+>af91	4d					.byte	'M'
+>af92	ce aa					.word	L10068
+>af94	00					.byte	0
+>af95	03					.byte	3
+>af96	d2 ab f7				.byte	$d2,$ab,$f7
+>af99	09					.byte	9
+>af9a	4d					.byte	'M'
+>af9b	d8 aa					.word	L10069
+>af9d	00					.byte	0
+>af9e	03					.byte	3
+>af9f	d2 ab f3				.byte	$d2,$ab,$f3
+>afa2	0c					.byte	12
+>afa3	4d					.byte	'M'
+>afa4	df aa					.word	L10070
+>afa6	00					.byte	0
+>afa7	06					.byte	6
+>afa8	d2 ab ec db d9 dd			.byte	$d2,$ab,$ec,$db,$d9,$dd
+>afae	09					.byte	9
+>afaf	4d					.byte	'M'
+>afb0	eb aa					.word	L10071
+>afb2	00					.byte	0
+>afb3	03					.byte	3
+>afb4	d2 ab ec				.byte	$d2,$ab,$ec
+>afb7	0c					.byte	12
+>afb8	4d					.byte	'M'
+>afb9	f7 aa					.word	L10072
+>afbb	00					.byte	0
+>afbc	06					.byte	6
+>afbd	d2 ab e9 db d9 dd			.byte	$d2,$ab,$e9,$db,$d9,$dd
+>afc3	09					.byte	9
+>afc4	4d					.byte	'M'
+>afc5	03 ab					.word	L10073
+>afc7	00					.byte	0
+>afc8	03					.byte	3
+>afc9	d2 ab e9				.byte	$d2,$ab,$e9
+>afcc	09					.byte	9
+>afcd	4d					.byte	'M'
+>afce	0d ab					.word	L10074
+>afd0	00					.byte	0
+>afd1	03					.byte	3
+>afd2	d2 ab e3				.byte	$d2,$ab,$e3
+>afd5	09					.byte	9
 >afd6	4d					.byte	'M'
->afd7	5a ab					.word	L10087
+>afd7	15 ab					.word	L10075
 >afd9	00					.byte	0
->afda	02					.byte	2
->afdb	49 c6					.byte	$49,$c6
->afdd	0d					.byte	13
->afde	4d					.byte	'M'
->afdf	5d ab					.word	L10088
->afe1	00					.byte	0
->afe2	07					.byte	7
->afe3	45 4e 44 50 52 4f c3			.byte	$45,$4e,$44,$50,$52,$4f,$c3
->afea	0b					.byte	11
->afeb	4d					.byte	'M'
->afec	60 ab					.word	L10089
->afee	00					.byte	0
->afef	05					.byte	5
->aff0	45 4e 44 49 c6				.byte	$45,$4e,$44,$49,$c6
->aff5	0a					.byte	10
->aff6	4d					.byte	'M'
->aff7	63 ab					.word	L10090
->aff9	00					.byte	0
->affa	04					.byte	4
->affb	45 4c 53 c5				.byte	$45,$4c,$53,$c5
->afff	09					.byte	9
->b000	4d					.byte	'M'
->b001	66 ab					.word	L10091
->b003	00					.byte	0
->b004	03					.byte	3
->b005	43 d3 bf				.byte	$43,$d3,$bf
->b008	09					.byte	9
->b009	4d					.byte	'M'
->b00a	6a ab					.word	L10092
->b00c	00					.byte	0
->b00d	03					.byte	3
->b00e	43 c3 bf				.byte	$43,$c3,$bf
->b011	0a					.byte	10
->b012	4d					.byte	'M'
->b013	6e ab					.word	L10093
->b015	00					.byte	0
->b016	04					.byte	4
->b017	42 59 54 c5				.byte	$42,$59,$54,$c5
->b01b	0b					.byte	11
->b01c	4d					.byte	'M'
->b01d	71 ab					.word	L10094
->b01f	00					.byte	0
->b020	05					.byte	5
->b021	42 52 45 41 cb				.byte	$42,$52,$45,$41,$cb
->b026	0c					.byte	12
->b027	4d					.byte	'M'
->b028	73 ab					.word	L10095
->b02a	00					.byte	0
->b02b	06					.byte	6
->b02c	c1 f3 f3 db d9 dd			.byte	$c1,$f3,$f3,$db,$d9,$dd
->b032	09					.byte	9
->b033	4d					.byte	'M'
->b034	76 ab					.word	L10096
->b036	00					.byte	0
->b037	03					.byte	3
->b038	c1 f3 f3				.byte	$c1,$f3,$f3
->b03b	09					.byte	9
->b03c	4d					.byte	'M'
->b03d	79 ab					.word	L10097
->b03f	00					.byte	0
->b040	03					.byte	3
->b041	c1 e3 e3				.byte	$c1,$e3,$e3
->b044	09					.byte	9
->b045	4d					.byte	'M'
->b046	7d ab					.word	L10098
->b048	00					.byte	0
->b049	03					.byte	3
->b04a	c1 e2 e2				.byte	$c1,$e2,$e2
->b04d	0c					.byte	12
->b04e	4d					.byte	'M'
->b04f	80 ab					.word	L10099
->b051	00					.byte	0
->b052	06					.byte	6
->b053	c1 bd f3 db d9 dd			.byte	$c1,$bd,$f3,$db,$d9,$dd
->b059	09					.byte	9
->b05a	4d					.byte	'M'
->b05b	83 ab					.word	L10100
->b05d	00					.byte	0
->b05e	03					.byte	3
->b05f	c1 bd f3				.byte	$c1,$bd,$f3
->b062	09					.byte	9
->b063	4d					.byte	'M'
->b064	86 ab					.word	L10101
->b066	00					.byte	0
->b067	03					.byte	3
->b068	c1 bd e3				.byte	$c1,$bd,$e3
->b06b	09					.byte	9
->b06c	4d					.byte	'M'
->b06d	8a ab					.word	L10102
->b06f	00					.byte	0
->b070	03					.byte	3
->b071	c1 bd e2				.byte	$c1,$bd,$e2
->b074	09					.byte	9
->b075	4d					.byte	'M'
->b076	8d ab					.word	L10103
->b078	00					.byte	0
->b079	03					.byte	3
->b07a	c1 bd d9				.byte	$c1,$bd,$d9
->b07d	09					.byte	9
->b07e	4d					.byte	'M'
->b07f	8f ab					.word	L10104
->b081	00					.byte	0
->b082	03					.byte	3
->b083	c1 bd d2				.byte	$c1,$bd,$d2
->b086	09					.byte	9
->b087	4d					.byte	'M'
->b088	90 ab					.word	L10105
->b08a	00					.byte	0
->b08b	03					.byte	3
->b08c	c1 bd bf				.byte	$c1,$bd,$bf
->b08f	0a					.byte	10
->b090	4d					.byte	'M'
->b091	96 ab					.word	L10106
->b093	00					.byte	0
->b094	04					.byte	4
->b095	c1 bc be bf				.byte	$c1,$bc,$be,$bf
->b099	0c					.byte	12
->b09a	4d					.byte	'M'
->b09b	9c ab					.word	L10107
->b09d	00					.byte	0
->b09e	06					.byte	6
->b09f	c1 ba f3 db d9 dd			.byte	$c1,$ba,$f3,$db,$d9,$dd
->b0a5	09					.byte	9
->b0a6	4d					.byte	'M'
->b0a7	9f ab					.word	L10108
->b0a9	00					.byte	0
->b0aa	03					.byte	3
->b0ab	c1 ba f3				.byte	$c1,$ba,$f3
->b0ae	09					.byte	9
->b0af	4d					.byte	'M'
->b0b0	a2 ab					.word	L10109
->b0b2	00					.byte	0
->b0b3	03					.byte	3
->b0b4	c1 ba e3				.byte	$c1,$ba,$e3
->b0b7	09					.byte	9
+>afda	03					.byte	3
+>afdb	d2 ab e2				.byte	$d2,$ab,$e2
+>afde	09					.byte	9
+>afdf	4d					.byte	'M'
+>afe0	1c ab					.word	L10076
+>afe2	00					.byte	0
+>afe3	03					.byte	3
+>afe4	d2 ab bf				.byte	$d2,$ab,$bf
+>afe7	09					.byte	9
+>afe8	4d					.byte	'M'
+>afe9	22 ab					.word	L10077
+>afeb	00					.byte	0
+>afec	03					.byte	3
+>afed	d2 aa f7				.byte	$d2,$aa,$f7
+>aff0	09					.byte	9
+>aff1	4d					.byte	'M'
+>aff2	2b ab					.word	L10078
+>aff4	00					.byte	0
+>aff5	03					.byte	3
+>aff6	d2 aa f3				.byte	$d2,$aa,$f3
+>aff9	0c					.byte	12
+>affa	4d					.byte	'M'
+>affb	2e ab					.word	L10079
+>affd	00					.byte	0
+>affe	06					.byte	6
+>afff	d2 aa ec db d9 dd			.byte	$d2,$aa,$ec,$db,$d9,$dd
+>b005	09					.byte	9
+>b006	4d					.byte	'M'
+>b007	39 ab					.word	L10080
+>b009	00					.byte	0
+>b00a	03					.byte	3
+>b00b	d2 aa ec				.byte	$d2,$aa,$ec
+>b00e	0c					.byte	12
+>b00f	4d					.byte	'M'
+>b010	44 ab					.word	L10081
+>b012	00					.byte	0
+>b013	06					.byte	6
+>b014	d2 aa e9 db d9 dd			.byte	$d2,$aa,$e9,$db,$d9,$dd
+>b01a	09					.byte	9
+>b01b	4d					.byte	'M'
+>b01c	4f ab					.word	L10082
+>b01e	00					.byte	0
+>b01f	03					.byte	3
+>b020	d2 aa e9				.byte	$d2,$aa,$e9
+>b023	09					.byte	9
+>b024	4d					.byte	'M'
+>b025	58 ab					.word	L10083
+>b027	00					.byte	0
+>b028	03					.byte	3
+>b029	d2 aa e3				.byte	$d2,$aa,$e3
+>b02c	09					.byte	9
+>b02d	4d					.byte	'M'
+>b02e	5c ab					.word	L10084
+>b030	00					.byte	0
+>b031	03					.byte	3
+>b032	d2 aa e2				.byte	$d2,$aa,$e2
+>b035	09					.byte	9
+>b036	4d					.byte	'M'
+>b037	5f ab					.word	L10085
+>b039	00					.byte	0
+>b03a	03					.byte	3
+>b03b	d2 a6 f7				.byte	$d2,$a6,$f7
+>b03e	09					.byte	9
+>b03f	4d					.byte	'M'
+>b040	68 ab					.word	L10086
+>b042	00					.byte	0
+>b043	03					.byte	3
+>b044	d2 a6 f3				.byte	$d2,$a6,$f3
+>b047	0c					.byte	12
+>b048	4d					.byte	'M'
+>b049	6d ab					.word	L10087
+>b04b	00					.byte	0
+>b04c	06					.byte	6
+>b04d	d2 a6 ec db d9 dd			.byte	$d2,$a6,$ec,$db,$d9,$dd
+>b053	09					.byte	9
+>b054	4d					.byte	'M'
+>b055	78 ab					.word	L10088
+>b057	00					.byte	0
+>b058	03					.byte	3
+>b059	d2 a6 ec				.byte	$d2,$a6,$ec
+>b05c	0c					.byte	12
+>b05d	4d					.byte	'M'
+>b05e	83 ab					.word	L10089
+>b060	00					.byte	0
+>b061	06					.byte	6
+>b062	d2 a6 e9 db d9 dd			.byte	$d2,$a6,$e9,$db,$d9,$dd
+>b068	09					.byte	9
+>b069	4d					.byte	'M'
+>b06a	8e ab					.word	L10090
+>b06c	00					.byte	0
+>b06d	03					.byte	3
+>b06e	d2 a6 e9				.byte	$d2,$a6,$e9
+>b071	09					.byte	9
+>b072	4d					.byte	'M'
+>b073	97 ab					.word	L10091
+>b075	00					.byte	0
+>b076	03					.byte	3
+>b077	d2 a6 e3				.byte	$d2,$a6,$e3
+>b07a	09					.byte	9
+>b07b	4d					.byte	'M'
+>b07c	9d ab					.word	L10092
+>b07e	00					.byte	0
+>b07f	03					.byte	3
+>b080	d2 a6 e2				.byte	$d2,$a6,$e2
+>b083	0a					.byte	10
+>b084	4d					.byte	'M'
+>b085	a2 ab					.word	L10093
+>b087	00					.byte	0
+>b088	04					.byte	4
+>b089	50 52 4f c3				.byte	$50,$52,$4f,$c3
+>b08d	0a					.byte	10
+>b08e	4d					.byte	'M'
+>b08f	a5 ab					.word	L10094
+>b091	00					.byte	0
+>b092	04					.byte	4
+>b093	4e 45 58 d4				.byte	$4e,$45,$58,$d4
+>b097	08					.byte	8
+>b098	4d					.byte	'M'
+>b099	a8 ab					.word	L10095
+>b09b	00					.byte	0
+>b09c	02					.byte	2
+>b09d	49 c6					.byte	$49,$c6
+>b09f	0d					.byte	13
+>b0a0	4d					.byte	'M'
+>b0a1	ab ab					.word	L10096
+>b0a3	00					.byte	0
+>b0a4	07					.byte	7
+>b0a5	45 4e 44 50 52 4f c3			.byte	$45,$4e,$44,$50,$52,$4f,$c3
+>b0ac	0b					.byte	11
+>b0ad	4d					.byte	'M'
+>b0ae	ae ab					.word	L10097
+>b0b0	00					.byte	0
+>b0b1	05					.byte	5
+>b0b2	45 4e 44 49 c6				.byte	$45,$4e,$44,$49,$c6
+>b0b7	0a					.byte	10
 >b0b8	4d					.byte	'M'
->b0b9	a6 ab					.word	L10110
+>b0b9	b1 ab					.word	L10098
 >b0bb	00					.byte	0
->b0bc	03					.byte	3
->b0bd	c1 ba e2				.byte	$c1,$ba,$e2
->b0c0	0b					.byte	11
->b0c1	4d					.byte	'M'
->b0c2	a9 ab					.word	L10111
->b0c4	00					.byte	0
->b0c5	05					.byte	5
->b0c6	41 2e 46 4f d2				.byte	$41,$2e,$46,$4f,$d2
->b0cb	0c					.byte	12
->b0cc	4d					.byte	'M'
->b0cd	ac ab					.word	L10112
->b0cf	00					.byte	0
->b0d0	06					.byte	6
->b0d1	c1 ad f3 db d9 dd			.byte	$c1,$ad,$f3,$db,$d9,$dd
->b0d7	09					.byte	9
->b0d8	4d					.byte	'M'
->b0d9	b0 ab					.word	L10113
->b0db	00					.byte	0
->b0dc	03					.byte	3
->b0dd	c1 ad f3				.byte	$c1,$ad,$f3
->b0e0	09					.byte	9
->b0e1	4d					.byte	'M'
->b0e2	b4 ab					.word	L10114
->b0e4	00					.byte	0
->b0e5	03					.byte	3
->b0e6	c1 ad e3				.byte	$c1,$ad,$e3
->b0e9	09					.byte	9
->b0ea	4d					.byte	'M'
->b0eb	b9 ab					.word	L10115
->b0ed	00					.byte	0
->b0ee	03					.byte	3
->b0ef	c1 ad e2				.byte	$c1,$ad,$e2
->b0f2	09					.byte	9
->b0f3	4d					.byte	'M'
->b0f4	bd ab					.word	L10116
->b0f6	00					.byte	0
->b0f7	03					.byte	3
->b0f8	c1 ad bf				.byte	$c1,$ad,$bf
->b0fb	0a					.byte	10
->b0fc	4d					.byte	'M'
->b0fd	c3 ab					.word	L10117
->b0ff	00					.byte	0
->b100	04					.byte	4
->b101	c1 ad be d3				.byte	$c1,$ad,$be,$d3
->b105	0c					.byte	12
->b106	4d					.byte	'M'
->b107	c5 ab					.word	L10118
->b109	00					.byte	0
->b10a	06					.byte	6
->b10b	c1 ab f3 db d9 dd			.byte	$c1,$ab,$f3,$db,$d9,$dd
->b111	09					.byte	9
->b112	4d					.byte	'M'
->b113	c9 ab					.word	L10119
->b115	00					.byte	0
->b116	03					.byte	3
->b117	c1 ab f3				.byte	$c1,$ab,$f3
->b11a	09					.byte	9
->b11b	4d					.byte	'M'
->b11c	cd ab					.word	L10120
->b11e	00					.byte	0
->b11f	03					.byte	3
->b120	c1 ab e3				.byte	$c1,$ab,$e3
->b123	09					.byte	9
->b124	4d					.byte	'M'
->b125	d2 ab					.word	L10121
->b127	00					.byte	0
->b128	03					.byte	3
->b129	c1 ab e2				.byte	$c1,$ab,$e2
->b12c	09					.byte	9
->b12d	4d					.byte	'M'
->b12e	d6 ab					.word	L10122
->b130	00					.byte	0
->b131	03					.byte	3
->b132	c1 ab bf				.byte	$c1,$ab,$bf
->b135	0c					.byte	12
->b136	4d					.byte	'M'
->b137	dc ab					.word	L10123
->b139	00					.byte	0
->b13a	06					.byte	6
->b13b	c1 a6 f3 db d9 dd			.byte	$c1,$a6,$f3,$db,$d9,$dd
->b141	09					.byte	9
->b142	4d					.byte	'M'
->b143	df ab					.word	L10124
->b145	00					.byte	0
->b146	03					.byte	3
->b147	c1 a6 f3				.byte	$c1,$a6,$f3
->b14a	09					.byte	9
->b14b	4d					.byte	'M'
->b14c	e2 ab					.word	L10125
->b14e	00					.byte	0
->b14f	03					.byte	3
->b150	c1 a6 e3				.byte	$c1,$a6,$e3
->b153	09					.byte	9
->b154	4d					.byte	'M'
->b155	e6 ab					.word	L10126
->b157	00					.byte	0
->b158	03					.byte	3
->b159	c1 a6 e2				.byte	$c1,$a6,$e2
->b15c	09					.byte	9
->b15d	4d					.byte	'M'
->b15e	e9 ab					.word	L10127
->b160	00					.byte	0
->b161	03					.byte	3
->b162	be be f3				.byte	$be,$be,$f3
->b165	09					.byte	9
->b166	4d					.byte	'M'
->b167	ec ab					.word	L10128
->b169	00					.byte	0
->b16a	03					.byte	3
->b16b	be be ec				.byte	$be,$be,$ec
->b16e	09					.byte	9
->b16f	4d					.byte	'M'
->b170	f3 ab					.word	L10129
->b172	00					.byte	0
->b173	03					.byte	3
->b174	be be e9				.byte	$be,$be,$e9
->b177	09					.byte	9
->b178	4d					.byte	'M'
->b179	f8 ab					.word	L10130
->b17b	00					.byte	0
->b17c	03					.byte	3
->b17d	be be e3				.byte	$be,$be,$e3
->b180	09					.byte	9
->b181	4d					.byte	'M'
->b182	fc ab					.word	L10131
->b184	00					.byte	0
->b185	03					.byte	3
->b186	be be d2				.byte	$be,$be,$d2
->b189	09					.byte	9
->b18a	4d					.byte	'M'
->b18b	03 ac					.word	L10132
->b18d	00					.byte	0
->b18e	03					.byte	3
->b18f	be be c1				.byte	$be,$be,$c1
->b192	09					.byte	9
->b193	4d					.byte	'M'
->b194	05 ac					.word	L10133
->b196	00					.byte	0
->b197	03					.byte	3
->b198	bc bc f3				.byte	$bc,$bc,$f3
->b19b	09					.byte	9
->b19c	4d					.byte	'M'
->b19d	08 ac					.word	L10134
->b19f	00					.byte	0
->b1a0	03					.byte	3
->b1a1	bc bc ec				.byte	$bc,$bc,$ec
->b1a4	09					.byte	9
->b1a5	4d					.byte	'M'
->b1a6	0f ac					.word	L10135
->b1a8	00					.byte	0
->b1a9	03					.byte	3
->b1aa	bc bc e9				.byte	$bc,$bc,$e9
->b1ad	09					.byte	9
->b1ae	4d					.byte	'M'
->b1af	14 ac					.word	L10136
->b1b1	00					.byte	0
->b1b2	03					.byte	3
->b1b3	bc bc e3				.byte	$bc,$bc,$e3
->b1b6	09					.byte	9
->b1b7	4d					.byte	'M'
->b1b8	18 ac					.word	L10137
->b1ba	00					.byte	0
->b1bb	03					.byte	3
->b1bc	bc bc d2				.byte	$bc,$bc,$d2
->b1bf	09					.byte	9
->b1c0	4d					.byte	'M'
->b1c1	1f ac					.word	L10138
->b1c3	00					.byte	0
->b1c4	03					.byte	3
->b1c5	bc bc c1				.byte	$bc,$bc,$c1
->b1c8	0b					.byte	11
->b1c9	4d					.byte	'M'
->b1ca	21 ac					.word	L10139
->b1cc	00					.byte	0
->b1cd	05					.byte	5
->b1ce	ad 52 50 48 c1				.byte	$ad,$52,$50,$48,$c1
->b1d3	08					.byte	8
->b1d4	4d					.byte	'M'
->b1d5	2d ac					.word	L10140
->b1d7	00					.byte	0
->b1d8	02					.byte	2
->b1d9	ad c1					.byte	$ad,$c1
->b1db	09					.byte	9
->b1dc	4d					.byte	'M'
->b1dd	31 ac					.word	L10141
->b1df	00					.byte	0
->b1e0	03					.byte	3
->b1e1	ad ad f3				.byte	$ad,$ad,$f3
->b1e4	09					.byte	9
->b1e5	4d					.byte	'M'
->b1e6	34 ac					.word	L10142
->b1e8	00					.byte	0
->b1e9	03					.byte	3
->b1ea	ad ad ec				.byte	$ad,$ad,$ec
->b1ed	09					.byte	9
->b1ee	4d					.byte	'M'
->b1ef	42 ac					.word	L10143
->b1f1	00					.byte	0
->b1f2	03					.byte	3
->b1f3	ad ad e9				.byte	$ad,$ad,$e9
->b1f6	09					.byte	9
->b1f7	4d					.byte	'M'
->b1f8	4d ac					.word	L10144
->b1fa	00					.byte	0
->b1fb	03					.byte	3
->b1fc	ad ad e3				.byte	$ad,$ad,$e3
->b1ff	09					.byte	9
->b200	4d					.byte	'M'
->b201	51 ac					.word	L10145
->b203	00					.byte	0
->b204	03					.byte	3
->b205	ad ad d9				.byte	$ad,$ad,$d9
->b208	09					.byte	9
->b209	4d					.byte	'M'
->b20a	53 ac					.word	L10146
->b20c	00					.byte	0
->b20d	03					.byte	3
->b20e	ad ad d2				.byte	$ad,$ad,$d2
->b211	09					.byte	9
->b212	4d					.byte	'M'
->b213	5a ac					.word	L10147
->b215	00					.byte	0
->b216	03					.byte	3
->b217	ad ad c1				.byte	$ad,$ad,$c1
->b21a	09					.byte	9
->b21b	4d					.byte	'M'
->b21c	5c ac					.word	L10148
->b21e	00					.byte	0
->b21f	03					.byte	3
->b220	ab ab f3				.byte	$ab,$ab,$f3
->b223	09					.byte	9
->b224	4d					.byte	'M'
->b225	5f ac					.word	L10149
->b227	00					.byte	0
->b228	03					.byte	3
->b229	ab ab ec				.byte	$ab,$ab,$ec
->b22c	09					.byte	9
->b22d	4d					.byte	'M'
->b22e	68 ac					.word	L10150
->b230	00					.byte	0
->b231	03					.byte	3
->b232	ab ab e9				.byte	$ab,$ab,$e9
->b235	09					.byte	9
->b236	4d					.byte	'M'
->b237	6f ac					.word	L10151
->b239	00					.byte	0
->b23a	03					.byte	3
->b23b	ab ab e3				.byte	$ab,$ab,$e3
->b23e	09					.byte	9
->b23f	4d					.byte	'M'
->b240	73 ac					.word	L10152
->b242	00					.byte	0
->b243	03					.byte	3
->b244	ab ab d9				.byte	$ab,$ab,$d9
->b247	09					.byte	9
->b248	4d					.byte	'M'
->b249	75 ac					.word	L10153
->b24b	00					.byte	0
->b24c	03					.byte	3
->b24d	ab ab d2				.byte	$ab,$ab,$d2
->b250	09					.byte	9
->b251	4d					.byte	'M'
->b252	7a ac					.word	L10154
->b254	00					.byte	0
->b255	03					.byte	3
->b256	ab ab c1				.byte	$ab,$ab,$c1
->b259	00					.byte	$00
+>b0bc	04					.byte	4
+>b0bd	45 4c 53 c5				.byte	$45,$4c,$53,$c5
+>b0c1	09					.byte	9
+>b0c2	4d					.byte	'M'
+>b0c3	b4 ab					.word	L10099
+>b0c5	00					.byte	0
+>b0c6	03					.byte	3
+>b0c7	43 d3 bf				.byte	$43,$d3,$bf
+>b0ca	09					.byte	9
+>b0cb	4d					.byte	'M'
+>b0cc	b8 ab					.word	L10100
+>b0ce	00					.byte	0
+>b0cf	03					.byte	3
+>b0d0	43 c3 bf				.byte	$43,$c3,$bf
+>b0d3	0a					.byte	10
+>b0d4	4d					.byte	'M'
+>b0d5	bc ab					.word	L10101
+>b0d7	00					.byte	0
+>b0d8	04					.byte	4
+>b0d9	42 59 54 c5				.byte	$42,$59,$54,$c5
+>b0dd	0b					.byte	11
+>b0de	4d					.byte	'M'
+>b0df	bf ab					.word	L10102
+>b0e1	00					.byte	0
+>b0e2	05					.byte	5
+>b0e3	42 52 45 41 cb				.byte	$42,$52,$45,$41,$cb
+>b0e8	09					.byte	9
+>b0e9	4d					.byte	'M'
+>b0ea	c1 ab					.word	L10103
+>b0ec	00					.byte	0
+>b0ed	03					.byte	3
+>b0ee	c1 bd f3				.byte	$c1,$bd,$f3
+>b0f1	0c					.byte	12
+>b0f2	4d					.byte	'M'
+>b0f3	c4 ab					.word	L10104
+>b0f5	00					.byte	0
+>b0f6	06					.byte	6
+>b0f7	c1 bd ec db d9 dd			.byte	$c1,$bd,$ec,$db,$d9,$dd
+>b0fd	0c					.byte	12
+>b0fe	4d					.byte	'M'
+>b0ff	c7 ab					.word	L10105
+>b101	00					.byte	0
+>b102	06					.byte	6
+>b103	c1 bd e9 db d9 dd			.byte	$c1,$bd,$e9,$db,$d9,$dd
+>b109	09					.byte	9
+>b10a	4d					.byte	'M'
+>b10b	ca ab					.word	L10106
+>b10d	00					.byte	0
+>b10e	03					.byte	3
+>b10f	c1 bd e3				.byte	$c1,$bd,$e3
+>b112	09					.byte	9
+>b113	4d					.byte	'M'
+>b114	ce ab					.word	L10107
+>b116	00					.byte	0
+>b117	03					.byte	3
+>b118	c1 bd e2				.byte	$c1,$bd,$e2
+>b11b	09					.byte	9
+>b11c	4d					.byte	'M'
+>b11d	d1 ab					.word	L10108
+>b11f	00					.byte	0
+>b120	03					.byte	3
+>b121	c1 bd d9				.byte	$c1,$bd,$d9
+>b124	09					.byte	9
+>b125	4d					.byte	'M'
+>b126	d3 ab					.word	L10109
+>b128	00					.byte	0
+>b129	03					.byte	3
+>b12a	c1 bd d2				.byte	$c1,$bd,$d2
+>b12d	09					.byte	9
+>b12e	4d					.byte	'M'
+>b12f	d4 ab					.word	L10110
+>b131	00					.byte	0
+>b132	03					.byte	3
+>b133	c1 bd bf				.byte	$c1,$bd,$bf
+>b136	0a					.byte	10
+>b137	4d					.byte	'M'
+>b138	da ab					.word	L10111
+>b13a	00					.byte	0
+>b13b	04					.byte	4
+>b13c	c1 bc be bf				.byte	$c1,$bc,$be,$bf
+>b140	09					.byte	9
+>b141	4d					.byte	'M'
+>b142	e0 ab					.word	L10112
+>b144	00					.byte	0
+>b145	03					.byte	3
+>b146	c1 ba f3				.byte	$c1,$ba,$f3
+>b149	0c					.byte	12
+>b14a	4d					.byte	'M'
+>b14b	e3 ab					.word	L10113
+>b14d	00					.byte	0
+>b14e	06					.byte	6
+>b14f	c1 ba ec db d9 dd			.byte	$c1,$ba,$ec,$db,$d9,$dd
+>b155	0c					.byte	12
+>b156	4d					.byte	'M'
+>b157	e6 ab					.word	L10114
+>b159	00					.byte	0
+>b15a	06					.byte	6
+>b15b	c1 ba e9 db d9 dd			.byte	$c1,$ba,$e9,$db,$d9,$dd
+>b161	09					.byte	9
+>b162	4d					.byte	'M'
+>b163	e9 ab					.word	L10115
+>b165	00					.byte	0
+>b166	03					.byte	3
+>b167	c1 ba e3				.byte	$c1,$ba,$e3
+>b16a	09					.byte	9
+>b16b	4d					.byte	'M'
+>b16c	ed ab					.word	L10116
+>b16e	00					.byte	0
+>b16f	03					.byte	3
+>b170	c1 ba e2				.byte	$c1,$ba,$e2
+>b173	0b					.byte	11
+>b174	4d					.byte	'M'
+>b175	f0 ab					.word	L10117
+>b177	00					.byte	0
+>b178	05					.byte	5
+>b179	41 2e 46 4f d2				.byte	$41,$2e,$46,$4f,$d2
+>b17e	09					.byte	9
+>b17f	4d					.byte	'M'
+>b180	f3 ab					.word	L10118
+>b182	00					.byte	0
+>b183	03					.byte	3
+>b184	c1 ad f3				.byte	$c1,$ad,$f3
+>b187	0c					.byte	12
+>b188	4d					.byte	'M'
+>b189	f7 ab					.word	L10119
+>b18b	00					.byte	0
+>b18c	06					.byte	6
+>b18d	c1 ad ec db d9 dd			.byte	$c1,$ad,$ec,$db,$d9,$dd
+>b193	0c					.byte	12
+>b194	4d					.byte	'M'
+>b195	fb ab					.word	L10120
+>b197	00					.byte	0
+>b198	06					.byte	6
+>b199	c1 ad e9 db d9 dd			.byte	$c1,$ad,$e9,$db,$d9,$dd
+>b19f	09					.byte	9
+>b1a0	4d					.byte	'M'
+>b1a1	ff ab					.word	L10121
+>b1a3	00					.byte	0
+>b1a4	03					.byte	3
+>b1a5	c1 ad e3				.byte	$c1,$ad,$e3
+>b1a8	09					.byte	9
+>b1a9	4d					.byte	'M'
+>b1aa	04 ac					.word	L10122
+>b1ac	00					.byte	0
+>b1ad	03					.byte	3
+>b1ae	c1 ad e2				.byte	$c1,$ad,$e2
+>b1b1	09					.byte	9
+>b1b2	4d					.byte	'M'
+>b1b3	08 ac					.word	L10123
+>b1b5	00					.byte	0
+>b1b6	03					.byte	3
+>b1b7	c1 ad bf				.byte	$c1,$ad,$bf
+>b1ba	0a					.byte	10
+>b1bb	4d					.byte	'M'
+>b1bc	0e ac					.word	L10124
+>b1be	00					.byte	0
+>b1bf	04					.byte	4
+>b1c0	c1 ad be d3				.byte	$c1,$ad,$be,$d3
+>b1c4	09					.byte	9
+>b1c5	4d					.byte	'M'
+>b1c6	10 ac					.word	L10125
+>b1c8	00					.byte	0
+>b1c9	03					.byte	3
+>b1ca	c1 ab f3				.byte	$c1,$ab,$f3
+>b1cd	0c					.byte	12
+>b1ce	4d					.byte	'M'
+>b1cf	14 ac					.word	L10126
+>b1d1	00					.byte	0
+>b1d2	06					.byte	6
+>b1d3	c1 ab ec db d9 dd			.byte	$c1,$ab,$ec,$db,$d9,$dd
+>b1d9	0c					.byte	12
+>b1da	4d					.byte	'M'
+>b1db	18 ac					.word	L10127
+>b1dd	00					.byte	0
+>b1de	06					.byte	6
+>b1df	c1 ab e9 db d9 dd			.byte	$c1,$ab,$e9,$db,$d9,$dd
+>b1e5	09					.byte	9
+>b1e6	4d					.byte	'M'
+>b1e7	1c ac					.word	L10128
+>b1e9	00					.byte	0
+>b1ea	03					.byte	3
+>b1eb	c1 ab e3				.byte	$c1,$ab,$e3
+>b1ee	09					.byte	9
+>b1ef	4d					.byte	'M'
+>b1f0	21 ac					.word	L10129
+>b1f2	00					.byte	0
+>b1f3	03					.byte	3
+>b1f4	c1 ab e2				.byte	$c1,$ab,$e2
+>b1f7	09					.byte	9
+>b1f8	4d					.byte	'M'
+>b1f9	25 ac					.word	L10130
+>b1fb	00					.byte	0
+>b1fc	03					.byte	3
+>b1fd	c1 ab bf				.byte	$c1,$ab,$bf
+>b200	09					.byte	9
+>b201	4d					.byte	'M'
+>b202	2b ac					.word	L10131
+>b204	00					.byte	0
+>b205	03					.byte	3
+>b206	c1 aa f3				.byte	$c1,$aa,$f3
+>b209	0c					.byte	12
+>b20a	4d					.byte	'M'
+>b20b	2e ac					.word	L10132
+>b20d	00					.byte	0
+>b20e	06					.byte	6
+>b20f	c1 aa ec db d9 dd			.byte	$c1,$aa,$ec,$db,$d9,$dd
+>b215	0c					.byte	12
+>b216	4d					.byte	'M'
+>b217	31 ac					.word	L10133
+>b219	00					.byte	0
+>b21a	06					.byte	6
+>b21b	c1 aa e9 db d9 dd			.byte	$c1,$aa,$e9,$db,$d9,$dd
+>b221	09					.byte	9
+>b222	4d					.byte	'M'
+>b223	34 ac					.word	L10134
+>b225	00					.byte	0
+>b226	03					.byte	3
+>b227	c1 aa e3				.byte	$c1,$aa,$e3
+>b22a	09					.byte	9
+>b22b	4d					.byte	'M'
+>b22c	38 ac					.word	L10135
+>b22e	00					.byte	0
+>b22f	03					.byte	3
+>b230	c1 aa e2				.byte	$c1,$aa,$e2
+>b233	09					.byte	9
+>b234	4d					.byte	'M'
+>b235	3b ac					.word	L10136
+>b237	00					.byte	0
+>b238	03					.byte	3
+>b239	c1 a6 f3				.byte	$c1,$a6,$f3
+>b23c	0c					.byte	12
+>b23d	4d					.byte	'M'
+>b23e	3e ac					.word	L10137
+>b240	00					.byte	0
+>b241	06					.byte	6
+>b242	c1 a6 ec db d9 dd			.byte	$c1,$a6,$ec,$db,$d9,$dd
+>b248	0c					.byte	12
+>b249	4d					.byte	'M'
+>b24a	41 ac					.word	L10138
+>b24c	00					.byte	0
+>b24d	06					.byte	6
+>b24e	c1 a6 e9 db d9 dd			.byte	$c1,$a6,$e9,$db,$d9,$dd
+>b254	09					.byte	9
+>b255	4d					.byte	'M'
+>b256	44 ac					.word	L10139
+>b258	00					.byte	0
+>b259	03					.byte	3
+>b25a	c1 a6 e3				.byte	$c1,$a6,$e3
+>b25d	09					.byte	9
+>b25e	4d					.byte	'M'
+>b25f	48 ac					.word	L10140
+>b261	00					.byte	0
+>b262	03					.byte	3
+>b263	c1 a6 e2				.byte	$c1,$a6,$e2
+>b266	09					.byte	9
+>b267	4d					.byte	'M'
+>b268	4b ac					.word	L10141
+>b26a	00					.byte	0
+>b26b	03					.byte	3
+>b26c	be be f3				.byte	$be,$be,$f3
+>b26f	09					.byte	9
+>b270	4d					.byte	'M'
+>b271	4e ac					.word	L10142
+>b273	00					.byte	0
+>b274	03					.byte	3
+>b275	be be ec				.byte	$be,$be,$ec
+>b278	09					.byte	9
+>b279	4d					.byte	'M'
+>b27a	55 ac					.word	L10143
+>b27c	00					.byte	0
+>b27d	03					.byte	3
+>b27e	be be e9				.byte	$be,$be,$e9
+>b281	09					.byte	9
+>b282	4d					.byte	'M'
+>b283	5a ac					.word	L10144
+>b285	00					.byte	0
+>b286	03					.byte	3
+>b287	be be e3				.byte	$be,$be,$e3
+>b28a	09					.byte	9
+>b28b	4d					.byte	'M'
+>b28c	5e ac					.word	L10145
+>b28e	00					.byte	0
+>b28f	03					.byte	3
+>b290	be be d2				.byte	$be,$be,$d2
+>b293	09					.byte	9
+>b294	4d					.byte	'M'
+>b295	65 ac					.word	L10146
+>b297	00					.byte	0
+>b298	03					.byte	3
+>b299	be be c1				.byte	$be,$be,$c1
+>b29c	09					.byte	9
+>b29d	4d					.byte	'M'
+>b29e	67 ac					.word	L10147
+>b2a0	00					.byte	0
+>b2a1	03					.byte	3
+>b2a2	bc bc f3				.byte	$bc,$bc,$f3
+>b2a5	09					.byte	9
+>b2a6	4d					.byte	'M'
+>b2a7	6a ac					.word	L10148
+>b2a9	00					.byte	0
+>b2aa	03					.byte	3
+>b2ab	bc bc ec				.byte	$bc,$bc,$ec
+>b2ae	09					.byte	9
+>b2af	4d					.byte	'M'
+>b2b0	71 ac					.word	L10149
+>b2b2	00					.byte	0
+>b2b3	03					.byte	3
+>b2b4	bc bc e9				.byte	$bc,$bc,$e9
+>b2b7	09					.byte	9
+>b2b8	4d					.byte	'M'
+>b2b9	76 ac					.word	L10150
+>b2bb	00					.byte	0
+>b2bc	03					.byte	3
+>b2bd	bc bc e3				.byte	$bc,$bc,$e3
+>b2c0	09					.byte	9
+>b2c1	4d					.byte	'M'
+>b2c2	7a ac					.word	L10151
+>b2c4	00					.byte	0
+>b2c5	03					.byte	3
+>b2c6	bc bc d2				.byte	$bc,$bc,$d2
+>b2c9	09					.byte	9
+>b2ca	4d					.byte	'M'
+>b2cb	81 ac					.word	L10152
+>b2cd	00					.byte	0
+>b2ce	03					.byte	3
+>b2cf	bc bc c1				.byte	$bc,$bc,$c1
+>b2d2	0b					.byte	11
+>b2d3	4d					.byte	'M'
+>b2d4	83 ac					.word	L10153
+>b2d6	00					.byte	0
+>b2d7	05					.byte	5
+>b2d8	ad 52 50 48 c1				.byte	$ad,$52,$50,$48,$c1
+>b2dd	08					.byte	8
+>b2de	4d					.byte	'M'
+>b2df	8f ac					.word	L10154
+>b2e1	00					.byte	0
+>b2e2	02					.byte	2
+>b2e3	ad c1					.byte	$ad,$c1
+>b2e5	09					.byte	9
+>b2e6	4d					.byte	'M'
+>b2e7	93 ac					.word	L10155
+>b2e9	00					.byte	0
+>b2ea	03					.byte	3
+>b2eb	ad ad f3				.byte	$ad,$ad,$f3
+>b2ee	09					.byte	9
+>b2ef	4d					.byte	'M'
+>b2f0	96 ac					.word	L10156
+>b2f2	00					.byte	0
+>b2f3	03					.byte	3
+>b2f4	ad ad ec				.byte	$ad,$ad,$ec
+>b2f7	09					.byte	9
+>b2f8	4d					.byte	'M'
+>b2f9	a4 ac					.word	L10157
+>b2fb	00					.byte	0
+>b2fc	03					.byte	3
+>b2fd	ad ad e9				.byte	$ad,$ad,$e9
+>b300	09					.byte	9
+>b301	4d					.byte	'M'
+>b302	af ac					.word	L10158
+>b304	00					.byte	0
+>b305	03					.byte	3
+>b306	ad ad e3				.byte	$ad,$ad,$e3
+>b309	09					.byte	9
+>b30a	4d					.byte	'M'
+>b30b	b3 ac					.word	L10159
+>b30d	00					.byte	0
+>b30e	03					.byte	3
+>b30f	ad ad d9				.byte	$ad,$ad,$d9
+>b312	09					.byte	9
+>b313	4d					.byte	'M'
+>b314	b5 ac					.word	L10160
+>b316	00					.byte	0
+>b317	03					.byte	3
+>b318	ad ad d2				.byte	$ad,$ad,$d2
+>b31b	09					.byte	9
+>b31c	4d					.byte	'M'
+>b31d	bc ac					.word	L10161
+>b31f	00					.byte	0
+>b320	03					.byte	3
+>b321	ad ad c1				.byte	$ad,$ad,$c1
+>b324	09					.byte	9
+>b325	4d					.byte	'M'
+>b326	be ac					.word	L10162
+>b328	00					.byte	0
+>b329	03					.byte	3
+>b32a	ab ab f3				.byte	$ab,$ab,$f3
+>b32d	09					.byte	9
+>b32e	4d					.byte	'M'
+>b32f	c1 ac					.word	L10163
+>b331	00					.byte	0
+>b332	03					.byte	3
+>b333	ab ab ec				.byte	$ab,$ab,$ec
+>b336	09					.byte	9
+>b337	4d					.byte	'M'
+>b338	ca ac					.word	L10164
+>b33a	00					.byte	0
+>b33b	03					.byte	3
+>b33c	ab ab e9				.byte	$ab,$ab,$e9
+>b33f	09					.byte	9
+>b340	4d					.byte	'M'
+>b341	d1 ac					.word	L10165
+>b343	00					.byte	0
+>b344	03					.byte	3
+>b345	ab ab e3				.byte	$ab,$ab,$e3
+>b348	09					.byte	9
+>b349	4d					.byte	'M'
+>b34a	d5 ac					.word	L10166
+>b34c	00					.byte	0
+>b34d	03					.byte	3
+>b34e	ab ab d9				.byte	$ab,$ab,$d9
+>b351	09					.byte	9
+>b352	4d					.byte	'M'
+>b353	d7 ac					.word	L10167
+>b355	00					.byte	0
+>b356	03					.byte	3
+>b357	ab ab d2				.byte	$ab,$ab,$d2
+>b35a	09					.byte	9
+>b35b	4d					.byte	'M'
+>b35c	dc ac					.word	L10168
+>b35e	00					.byte	0
+>b35f	03					.byte	3
+>b360	ab ab c1				.byte	$ab,$ab,$c1
+>b363	00					.byte	$00
 
 ;******  Return to file: main.asm
 
 
 ;******  Processing file: utility/loadcode.asm
 
-.b25a					LoadBasicCode:
-.b25a	a9 89		lda #$89			lda 	#(LBCTest) & $FF
-.b25c	85 1a		sta $1a				sta 	zTemp0
-.b25e	a9 b2		lda #$b2			lda 	#(LBCTest) >> 8
-.b260	85 1b		sta $1b				sta 	zTemp0+1
-.b262	a9 01		lda #$01			lda 	#($801) & $FF
-.b264	85 1c		sta $1c				sta 	zTemp1
-.b266	a9 08		lda #$08			lda 	#($801) >> 8
-.b268	85 1d		sta $1d				sta 	zTemp1+1
-.b26a					_LBCCopy:
-.b26a	a0 02		ldy #$02			ldy 	#2							; skip over the loading address
-.b26c	b1 1a		lda ($1a),y			lda 	(zTemp0),y 					; skips first two bytes :)
-.b26e	92 1c		sta ($1c)			sta 	(zTemp1)
-.b270	e6 1a		inc $1a				inc 	zTemp0
-.b272	d0 02		bne $b276			bne 	_NoCarry
-.b274	e6 1b		inc $1b				inc 	zTemp0+1
-.b276					_NoCarry:
-.b276	e6 1c		inc $1c				inc 	zTemp1
-.b278	d0 02		bne $b27c			bne 	_NoCarry
-.b27a	e6 1d		inc $1d				inc 	zTemp1+1
-.b27c					_NoCarry:
-.b27c	a5 1a		lda $1a				lda 	zTemp0
-.b27e	c9 2d		cmp #$2d			cmp 	#LBCTestEnd & $FF
-.b280	d0 e8		bne $b26a			bne 	_LBCCopy
-.b282	a5 1b		lda $1b				lda 	zTemp0+1
-.b284	c9 b9		cmp #$b9			cmp 	#LBCTestEnd >> 8
-.b286	d0 e2		bne $b26a			bne 	_LBCCopy
-.b288	60		rts				rts
-.b289					LBCTest:
->b289	01 08 0c 08 e8 03 99 c7				.binary 	"../generated/test.prg"
->b291	28 31 34 29 00 17 08 f2 03 9e 34 30 39 36 30 00
->b2a1	32 08 fc 03 8f 2e 20 57 4f 52 44 20 56 45 52 41
->b2b1	2e 4c 4f 57 40 24 39 46 32 30 00 4e 08 06 04 8f
->b2c1	2e 20 42 59 54 45 20 56 45 52 41 2e 48 49 47 48
->b2d1	40 24 39 46 32 32 00 6a 08 10 04 8f 2e 20 42 59
->b2e1	54 45 20 56 45 52 41 2e 44 41 54 41 40 24 39 46
->b2f1	32 33 00 83 08 1a 04 8f 2e 20 57 4f 52 44 20 2e
->b301	53 50 52 49 54 45 2e 42 41 53 45 00 9c 08 24 04
->b311	8f 2e 20 42 59 54 45 20 2e 53 50 52 49 54 45 2e
->b321	4d 4f 44 45 00 b3 08 2e 04 8f 2e 20 50 52 4f 43
->b331	20 56 45 52 41 2e 53 45 54 28 29 00 c7 08 38 04
->b341	8f 2e 20 56 45 52 41 2e 4c 4f 57 20 3d 20 52 00
->b351	ea 08 42 04 8f 2e 20 41 3d 59 20 41 26 24 30 46
->b361	20 41 3a 24 31 30 20 56 45 52 41 2e 48 49 47 48
->b371	3d 41 00 f9 08 4c 04 8f 2e 20 45 4e 44 50 52 4f
->b381	43 00 14 09 56 04 8f 2e 20 50 52 4f 43 20 56 45
->b391	52 41 2e 50 41 4c 45 54 54 45 28 29 00 22 09 60
->b3a1	04 8f 2e 20 52 41 59 2d 3e 53 00 4f 09 6a 04 8f
->b3b1	2e 20 52 2d 3e 53 20 52 3d 59 20 3c 3c 52 20 52
->b3c1	3a 24 31 30 30 30 20 59 3d 24 30 46 20 56 45 52
->b3d1	41 2e 53 45 54 28 29 00 7a 09 74 04 8f 2e 20 53
->b3e1	2d 3e 52 20 56 45 52 41 2e 44 41 54 41 3d 41 20
->b3f1	52 2e 53 57 41 50 20 56 45 52 41 2e 44 41 54 41
->b401	3d 41 00 88 09 7e 04 8f 2e 20 53 2d 3e 52 41 59
->b411	00 97 09 88 04 8f 2e 20 45 4e 44 50 52 4f 43 00
->b421	b9 09 92 04 8f 2e 20 50 52 4f 43 20 56 45 52 41
->b431	2e 53 50 52 49 54 45 53 2e 45 4e 41 42 4c 45 28
->b441	29 00 16 0a 9c 04 8f 2e 20 52 41 59 2d 3e 53 20
->b451	2e 53 50 52 49 54 45 2e 4d 4f 44 45 3d 59 20 52
->b461	3c 3e 3f 20 49 46 20 31 20 45 4e 44 49 46 20 41
->b471	2d 3e 53 20 56 45 52 41 2e 53 45 54 28 24 34 30
->b481	30 30 2c 24 46 29 20 53 2d 3e 41 20 56 45 52 41
->b491	2e 44 41 54 41 3d 41 20 53 2d 3e 52 41 59 00 25
->b4a1	0a a6 04 8f 2e 20 45 4e 44 50 52 4f 43 00 3f 0a
->b4b1	b0 04 8f 2e 20 50 52 4f 43 20 56 45 52 41 2e 53
->b4c1	45 4c 45 43 54 28 29 00 7d 0a ba 04 8f 2e 20 52
->b4d1	41 59 2d 3e 53 20 52 26 24 37 46 20 3c 3c 41 20
->b4e1	3c 3c 52 20 3c 3c 52 20 52 3a 24 35 30 30 30 20
->b4f1	2e 53 50 52 49 54 45 2e 42 41 53 45 3d 52 20 53
->b501	2d 3e 52 41 59 00 8c 0a c4 04 8f 2e 20 45 4e 44
->b511	50 52 4f 43 00 a7 0a ce 04 8f 2e 20 50 52 4f 43
->b521	20 2e 56 45 52 41 2e 41 43 43 45 53 53 28 29 00
->b531	d8 0a d8 04 8f 2e 20 59 2d 3e 53 20 52 2b 2e 53
->b541	50 52 49 54 45 2e 42 41 53 45 20 59 3d 24 30 46
->b551	20 56 45 52 41 2e 53 45 54 28 29 20 53 2d 3e 59
->b561	00 e7 0a e2 04 8f 2e 20 45 4e 44 50 52 4f 43 00
->b571	fc 0a ec 04 8f 2e 20 50 52 4f 43 20 56 45 52 41
->b581	2e 58 28 29 00 4a 0b f6 04 8f 2e 20 52 41 59 2d
->b591	3e 53 20 52 2d 3e 53 20 2e 56 45 52 41 2e 41 43
->b5a1	43 45 53 53 28 32 29 20 53 2d 3e 52 20 56 45 52
->b5b1	41 2e 44 41 54 41 3d 41 20 52 2e 53 57 41 50 20
->b5c1	56 45 52 41 2e 44 41 54 41 3d 41 20 53 2d 3e 52
->b5d1	41 59 00 59 0b 00 05 8f 2e 20 45 4e 44 50 52 4f
->b5e1	43 00 6e 0b 0a 05 8f 2e 20 50 52 4f 43 20 56 45
->b5f1	52 41 2e 59 28 29 00 bc 0b 14 05 8f 2e 20 52 41
->b601	59 2d 3e 53 20 52 2d 3e 53 20 2e 56 45 52 41 2e
->b611	41 43 43 45 53 53 28 34 29 20 53 2d 3e 52 20 56
->b621	45 52 41 2e 44 41 54 41 3d 41 20 52 2e 53 57 41
->b631	50 20 56 45 52 41 2e 44 41 54 41 3d 41 20 53 2d
->b641	3e 52 41 59 00 cb 0b 1e 05 8f 2e 20 45 4e 44 50
->b651	52 4f 43 00 e5 0b 28 05 8f 2e 20 50 52 4f 43 20
->b661	56 45 52 41 2e 43 52 45 41 54 45 28 29 00 f3 0b
->b671	32 05 8f 2e 20 52 41 59 2d 3e 53 00 0f 0c 3c 05
->b681	8f 2e 20 3c 3c 41 20 3c 3c 41 20 3c 3c 41 20 3c
->b691	3c 41 20 41 2d 3e 53 00 4a 0c 46 05 8f 2e 20 2e
->b6a1	56 45 52 41 2e 41 43 43 45 53 53 28 36 29 20 41
->b6b1	20 3d 20 31 32 20 56 45 52 41 2e 44 41 54 41 3d
->b6c1	41 20 53 2d 3e 41 20 56 45 52 41 2e 44 41 54 41
->b6d1	3d 41 00 58 0c 50 05 8f 2e 20 53 2d 3e 52 41 59
->b6e1	00 67 0c 5a 05 8f 2e 20 45 4e 44 50 52 4f 43 00
->b6f1	82 0c 64 05 8f 2e 20 50 52 4f 43 20 56 45 52 41
->b701	2e 47 52 41 50 48 49 43 28 29 00 90 0c 6e 05 8f
->b711	2e 20 52 41 59 2d 3e 53 00 b5 0c 78 05 8f 2e 20
->b721	3e 3e 52 20 52 2d 3e 53 20 52 2d 3e 53 20 2e 56
->b731	45 52 41 2e 41 43 43 45 53 53 28 30 29 00 cd 0c
->b741	82 05 8f 2e 20 53 2d 3e 52 20 56 45 52 41 2e 44
->b751	41 54 41 3d 41 00 01 0d 8c 05 8f 2e 20 53 2d 3e
->b761	52 20 52 2e 53 57 41 50 20 41 26 24 30 46 20 41
->b771	2b 2e 53 50 52 49 54 45 2e 4d 4f 44 45 20 56 45
->b781	52 41 2e 44 41 54 41 3d 41 00 0f 0d 96 05 8f 2e
->b791	20 53 2d 3e 52 41 59 00 1e 0d a0 05 8f 2e 20 45
->b7a1	4e 44 50 52 4f 43 00 31 0d aa 05 8f 2e 20 50 52
->b7b1	4f 43 20 4d 41 49 4e 28 29 00 4d 0d b4 05 8f 2e
->b7c1	20 56 45 52 41 2e 50 41 4c 45 54 54 45 28 24 46
->b7d1	38 30 2c 31 29 00 69 0d be 05 8f 2e 20 56 45 52
->b7e1	41 2e 50 41 4c 45 54 54 45 28 24 30 30 30 2c 36
->b7f1	29 00 8b 0d c8 05 8f 2e 20 56 45 52 41 2e 53 50
->b801	52 49 54 45 53 2e 45 4e 41 42 4c 45 28 31 2c 24
->b811	30 30 29 00 a6 0d d2 05 8f 2e 20 56 45 52 41 2e
->b821	53 45 54 28 24 34 30 30 30 2c 24 30 31 29 00 d1
->b831	0d dc 05 8f 2e 20 34 30 39 36 20 52 2e 46 4f 52
->b841	20 3e 3e 41 20 3e 3e 41 20 56 45 52 41 2e 44 41
->b851	54 41 3d 41 20 4e 45 58 54 00 e1 0d e6 05 8f 2e
->b861	20 31 32 20 41 2e 46 4f 52 00 ed 0d f0 05 8f 2e
->b871	20 52 2d 3e 53 00 02 0e fa 05 8f 2e 20 56 45 52
->b881	41 2e 53 45 4c 45 43 54 28 29 00 1a 0e 04 06 8f
->b891	2e 20 56 45 52 41 2e 43 52 45 41 54 45 28 24 30
->b8a1	41 29 00 35 0e 0e 06 8f 2e 20 56 45 52 41 2e 47
->b8b1	52 41 50 48 49 43 28 24 31 34 30 30 29 00 4d 0e
->b8c1	18 06 8f 2e 20 53 2d 3e 52 20 3c 3c 52 20 3c 3c
->b8d1	52 20 3c 3c 52 00 61 0e 22 06 8f 2e 20 56 45 52
->b8e1	41 2e 58 28 29 20 3c 3c 52 00 71 0e 2c 06 8f 2e
->b8f1	20 56 45 52 41 2e 59 28 29 00 7d 0e 36 06 8f 2e
->b901	20 4e 45 58 54 00 8c 0e 40 06 8f 2e 20 45 4e 44
->b911	50 52 4f 43 00 a1 0e 4a 06 8f 2e 20 52 45 4d 4f
->b921	56 45 2e 4c 4f 43 41 4c 53 00 00 00
-.b92d					LBCTestEnd:
+.b364					LoadBasicCode:
+.b364	a9 93		lda #$93			lda 	#(LBCTest) & $FF
+.b366	85 1a		sta $1a				sta 	zTemp0
+.b368	a9 b3		lda #$b3			lda 	#(LBCTest) >> 8
+.b36a	85 1b		sta $1b				sta 	zTemp0+1
+.b36c	a9 01		lda #$01			lda 	#($801) & $FF
+.b36e	85 1c		sta $1c				sta 	zTemp1
+.b370	a9 08		lda #$08			lda 	#($801) >> 8
+.b372	85 1d		sta $1d				sta 	zTemp1+1
+.b374					_LBCCopy:
+.b374	a0 02		ldy #$02			ldy 	#2							; skip over the loading address
+.b376	b1 1a		lda ($1a),y			lda 	(zTemp0),y 					; skips first two bytes :)
+.b378	92 1c		sta ($1c)			sta 	(zTemp1)
+.b37a	e6 1a		inc $1a				inc 	zTemp0
+.b37c	d0 02		bne $b380			bne 	_NoCarry
+.b37e	e6 1b		inc $1b				inc 	zTemp0+1
+.b380					_NoCarry:
+.b380	e6 1c		inc $1c				inc 	zTemp1
+.b382	d0 02		bne $b386			bne 	_NoCarry
+.b384	e6 1d		inc $1d				inc 	zTemp1+1
+.b386					_NoCarry:
+.b386	a5 1a		lda $1a				lda 	zTemp0
+.b388	c9 5b		cmp #$5b			cmp 	#LBCTestEnd & $FF
+.b38a	d0 e8		bne $b374			bne 	_LBCCopy
+.b38c	a5 1b		lda $1b				lda 	zTemp0+1
+.b38e	c9 ba		cmp #$ba			cmp 	#LBCTestEnd >> 8
+.b390	d0 e2		bne $b374			bne 	_LBCCopy
+.b392	60		rts				rts
+.b393					LBCTest:
+>b393	01 08 0c 08 e8 03 99 c7				.binary 	"../generated/test.prg"
+>b39b	28 31 34 29 00 17 08 f2 03 9e 34 30 39 36 30 00
+>b3ab	32 08 fc 03 8f 2e 20 57 4f 52 44 20 56 45 52 41
+>b3bb	2e 4c 4f 57 40 24 39 46 32 30 00 4e 08 06 04 8f
+>b3cb	2e 20 42 59 54 45 20 56 45 52 41 2e 48 49 47 48
+>b3db	40 24 39 46 32 32 00 6a 08 10 04 8f 2e 20 42 59
+>b3eb	54 45 20 56 45 52 41 2e 44 41 54 41 40 24 39 46
+>b3fb	32 33 00 83 08 1a 04 8f 2e 20 57 4f 52 44 20 2e
+>b40b	53 50 52 49 54 45 2e 42 41 53 45 00 9c 08 24 04
+>b41b	8f 2e 20 42 59 54 45 20 2e 53 50 52 49 54 45 2e
+>b42b	4d 4f 44 45 00 b0 08 2e 04 8f 2e 20 57 4f 52 44
+>b43b	20 50 54 52 40 24 31 30 00 c7 08 38 04 8f 2e 20
+>b44b	50 52 4f 43 20 56 45 52 41 2e 53 45 54 28 29 00
+>b45b	db 08 42 04 8f 2e 20 56 45 52 41 2e 4c 4f 57 20
+>b46b	3d 20 52 00 fe 08 4c 04 8f 2e 20 41 3d 59 20 41
+>b47b	26 24 30 46 20 41 3a 24 31 30 20 56 45 52 41 2e
+>b48b	48 49 47 48 3d 41 00 0d 09 56 04 8f 2e 20 45 4e
+>b49b	44 50 52 4f 43 00 28 09 60 04 8f 2e 20 50 52 4f
+>b4ab	43 20 56 45 52 41 2e 50 41 4c 45 54 54 45 28 29
+>b4bb	00 36 09 6a 04 8f 2e 20 52 41 59 2d 3e 53 00 63
+>b4cb	09 74 04 8f 2e 20 52 2d 3e 53 20 52 3d 59 20 3c
+>b4db	3c 52 20 52 3a 24 31 30 30 30 20 59 3d 24 30 46
+>b4eb	20 56 45 52 41 2e 53 45 54 28 29 00 8e 09 7e 04
+>b4fb	8f 2e 20 53 2d 3e 52 20 56 45 52 41 2e 44 41 54
+>b50b	41 3d 41 20 52 2e 53 57 41 50 20 56 45 52 41 2e
+>b51b	44 41 54 41 3d 41 00 9c 09 88 04 8f 2e 20 53 2d
+>b52b	3e 52 41 59 00 ab 09 92 04 8f 2e 20 45 4e 44 50
+>b53b	52 4f 43 00 cd 09 9c 04 8f 2e 20 50 52 4f 43 20
+>b54b	56 45 52 41 2e 53 50 52 49 54 45 53 2e 45 4e 41
+>b55b	42 4c 45 28 29 00 2a 0a a6 04 8f 2e 20 52 41 59
+>b56b	2d 3e 53 20 2e 53 50 52 49 54 45 2e 4d 4f 44 45
+>b57b	3d 59 20 52 3c 3e 3f 20 49 46 20 31 20 45 4e 44
+>b58b	49 46 20 41 2d 3e 53 20 56 45 52 41 2e 53 45 54
+>b59b	28 24 34 30 30 30 2c 24 46 29 20 53 2d 3e 41 20
+>b5ab	56 45 52 41 2e 44 41 54 41 3d 41 20 53 2d 3e 52
+>b5bb	41 59 00 39 0a b0 04 8f 2e 20 45 4e 44 50 52 4f
+>b5cb	43 00 53 0a ba 04 8f 2e 20 50 52 4f 43 20 56 45
+>b5db	52 41 2e 53 45 4c 45 43 54 28 29 00 91 0a c4 04
+>b5eb	8f 2e 20 52 41 59 2d 3e 53 20 52 26 24 37 46 20
+>b5fb	3c 3c 41 20 3c 3c 52 20 3c 3c 52 20 52 3a 24 35
+>b60b	30 30 30 20 2e 53 50 52 49 54 45 2e 42 41 53 45
+>b61b	3d 52 20 53 2d 3e 52 41 59 00 a0 0a ce 04 8f 2e
+>b62b	20 45 4e 44 50 52 4f 43 00 bb 0a d8 04 8f 2e 20
+>b63b	50 52 4f 43 20 2e 56 45 52 41 2e 41 43 43 45 53
+>b64b	53 28 29 00 ec 0a e2 04 8f 2e 20 59 2d 3e 53 20
+>b65b	52 2b 2e 53 50 52 49 54 45 2e 42 41 53 45 20 59
+>b66b	3d 24 30 46 20 56 45 52 41 2e 53 45 54 28 29 20
+>b67b	53 2d 3e 59 00 fb 0a ec 04 8f 2e 20 45 4e 44 50
+>b68b	52 4f 43 00 10 0b f6 04 8f 2e 20 50 52 4f 43 20
+>b69b	56 45 52 41 2e 58 28 29 00 5e 0b 00 05 8f 2e 20
+>b6ab	52 41 59 2d 3e 53 20 52 2d 3e 53 20 2e 56 45 52
+>b6bb	41 2e 41 43 43 45 53 53 28 32 29 20 53 2d 3e 52
+>b6cb	20 56 45 52 41 2e 44 41 54 41 3d 41 20 52 2e 53
+>b6db	57 41 50 20 56 45 52 41 2e 44 41 54 41 3d 41 20
+>b6eb	53 2d 3e 52 41 59 00 6d 0b 0a 05 8f 2e 20 45 4e
+>b6fb	44 50 52 4f 43 00 82 0b 14 05 8f 2e 20 50 52 4f
+>b70b	43 20 56 45 52 41 2e 59 28 29 00 d0 0b 1e 05 8f
+>b71b	2e 20 52 41 59 2d 3e 53 20 52 2d 3e 53 20 2e 56
+>b72b	45 52 41 2e 41 43 43 45 53 53 28 34 29 20 53 2d
+>b73b	3e 52 20 56 45 52 41 2e 44 41 54 41 3d 41 20 52
+>b74b	2e 53 57 41 50 20 56 45 52 41 2e 44 41 54 41 3d
+>b75b	41 20 53 2d 3e 52 41 59 00 df 0b 28 05 8f 2e 20
+>b76b	45 4e 44 50 52 4f 43 00 f9 0b 32 05 8f 2e 20 50
+>b77b	52 4f 43 20 56 45 52 41 2e 43 52 45 41 54 45 28
+>b78b	29 00 07 0c 3c 05 8f 2e 20 52 41 59 2d 3e 53 00
+>b79b	23 0c 46 05 8f 2e 20 3c 3c 41 20 3c 3c 41 20 3c
+>b7ab	3c 41 20 3c 3c 41 20 41 2d 3e 53 00 5e 0c 50 05
+>b7bb	8f 2e 20 2e 56 45 52 41 2e 41 43 43 45 53 53 28
+>b7cb	36 29 20 41 20 3d 20 31 32 20 56 45 52 41 2e 44
+>b7db	41 54 41 3d 41 20 53 2d 3e 41 20 56 45 52 41 2e
+>b7eb	44 41 54 41 3d 41 00 6c 0c 5a 05 8f 2e 20 53 2d
+>b7fb	3e 52 41 59 00 7b 0c 64 05 8f 2e 20 45 4e 44 50
+>b80b	52 4f 43 00 96 0c 6e 05 8f 2e 20 50 52 4f 43 20
+>b81b	56 45 52 41 2e 47 52 41 50 48 49 43 28 29 00 a4
+>b82b	0c 78 05 8f 2e 20 52 41 59 2d 3e 53 00 c9 0c 82
+>b83b	05 8f 2e 20 3e 3e 52 20 52 2d 3e 53 20 52 2d 3e
+>b84b	53 20 2e 56 45 52 41 2e 41 43 43 45 53 53 28 30
+>b85b	29 00 e1 0c 8c 05 8f 2e 20 53 2d 3e 52 20 56 45
+>b86b	52 41 2e 44 41 54 41 3d 41 00 15 0d 96 05 8f 2e
+>b87b	20 53 2d 3e 52 20 52 2e 53 57 41 50 20 41 26 24
+>b88b	30 46 20 41 2b 2e 53 50 52 49 54 45 2e 4d 4f 44
+>b89b	45 20 56 45 52 41 2e 44 41 54 41 3d 41 00 23 0d
+>b8ab	a0 05 8f 2e 20 53 2d 3e 52 41 59 00 32 0d aa 05
+>b8bb	8f 2e 20 45 4e 44 50 52 4f 43 00 45 0d b4 05 8f
+>b8cb	2e 20 50 52 4f 43 20 4d 41 49 4e 28 29 00 55 0d
+>b8db	be 05 8f 2e 20 50 54 52 5b 59 5d 3d 41 00 71 0d
+>b8eb	c8 05 8f 2e 20 56 45 52 41 2e 50 41 4c 45 54 54
+>b8fb	45 28 24 46 38 30 2c 31 29 00 8d 0d d2 05 8f 2e
+>b90b	20 56 45 52 41 2e 50 41 4c 45 54 54 45 28 24 30
+>b91b	30 30 2c 36 29 00 af 0d dc 05 8f 2e 20 56 45 52
+>b92b	41 2e 53 50 52 49 54 45 53 2e 45 4e 41 42 4c 45
+>b93b	28 31 2c 24 30 30 29 00 ca 0d e6 05 8f 2e 20 56
+>b94b	45 52 41 2e 53 45 54 28 24 34 30 30 30 2c 24 30
+>b95b	31 29 00 f5 0d f0 05 8f 2e 20 34 30 39 36 20 52
+>b96b	2e 46 4f 52 20 3e 3e 41 20 3e 3e 41 20 56 45 52
+>b97b	41 2e 44 41 54 41 3d 41 20 4e 45 58 54 00 05 0e
+>b98b	fa 05 8f 2e 20 31 32 20 41 2e 46 4f 52 00 11 0e
+>b99b	04 06 8f 2e 20 52 2d 3e 53 00 26 0e 0e 06 8f 2e
+>b9ab	20 56 45 52 41 2e 53 45 4c 45 43 54 28 29 00 3e
+>b9bb	0e 18 06 8f 2e 20 56 45 52 41 2e 43 52 45 41 54
+>b9cb	45 28 24 30 41 29 00 59 0e 22 06 8f 2e 20 56 45
+>b9db	52 41 2e 47 52 41 50 48 49 43 28 24 31 34 30 30
+>b9eb	29 00 71 0e 2c 06 8f 2e 20 53 2d 3e 52 20 3c 3c
+>b9fb	52 20 3c 3c 52 20 3c 3c 52 00 85 0e 36 06 8f 2e
+>ba0b	20 56 45 52 41 2e 58 28 29 20 3c 3c 52 00 95 0e
+>ba1b	40 06 8f 2e 20 56 45 52 41 2e 59 28 29 00 a1 0e
+>ba2b	4a 06 8f 2e 20 4e 45 58 54 00 b0 0e 54 06 8f 2e
+>ba3b	20 45 4e 44 50 52 4f 43 00 c5 0e 5e 06 8f 2e 20
+>ba4b	52 45 4d 4f 56 45 2e 4c 4f 43 41 4c 53 00 00 00
+.ba5b					LBCTestEnd:
 
 ;******  Return to file: main.asm
 
-.b92d					EndCode:
+.ba5b					EndCode:
 
 ;******  End of listing

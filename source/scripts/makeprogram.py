@@ -19,7 +19,7 @@ class BasicProgram(object):
 	#		Generate starting code
 	#
 	def startCode(self):
-		self.addLine(chr(0x99)+chr(199)+"(14)")								# PRINT CHR$(14)
+		#self.addLine(chr(0x99)+chr(199)+"(14)")								# PRINT CHR$(14)
 		self.addLine(chr(0x9E)+str(0xA000))									# SYS 40960
 	#
 	#		Add a line of code

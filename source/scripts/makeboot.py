@@ -24,6 +24,7 @@ class SelfBoot(BasicProgram):
 	def startCode(self):
 		self.addLine(chr(0x9E)+"01108")										# dummy SYS, will be patched.
 		BasicProgram.startCode(self)										# standard code
+		self.addLine(chr(0x9E)+"3")
 	#
 	#		End of program code.
 	#

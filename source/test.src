@@ -5,6 +5,8 @@ byte vera.data@$9f23
 word .sprite.base 				// current base address of sprite
 byte .sprite.mode 				// 0=4bpp, $80=8 bpp
 
+word ptr@$10
+
 //
 //		Set vera write address with +1 step (low,high)
 //
@@ -70,6 +72,7 @@ proc vera.graphic()
 endproc
 
 proc main()
+	ptr[y]=A
 	vera.palette($F80,1)
 	vera.palette($000,6)
 	vera.sprites.enable(1,$00)

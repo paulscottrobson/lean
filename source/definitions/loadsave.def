@@ -88,15 +88,15 @@ S 		<var> = Y
 //
 // ******************************************************************************
 
-Z 		A = <var>[y]
-			lda 	(<addr>),y
+I		A = <var>[y]
+			lda 	(<addr>& $FF),y
 
-Z 		R = <var>[y]			
+I		R = <var>[y]			
 			iny
-			lda 	(<addr>),y
+			lda 	(<addr>& $FF),y
 			tax
 			dey
-			lda 	(<addr>),y
+			lda 	(<addr>& $FF),y
 
 // ******************************************************************************
 //
@@ -104,14 +104,14 @@ Z 		R = <var>[y]
 //
 // ******************************************************************************
 
-Z 		<var>[y] = A
-			sta 	(<addr>),y
+I 		<var>[y] = A
+			sta 	(<addr>& $FF),y
 
-Z 		<var>[y] = R
-			sta 	(<addr>),y
+I 		<var>[y] = R
+			sta 	(<addr>& $FF),y
 			iny
 			txa
-			sta 	(<addr>),y
+			sta 	(<addr>& $FF),y
 			dey
-			lda 	(<addr>),y
+			lda 	(<addr>& $FF),y
 								

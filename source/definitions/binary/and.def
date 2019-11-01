@@ -69,15 +69,15 @@ S 	A&<var>
 //
 // ******************************************************************************
 
-Z 		A & <var>[y]
-		and 	(<addr>),y
+I 		A & <var>[y]
+		and 	(<addr>& $FF),y
 
-Z 		R & <var>[y]
-		and 	(<addr>),y
+I 		R & <var>[y]
+		and 	(<addr>& $FF),y
 		pha
 		txa
 		iny		
-		and 	(<addr>),y
+		and 	(<addr>& $FF),y
 		dey
 		tax
 		pla

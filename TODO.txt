@@ -1,5 +1,6 @@
 TODO
 ====
+-	Add comparisons.
 - 	Write code with it - ball demo ?
 - 	Strings (process bit)
 -	Mark
