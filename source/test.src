@@ -5,9 +5,7 @@ word aw1@$2CDE
 
 proc main()
 
-R+zb1[y]
-A+zb1[y]
-
+++A --R
 endproc
 
 remove.locals
