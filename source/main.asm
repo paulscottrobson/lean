@@ -22,15 +22,25 @@ BankCode = $0700 							; bank handling code goes here.
 LINEBUFFSIZE = 64
 VALBUFFSIZE = 128
 
-
 		.include 	"data.asm" 					; data & constants
 		.include 	"generated/cgconst.inc" 	; constants shared with translator
 		.include 	"macros.inc" 				; macros
 
 		* = $A000
+Start:		
+		jmp 	RunCompiler
+		jmp 	CallCodeMemory
 
+RunCompiler:
 		tsx 									; save SP
 		stx 	originalSP
+
+		ldx 	#5 								; set up vectors.
+_RCCopy:lda 	Start,x
+		sta 	$00,x
+		dex
+		bpl 	_RCCopy
+
 		jsr 	LoadBasicCode
 
 		jsr 	BankCopyCode 					; copy banked code to RAM space.
@@ -64,14 +74,12 @@ ReturnCaller:
 ; ******************************************************************************
 
 CallCodeMemory:
-		.byte 	$FF
-		lda 	lastDefine
+		lda 	lastDefine 					; check if something defined (no error)
 		ora 	lastDefine+1
 		ora 	lastDefine+2
 		beq 	_NoExecute
-		lda 	codePtr							; pass in byte after code.
-		ldx 	codePtr+1
-		jmp 	(lastDefine)					; call last definition.
+		jsr 	BankCopyCode 				; copy banked code to RAM space.
+		jmp 	CodeRunCode
 _NoExecute:
 		rts
 

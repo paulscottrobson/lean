@@ -12,8 +12,35 @@
 BANKEDStart:
 
 CodeWriteByte = BankCode
+CodeRunCode = Bankcode+2
 
 		bra 	BankedCodeWriteByte
+		bra 	BankedCodeRun
+
+; ******************************************************************************
+;
+;									Run code
+;
+; ******************************************************************************
+
+BankedCodeRun:
+		lda 	ramBank 					; save current RAM bank
+		pha
+		lda 	lastDefine+2 				; set page number
+		sta 	ramBank
+		;
+		lda 	lastDefine 					; overwrite the call address
+		sta 	_BCRCode-BANKEDStart+BankCode+1
+		lda 	lastDefine+1
+		sta 	_BCRCode-BANKEDStart+BankCode+2
+		;
+		lda 	codePtr						; pass in byte after code.
+		ldx 	codePtr+1
+_BCRCode:
+		jsr 	$0000 						; call the code
+		pla 								; restore RAM page.
+		sta 	ramBank
+		rts
 
 ; ******************************************************************************
 ;
