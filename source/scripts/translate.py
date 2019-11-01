@@ -177,9 +177,9 @@ class MatchBook(object):
 		h.write("\t.word\t{0}\n".format(address))
 		h.write("\t.byte\t{0}\n".format(bank))
 		h.write("\t.byte\t{0}\n".format(len(key)))
-		key = re.split("([A-Za-z0-9\\.\\_\\$\\%]+)",key)
+		key = re.split("([A-Z0-9\\.\\_\\$\\%]+)",key)
 		for i in range(0,len(key)):
-			if re.match("^[A-Za-z0-9\\.\\_\\$\\%]+$",key[i]):
+			if re.match("^[A-Z0-9\\.\\_\\$\\%]+$",key[i]):
 				key[i] = key[i][:-1]+chr(ord(key[i][-1])+0x80)
 			else:
 				key[i] = "".join([chr(ord(c)+0x80) for c in key[i]])

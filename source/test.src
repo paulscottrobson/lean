@@ -5,7 +5,8 @@ word aw1@$2CDE
 
 proc main()
 
-++A --R
+zb1 aw1 42
+
 endproc
 
 remove.locals

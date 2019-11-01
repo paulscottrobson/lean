@@ -12,6 +12,4 @@ TODO
 
 Definitions List
 ================
-Unary Variable Operations
 Conditionals
-Stand alone Constants

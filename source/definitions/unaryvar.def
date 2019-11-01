@@ -1,0 +1,46 @@
+// ******************************************************************************
+// ******************************************************************************
+//
+//		Name : 		unaryvar.def
+//		Purpose : 	Unary variable definitions
+//		Author : 	Paul Robson (paul@robsons.org.uk)
+//		Created : 	1st November 2019
+//
+// ******************************************************************************
+// ******************************************************************************
+
+S	++<var>
+		inc 	<addr>
+
+S 	--<var>
+		dec 	<addr>
+
+I 	++<var>
+		inc 	<addr>
+		bne 	_NoCarry
+		inc 	<next>
+		_NoCarry:
+
+I 	--<var>
+		pha
+		lda 	<addr>
+		bne 	_NoBorrow
+		dec 	<next>
+		_NoBorrow:
+		dec 	<addr>
+		pla
+
+S 	<<<var>
+		asl 	<addr>
+
+I 	<<<var>
+		asl 	<addr>
+		rol 	<next>
+
+S 	>><var>
+		lsr 	<addr>
+
+I 	>><var>
+		lsr 	<next>
+		ror 	<addr>
+
