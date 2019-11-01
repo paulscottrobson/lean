@@ -26,6 +26,9 @@ ErrorHandler:
 		iny
 _EHNoCarry:		
 		jsr 	PrintStringXY 				; print string at XY
+		lda 	lineNumber
+		ora 	lineNumber+1
+		beq 	_EHNoLine
 		ldx 	#_EHMessage & $FF 			; print " AT "
 		ldy 	#_EHMessage >> 8
 		jsr 	PrintStringXY
@@ -45,18 +48,17 @@ _EHNoCarry:
 		ldy 	#lineBuffer >> 8
 		jsr 	PrintStringXY
 		;		
+_EHNoLine:		
 		stz 	lastDefine 					; disable running by zeroing last defined
 		stz 	lastDefine+1
 		stz 	lastDefine+2
-		ldx 	#_EHMessage2 & $FF 			; print LEAN info
-		ldy 	#_EHMessage2 >> 8
+		ldx 	#LeanMessage & $FF 			; print LEAN info
+		ldy 	#LeanMessage >> 8
 		jsr 	PrintStringXY		
 		jmp 	ReturnCaller 				; exit the compiler.
 
 _EHMessage:
 		.text	" AT ",0
-_EHMessage2:
-		.text 	13,"    LEAN V0.2 (01-NOV-19)",0
 
 ; ******************************************************************************
 ;

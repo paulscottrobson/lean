@@ -14,6 +14,11 @@ class BasicProgram(object):
 		self.code = [] 														# code buffer
 		self.lineNumber = 1000 												# next line number
 		self.loadAddress = loadAddress
+		self.startCode()
+	#
+	#		Generate starting code
+	#
+	def startCode(self):
 		self.addLine(chr(0x99)+chr(199)+"(14)")								# PRINT CHR$(14)
 		self.addLine(chr(0x9E)+str(0xA000))									# SYS 40960
 	#
@@ -49,12 +54,16 @@ class BasicProgram(object):
 		h.write(bytes([self.loadAddress & 0xFF,self.loadAddress >> 8]))
 		h.write(bytes(self.code))
 		h.close()
+	#
+	#		Convert text file to loadable binary (for testing.)
+	#
+	def convertFile(self,source):
+		src = [x.upper() for x in open(source).readlines()]
+		src = [x.strip() if x.find("//") < 0 else x[:x.find("//")] for x in src]
+		for l in [x for x in src if x != ""]:
+			self.add(l)
+		self.complete()
+		self.writeProgram()
 
 bp = BasicProgram()
-src = [x.upper() for x in open("test.src").readlines()]
-src = [x.strip() if x.find("//") < 0 else x[:x.find("//")] for x in src]
-for l in [x for x in src if x != ""]:
-	bp.add(l)
-bp.complete()
-bp.writeProgram()
-
+bp.convertFile("test.src")

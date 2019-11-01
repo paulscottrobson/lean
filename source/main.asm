@@ -31,6 +31,9 @@ Start:
 		jmp 	RunCompiler
 		jmp 	CallCodeMemory
 
+LeanMessage:
+		.text 	13,"    LEAN V0.3 (01-NOV-19)",0
+
 RunCompiler:
 		tsx 									; save SP
 		stx 	originalSP
@@ -41,7 +44,9 @@ _RCCopy:lda 	Start,x
 		dex
 		bpl 	_RCCopy
 
+		.if 	loadbas == 1 					; optional code, loads a test program in.
 		jsr 	LoadBasicCode
+		.endif
 
 		jsr 	BankCopyCode 					; copy banked code to RAM space.
 		jsr 	StackReset 						; reset convert stack.
@@ -81,7 +86,7 @@ CallCodeMemory:
 		jsr 	BankCopyCode 				; copy banked code to RAM space.
 		jmp 	CodeRunCode
 _NoExecute:
-		rts
+		derror 	"NO CODE"
 
 ; ******************************************************************************
 ;
@@ -114,5 +119,7 @@ _NoExecute:
 
 		.include 	"generated/system.inc"		; auto-generated data from translate.py
 
+		.if 	loadbas == 1 					; optional code, loads a test program in.
 		.include 	"utility/loadcode.asm"		; loads BASIC automatically
+		.endif
 EndCode:		
