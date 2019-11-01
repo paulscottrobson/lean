@@ -88,7 +88,8 @@ REM_TOKEN = $8F 							; C64 REM Token
 SCM_TOP = '*'								; top of stack marker.
 SCM_PROC = 'P'								; procedure marker
 SCM_REPEAT = 'R'							; repeat marker
-SCM_FOR = 'F' 								; for marker
+SCM_FOR = 'F' 								; for marker (8 bit)
+SCM_INTFOR = 'G'							; for marker (16 bit)
 SCM_IF = 'I'								; if/else/endif marker.
 
 ; ******************************************************************************
@@ -104,3 +105,8 @@ CPU_DECA = $3A 								; DEC A
 CPU_BNE = $D0								; BNE
 CPU_BRA = $80								; BRA
 CPU_JSR = $20 								; JSR 
+CPU_PHX = $DA 								; PHX
+CPU_PLX = $FA 								; PLX
+CPU_CMPIM = $C9 							; CMP#
+CPU_CPXIM = $E0 							; CPX#
+CPU_DEX = $CA 								; DEX

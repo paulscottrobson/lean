@@ -3,9 +3,17 @@ word zw1@$14
 byte ab1@$1234
 word _aw1@$2CDE
 
+word vlo@$9f20
+byte vhi@$9f22
+byte vdata@$9f23
+
 proc main()
 
-3 r.for next
+0 vlo=R A=$10 vhi=A
+
+3840 <<R r.for
+A->S A=42 vdata=A S->A vdata=A
+next
 
 endproc
 

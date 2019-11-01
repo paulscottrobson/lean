@@ -27,6 +27,8 @@
 		[exec:until]
 *	a.for
 		[exec:afor]
+*	r.for
+		[exec:rfor]
 *	next
 		[exec:next]
 *	if
