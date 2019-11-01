@@ -4,8 +4,11 @@ TODO
 - 	Write code with it.
 -  	R.For ?
 - 	Strings (process bit)
--	Reset compilation on start, but forget afterwards.
+-	Mark
+		if = current mark, do nthing
+		if != current mark, record as mark.
 -	Runtime support ?
+-	Shift code to another block.
 
 Definitions List
 ================
