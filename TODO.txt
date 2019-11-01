@@ -1,7 +1,6 @@
 TODO
 ====
--	New Uploader using .PRG as a BASIC program.
-- 	Write code with it.
+- 	Write code with it - ball demo ?
 - 	Strings (process bit)
 -	Mark
 		if = current mark, do nothing

@@ -62,8 +62,8 @@ CopyData:									; copy 1 page
 		bne 	CopyData
 		rts 								; and exit
 
-
-
 UploadData:
-		.binary 	"lean.bin"
-UploadDataEnd:
+		;
+		;		The lean binary is tagged on here.
+		;
+		

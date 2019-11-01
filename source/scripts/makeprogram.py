@@ -47,10 +47,15 @@ class BasicProgram(object):
 	def complete(self):
 		self.appendWord(0)
 	#
+	#		Get name of target file
+	#
+	def getTarget(self):
+		return "generated/test.prg"
+	#
 	#		Dump binary code.
 	#
 	def writeProgram(self):
-		h = open("generated/test.prg","wb")
+		h = open(self.getTarget(),"wb")
 		h.write(bytes([self.loadAddress & 0xFF,self.loadAddress >> 8]))
 		h.write(bytes(self.code))
 		h.close()
@@ -65,5 +70,6 @@ class BasicProgram(object):
 		self.complete()
 		self.writeProgram()
 
-bp = BasicProgram()
-bp.convertFile("test.src")
+if __name__ == '__main__':
+	bp = BasicProgram()
+	bp.convertFile("test.src")
