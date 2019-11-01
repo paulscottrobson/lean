@@ -43,4 +43,5 @@ P	<proc>
 		[exec:call]
 *	endproc			
 		[exec:endproc]
-
+*	break
+		.byte 	$FF

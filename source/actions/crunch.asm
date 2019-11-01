@@ -11,7 +11,7 @@
 
 ; ******************************************************************************
 ;
-;		Dictionary Crunch. Removes all locals (begin with underscore)
+;		Dictionary Crunch. Removes all locals (begin with .)
 ;
 ; ******************************************************************************
 
@@ -25,8 +25,8 @@ _ADCLoop:
 		beq 	_ADCExit
 		ldy 	#6							; read first character
 		lda 	(zTemp0),y
-		and 	#$7F 						; is it a '_' ?
-		cmp 	#'_'
+		and 	#$7F 						; is it a '.' ?
+		cmp 	#'.'
 		bne 	_ADCNext 					; if not, it's a global, skip to next.
 		;
 		lda 	zTemp0 						; work out copy from, into zTemp1

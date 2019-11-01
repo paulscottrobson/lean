@@ -62,7 +62,6 @@ CallCodeMemory:
 		beq 	_NoExecute
 		lda 	codePtr							; pass in byte after code.
 		ldx 	codePtr+1
-		.byte 	$FF
 		jmp 	(lastDefine)					; call last definition.
 _NoExecute:
 		rts

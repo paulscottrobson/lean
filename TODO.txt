@@ -1,9 +1,9 @@
 TODO
 ====
 - 	Write code with it.
+-	Shift code to another block & put run in $00
 - 	Strings (process bit)
 -	Mark
 		if = current mark, do nothing
 		if != current mark, record as mark (variable ptr, code ptr, dict ptr)
--	Shift code to another block.
 
