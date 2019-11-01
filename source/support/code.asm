@@ -18,7 +18,7 @@
 CodeReset:
 		ldx 	#CodeMemory & 255
 		ldy 	#CodeMemory >> 8
-		lda 	#0
+		lda 	#CodePage
 		bra 	CodeSetPointer
 
 ; ******************************************************************************
@@ -56,19 +56,6 @@ CodeRestorePointer:
 		sta 	codeBank
 		rts
 
-; ******************************************************************************
-;
-;							Write a byte to code space
-;
-; ******************************************************************************
-
-CodeWriteByte:
-		sta 	(codePtr)
-		inc 	codePtr
-		bne 	_CWBNoCarry
-		inc 	codePtr+1
-_CWBNoCarry:
-		rts
 
 ; ******************************************************************************
 ;

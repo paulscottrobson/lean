@@ -11,9 +11,17 @@
 
 ProgramStart = $0801 						; where source code starts.
 UserDictionary = EndCode 					; user dictionary
-CodeMemory = $BC00 							; where object code goes.
+CodeMemory = $A000 							; where object code goes.
+CodePage = $01 								; page for code memory.
 AssemblerStack = $063F 						; compiler stack space.
+lineBuffer = $0640	 						; current line, match encoded.
+valueBuffer = $0680 						; buffer for associated values.
 VariableMemory = $0700 						; data memory allocaed from here
+BankCode = $0700 							; bank handling code goes here.
+
+LINEBUFFSIZE = 64
+VALBUFFSIZE = 128
+
 
 		.include 	"data.asm" 					; data & constants
 		.include 	"generated/cgconst.inc" 	; constants shared with translator
@@ -25,6 +33,7 @@ VariableMemory = $0700 						; data memory allocaed from here
 		stx 	originalSP
 		jsr 	LoadBasicCode
 
+		jsr 	BankCopyCode 					; copy banked code to RAM space.
 		jsr 	StackReset 						; reset convert stack.
 		jsr 	VariableReset 					; reset variable memory.
 		jsr 	DictionaryReset 				; reset user dictionary
@@ -43,8 +52,6 @@ AsmEnd:
 		lda 	#SCM_TOP 						; check structures are done
 		jsr 	StackCheckStructureMarker
 		;
-		jsr 	CallCodeMemory	
-		;
 ReturnCaller:
 		ldx		originalSP 						; restore XP and exit.
 		txs
@@ -57,8 +64,10 @@ ReturnCaller:
 ; ******************************************************************************
 
 CallCodeMemory:
+		.byte 	$FF
 		lda 	lastDefine
 		ora 	lastDefine+1
+		ora 	lastDefine+2
 		beq 	_NoExecute
 		lda 	codePtr							; pass in byte after code.
 		ldx 	codePtr+1
@@ -76,7 +85,7 @@ _NoExecute:
 		.include 	"lean/process.asm"			; process to line.
 		.include 	"lean/generate.asm"			; generator searches.
 		.include 	"lean/extract.asm"			; get translated objects.
-
+		.include  	"bank/banking.asm"			; banked code.
 		.include 	"dictionary/create.asm"		; dictionary create.
 		.include 	"dictionary/search.asm" 	; dictionary search.
 
@@ -99,4 +108,3 @@ _NoExecute:
 
 		.include 	"utility/loadcode.asm"		; loads BASIC automatically
 EndCode:		
-

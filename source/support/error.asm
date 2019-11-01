@@ -47,6 +47,7 @@ _EHNoCarry:
 		;		
 		stz 	lastDefine 					; disable running by zeroing last defined
 		stz 	lastDefine+1
+		stz 	lastDefine+2
 		ldx 	#_EHMessage2 & $FF 			; print LEAN info
 		ldy 	#_EHMessage2 >> 8
 		jsr 	PrintStringXY		

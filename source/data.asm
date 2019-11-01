@@ -11,11 +11,7 @@
 
 		* = $00
 
-LINEBUFFSIZE = 64
-VALBUFFSIZE = 128
-
-lineBuffer = $0640	 						; current line, match encoded.
-valueBuffer = $0680 						; buffer for associated values.
+ramBank = $9F61 							; RAM Memory bank register.
 
 ; ******************************************************************************
 ;
@@ -48,7 +44,7 @@ codeBank:	.byte ?							; code bank
 
 originalSP:			.byte ? 				; 6502 stack on entry.
 
-lastDefine:			.word ? 				; last defined word.
+lastDefine:			.fill 3 				; last defined word (addr/page)
 
 lineNumber:			.word ? 				; current line number
 

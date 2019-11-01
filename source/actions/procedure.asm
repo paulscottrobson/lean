@@ -22,8 +22,11 @@ Action_Procedure_Def:
 		lda 	codeBank 					; and assign it the current PC value.
 		ldx 	codePtr
 		ldy 	codePtr+1
+		;
 		stx 	lastDefine 					; update last defined
 		sty 	lastDefine+1
+		sta 	lastDefine+2
+		;
 		jsr 	DictionarySet 				; set the dictionary values.
 
 		lda 	#"("
