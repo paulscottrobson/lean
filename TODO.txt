@@ -1,6 +1,5 @@
 TODO
 ====
--	Write definitions testing as we go
 - 	Write code with it.
 -  	R.For ?
 - 	Strings (process bit)
@@ -10,6 +9,6 @@ TODO
 -	Shift code to another block.
 -	Change dictionary crunch (and documentation)
 
-Definitions List
-================
-Conditionals
+
+
+

@@ -9,6 +9,12 @@
 ; ******************************************************************************
 ; ******************************************************************************
 
+ProgramStart = $0801 						; where source code starts.
+UserDictionary = EndCode 					; user dictionary
+CodeMemory = $BC00 							; where object code goes.
+AssemblerStack = $063F 						; compiler stack space.
+VariableMemory = $0700 						; data memory allocaed from here
+
 		.include 	"data.asm" 					; data & constants
 		.include 	"generated/cgconst.inc" 	; constants shared with translator
 		.include 	"macros.inc" 				; macros

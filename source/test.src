@@ -1,11 +1,11 @@
 byte zb1@$04
 word zw1@$14
 byte ab1@$1234
-word aw1@$2CDE
+word _aw1@$2CDE
 
 proc main()
 
-zb1 aw1 42
+3 r.for next
 
 endproc
 

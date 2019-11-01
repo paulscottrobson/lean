@@ -11,12 +11,6 @@
 
 		* = $00
 
-ProgramStart = $0801 						; where source code starts.
-UserDictionary = $B800 						; user dictionary
-CodeMemory = $BC00 							; where object code goes.
-AssemblerStack = $063F 						; compiler stack space.
-VariableMemory = $0700
-
 LINEBUFFSIZE = 64
 VALBUFFSIZE = 128
 

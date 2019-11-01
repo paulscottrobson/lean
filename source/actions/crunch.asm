@@ -11,7 +11,7 @@
 
 ; ******************************************************************************
 ;
-;		Dictionary Crunch. Removes all locals (globals have a . in them)
+;		Dictionary Crunch. Removes all locals (begin with underscore)
 ;
 ; ******************************************************************************
 
@@ -23,17 +23,11 @@ Action_DictionaryCrunch:
 _ADCLoop:		
 		lda 	(zTemp0) 					; reached end of dictionary
 		beq 	_ADCExit
-		ldy 	#5 							; length into X.
+		ldy 	#6							; read first character
 		lda 	(zTemp0),y
-		tax
-_ADCCheck:
-		iny 								; get next.
-		lda 	(zTemp0),y
-		and 	#$7F 						; is it a '.' ?
-		cmp 	#'.'
-		beq 	_ADCNext 					; if so, it's a global, skip to next.
-		dex
-		bne 	_ADCCheck 					; checked the whole identifier.
+		and 	#$7F 						; is it a '_' ?
+		cmp 	#'_'
+		bne 	_ADCNext 					; if not, it's a global, skip to next.
 		;
 		lda 	zTemp0 						; work out copy from, into zTemp1
 		pha
