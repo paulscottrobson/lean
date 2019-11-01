@@ -11,7 +11,7 @@ proc main()
 
 0 vlo=R A=$10 vhi=A
 
-3840 <<R r.for
+3840 <<R x.for
 A->S A=42 vdata=A S->A vdata=A
 next
 

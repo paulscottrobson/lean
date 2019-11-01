@@ -11,14 +11,16 @@
 
 GeneratorSearch:
 		stz 	genPos 						; reset the generator pointer
+		stz 	matchCount 					; reset the match count.
 		;
 		;		Main Generator loop.
 		;
-_GSNextItem:
-		ldx 	genPos
+_GSNextItem:		
+		ldx 	genPos 						; check end ?
 		lda 	lineBuffer,x
 		beq 	_GSExit
-		jsr 	GenerateOne
+		jsr 	GenerateOne 				; do one match
+		inc 	matchCount 					; bump the count.
 		bra 	_GSNextItem
 _GSExit:
 		rts

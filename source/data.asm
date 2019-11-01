@@ -71,6 +71,8 @@ codeBackup:			.fill 3 				; backup code pointer.
 
 varSize:			.byte ? 				; size of current variable.
 
+matchCount:			.byte ? 				; successful line matches (for errors)
+
 ; ******************************************************************************
 ;
 ;								 C64 Basic Tokens

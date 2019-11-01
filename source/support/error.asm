@@ -35,9 +35,19 @@ _EHNoCarry:
 		ldx 	#lineBuffer & $FF 			; print number
 		ldy 	#lineBuffer >> 8
 		jsr 	PrintStringXY
+		;
+		lda 	#":"						; print match count
+		jsr 	PrintCharacter
+		ldx 	matchCount
+		ldy 	#0
+		jsr 	IntToString
+		ldx 	#lineBuffer & $FF 			; print number
+		ldy 	#lineBuffer >> 8
+		jsr 	PrintStringXY
+		;		
 		stz 	lastDefine 					; disable running by zeroing last defined
 		stz 	lastDefine+1
-		ldx 	#_EHMessage2 & $FF 			; print " AT "
+		ldx 	#_EHMessage2 & $FF 			; print LEAN info
 		ldy 	#_EHMessage2 >> 8
 		jsr 	PrintStringXY		
 		jmp 	ReturnCaller 				; exit the compiler.
@@ -45,7 +55,7 @@ _EHNoCarry:
 _EHMessage:
 		.text	" AT ",0
 _EHMessage2:
-		.text 	13,"    LEAN V0.1 (27-OCT-19)",0
+		.text 	13,"    LEAN V0.2 (01-NOV-19)",0
 
 ; ******************************************************************************
 ;
