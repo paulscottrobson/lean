@@ -27,28 +27,38 @@ endproc
 //
 proc random()
 	Y->S
-	byte limit
-	limit = R
+	byte limit,n
+	limit = A 						// must be < this
 	repeat
-		R=seed R=? if R=$AB9E seed=R endif
-		R=seed >>seed A&1 A=? if R=seed R*$B400 seed=R endif
-		R=seed R.Swap A=R A-limit
-	CC? until
-	R=seed R.Swap A=R
+		R=seed R=?  				// if zero set seed
+		if R=$A2B7 seed=R endif
+		R=seed >>seed 				// Galois LFSR
+		A&1 A=? if R=seed R*$B400 seed=R endif
+		R=seed R.Swap R*Seed n=A 	// Eor MSB/LSB together
+		A-limit 	
+	CC? until 						// until in range.
+	A=n R=A
 	S->Y
+endproc
+//
+//			Random Direction
+//
+proc random.dir()
+	random(127) A&1  				// 0 or 1
+	A=? if A=255 endif 				// 255 or 1
 endproc
 //
 //			Create ball Y
 //
 proc ball.create()
-	random(80) x.ptr[y]=A
+	random(80) x.ptr[y]=A 			// Put random values in array elements
 	random(60) y.ptr[y]=A
-	A=1 xi.ptr[y]=A 
-	A=1 yi.ptr[y]=A
-	random(15) ++A col.ptr[y]=A
+	random.dir() xi.ptr[y]=A 
+	random.dir() yi.ptr[y]=A
+	random(127) A&15 col.ptr[y]=A
 endproc
 //
-//			Draw ball R
+//			Draw ball Y
 //
 proc ball.draw()
 	A->S 
@@ -57,6 +67,18 @@ proc ball.draw()
 	S->A vera.write()
 	A=col.ptr[y] vera.write()
 endproc	
+//
+//			Move Ball Y
+//
+proc ball.move()
+	A=x.ptr[y] A=? if A=1 xi.ptr[y]=A endif
+	A=y.ptr[y] A=? if A=1 yi.ptr[y]=A endif
+	A=x.ptr[y] A-79 A=? if A=255 xi.ptr[y]=A endif
+	A=y.ptr[y] A-59 A=? if A=255 yi.ptr[y]=A endif
+
+	A=x.ptr[y] A+xi.ptr[y] x.ptr[y]=A
+	A=y.ptr[y] A+yi.ptr[y] y.ptr[y]=A
+endproc
 //
 //			Main Program
 //
@@ -72,11 +94,22 @@ proc main()
 		vera.write(32) vera.write(1)
 	next
 
-	A=112 count=a 					// Count of balls (no input ... yet)
+	A=100 count=a 					// Count of balls (no input ... yet)
 	A=count a.for 					// Create the balls.
 		Y=A
 		ball.create()
 		ball.draw(81)
+	next
+
+	1000 r.for
+		A=count a.for
+			Y=A
+			ball.draw(32)
+			ball.move()
+			ball.draw(81)
+			100 r.for next
+		next
+
 	next
 endproc
 

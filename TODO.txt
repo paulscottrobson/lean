@@ -1,7 +1,8 @@
 TODO
 ====
--	Add comparisons.
-- 	Write code with it - ball demo ?
+-	Add comparisons vs constants/variables
+-	First 2 bytes are call address
+- 	Some sort of case type thing.
 - 	Strings (process bit)
 -	Mark
 		if = current mark, do nothing
