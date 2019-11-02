@@ -1,3 +1,5 @@
+-A 
+-R 
 word vera.low@$9f20
 byte vera.high@$9f22
 byte vera.data@$9f23

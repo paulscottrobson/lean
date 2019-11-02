@@ -32,7 +32,7 @@ Start:
 		jmp 	CallCodeMemory
 
 LeanMessage:
-		.text 	13,"    LEAN V0.3 (01-NOV-19)",0
+		.text 	13,"    LEAN V0.9 (02-NOV-19)",0
 
 RunCompiler:
 		tsx 									; save SP

@@ -85,14 +85,16 @@
 		eor 	#$FF
 		inc 	a
 
-*	^R 	pha
+*	^R 	
+		pha
 		txa 
 		eor 	#$FF
 		tax
 		pla
 		eor 	#$FF
 
-*	-R 	pha
+*	-R 	
+		pha
 		txa 
 		eor 	#$FF
 		tax

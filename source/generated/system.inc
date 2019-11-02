@@ -153,10 +153,11 @@ L10018:
 	ldx  #$73
 L10018_END:
 ;
-;		** ^r  pha:* [^RPHA] **
+;		** ^r:* [^R] **
 ;
 L10019:
 	.byte L10019_END-L10019-1
+	pha
 	txa
 	eor  #$ff
 	tax
@@ -294,136 +295,273 @@ L10036:
 	bcs *
 L10036_END:
 ;
-;		** r = |:W [R=w] **
+;		** r>=|?:L [R>=l?] **
 ;
 L10037:
 	.byte L10037_END-L10037-1
-	lda  #$63
-	ldx  #$73
+	cmp  $7363
+	pha
+	txa
+	sbc  $7383
+	pla
+	.byte $93
+	bcs *
 L10037_END:
 ;
-;		** r = |:S [R=s] **
+;		** r>=|?:I [R>=i?] **
 ;
 L10038:
 	.byte L10038_END-L10038-1
-	lda  $63
-	ldx  #0
+	cmp  $63
+	pha
+	txa
+	sbc  $83
+	pla
+	.byte $93
+	bcs *
 L10038_END:
 ;
-;		** r = |[y]:L [R=l[Y]] **
+;		** r=|?:W [R=w?] **
 ;
 L10039:
 	.byte L10039_END-L10039-1
-	iny
-	lda  ($7363& $ff),y
-	tax
-	dey
-	lda  ($7363& $ff),y
+	cmp  #$63
+	bne  _skip1
+	cpx  #$73
+_skip1:
+	.byte $93
+	beq *
 L10039_END:
 ;
-;		** r = |:L [R=l] **
+;		** r = |:W [R=w] **
 ;
 L10040:
 	.byte L10040_END-L10040-1
-	lda  $7363
-	ldx  $7383
+	lda  #$63
+	ldx  #$73
 L10040_END:
 ;
-;		** r = |[y]:I [R=i[Y]] **
+;		** r = |:S [R=s] **
 ;
 L10041:
 	.byte L10041_END-L10041-1
+	lda  $63
+	ldx  #0
+L10041_END:
+;
+;		** r = |[y]:L [R=l[Y]] **
+;
+L10042:
+	.byte L10042_END-L10042-1
+	iny
+	lda  ($7363& $ff),y
+	tax
+	dey
+	lda  ($7363& $ff),y
+L10042_END:
+;
+;		** r=|?:L [R=l?] **
+;
+L10043:
+	.byte L10043_END-L10043-1
+	cmp  $7363
+	bne  _skip1
+	cpx  $7383
+_skip1:
+	.byte $93
+	beq *
+L10043_END:
+;
+;		** r = |:L [R=l] **
+;
+L10044:
+	.byte L10044_END-L10044-1
+	lda  $7363
+	ldx  $7383
+L10044_END:
+;
+;		** r = |[y]:I [R=i[Y]] **
+;
+L10045:
+	.byte L10045_END-L10045-1
 	iny
 	lda  ($63& $ff),y
 	tax
 	dey
 	lda  ($63& $ff),y
-L10041_END:
-;
-;		** r = |:I [R=i] **
-;
-L10042:
-	.byte L10042_END-L10042-1
-	lda  $63
-	ldx  $83
-L10042_END:
-;
-;		** r = |:C [R=c] **
-;
-L10043:
-	.byte L10043_END-L10043-1
-	lda  $7363
-	ldx  #0
-L10043_END:
-;
-;		** r = |:B [R=b] **
-;
-L10044:
-	.byte L10044_END-L10044-1
-	lda  #$63
-	ldx  #$73
-L10044_END:
-;
-;		** r=y:* [R=Y] **
-;
-L10045:
-	.byte L10045_END-L10045-1
-	tya
-	ldx  #0
 L10045_END:
 ;
-;		** r=a:* [R=A] **
+;		** r=|?:I [R=i?] **
 ;
 L10046:
 	.byte L10046_END-L10046-1
-	ldx  #0
+	cmp  $63
+	bne  _skip1
+	cpx  $83
+_skip1:
+	.byte $93
+	beq *
 L10046_END:
 ;
-;		** r=?:* [R=?] **
+;		** r = |:I [R=i] **
 ;
 L10047:
 	.byte L10047_END-L10047-1
+	lda  $63
+	ldx  $83
+L10047_END:
+;
+;		** r = |:C [R=c] **
+;
+L10048:
+	.byte L10048_END-L10048-1
+	lda  $7363
+	ldx  #0
+L10048_END:
+;
+;		** r = |:B [R=b] **
+;
+L10049:
+	.byte L10049_END-L10049-1
+	lda  #$63
+	ldx  #$73
+L10049_END:
+;
+;		** r=y:* [R=Y] **
+;
+L10050:
+	.byte L10050_END-L10050-1
+	tya
+	ldx  #0
+L10050_END:
+;
+;		** r=a:* [R=A] **
+;
+L10051:
+	.byte L10051_END-L10051-1
+	ldx  #0
+L10051_END:
+;
+;		** r=?:* [R=?] **
+;
+L10052:
+	.byte L10052_END-L10052-1
 	cmp #0
 	bne *+4
 	cpx #0
 	.byte $93
 	beq *
-L10047_END:
+L10052_END:
+;
+;		** r<|?:W [R<w?] **
+;
+L10053:
+	.byte L10053_END-L10053-1
+	cmp  #$63
+	pha
+	txa
+	sbc  #$73
+	pla
+	.byte $93
+	bcc *
+L10053_END:
+;
+;		** r<|?:L [R<l?] **
+;
+L10054:
+	.byte L10054_END-L10054-1
+	cmp  $7363
+	pha
+	txa
+	sbc  $7383
+	pla
+	.byte $93
+	bcc *
+L10054_END:
+;
+;		** r<|?:I [R<i?] **
+;
+L10055:
+	.byte L10055_END-L10055-1
+	cmp  $63
+	pha
+	txa
+	sbc  $83
+	pla
+	.byte $93
+	bcc *
+L10055_END:
+;
+;		** r<>|?:W [R<>w?] **
+;
+L10056:
+	.byte L10056_END-L10056-1
+	cmp  #$63
+	bne  _skip1
+	cpx  #$73
+_skip1:
+	.byte $93
+	bne *
+L10056_END:
+;
+;		** r<>|?:L [R<>l?] **
+;
+L10057:
+	.byte L10057_END-L10057-1
+	cmp  $7363
+	bne  _skip1
+	cpx  $7383
+_skip1:
+	.byte $93
+	bne *
+L10057_END:
+;
+;		** r<>|?:I [R<>i?] **
+;
+L10058:
+	.byte L10058_END-L10058-1
+	cmp  $63
+	bne  _skip1
+	cpx  $83
+_skip1:
+	.byte $93
+	bne *
+L10058_END:
 ;
 ;		** r<>?:* [R<>?] **
 ;
-L10048:
-	.byte L10048_END-L10048-1
+L10059:
+	.byte L10059_END-L10059-1
 	cmp #0
 	bne *+4
 	cpx #0
 	.byte $93
 	bne *
-L10048_END:
+L10059_END:
 ;
 ;		** r:|:W [R:w] **
 ;
-L10049:
-	.byte L10049_END-L10049-1
+L10060:
+	.byte L10060_END-L10060-1
 	ora  #$63
 	pha
 	txa
 	ora  #$73
 	tax
 	pla
-L10049_END:
+L10060_END:
 ;
 ;		** r:|:S [R:s] **
 ;
-L10050:
-	.byte L10050_END-L10050-1
+L10061:
+	.byte L10061_END-L10061-1
 	ora  $63
-L10050_END:
+L10061_END:
 ;
 ;		** r : |[y]:L [R:l[Y]] **
 ;
-L10051:
-	.byte L10051_END-L10051-1
+L10062:
+	.byte L10062_END-L10062-1
 	ora  ($7363& $ff),y
 	pha
 	txa
@@ -432,24 +570,24 @@ L10051:
 	dey
 	tax
 	pla
-L10051_END:
+L10062_END:
 ;
 ;		** r:|:L [R:l] **
 ;
-L10052:
-	.byte L10052_END-L10052-1
+L10063:
+	.byte L10063_END-L10063-1
 	ora  $7363
 	pha
 	txa
 	ora  $7383
 	tax
 	pla
-L10052_END:
+L10063_END:
 ;
 ;		** r : |[y]:I [R:i[Y]] **
 ;
-L10053:
-	.byte L10053_END-L10053-1
+L10064:
+	.byte L10064_END-L10064-1
 	ora  ($63& $ff),y
 	pha
 	txa
@@ -458,54 +596,54 @@ L10053:
 	dey
 	tax
 	pla
-L10053_END:
+L10064_END:
 ;
 ;		** r:|:I [R:i] **
 ;
-L10054:
-	.byte L10054_END-L10054-1
+L10065:
+	.byte L10065_END-L10065-1
 	ora  $63
 	pha
 	txa
 	ora  $83
 	tax
 	pla
-L10054_END:
+L10065_END:
 ;
 ;		** r:|:C [R:c] **
 ;
-L10055:
-	.byte L10055_END-L10055-1
+L10066:
+	.byte L10066_END-L10066-1
 	ora  $7363
-L10055_END:
+L10066_END:
 ;
 ;		** r:|:B [R:b] **
 ;
-L10056:
-	.byte L10056_END-L10056-1
+L10067:
+	.byte L10067_END-L10067-1
 	ora  #$63
-L10056_END:
+L10067_END:
 ;
 ;		** r.swap:* [R.SWAP] **
 ;
-L10057:
-	.byte L10057_END-L10057-1
+L10068:
+	.byte L10068_END-L10068-1
 	pha
 	txa
 	plx
-L10057_END:
+L10068_END:
 ;
 ;		** r.for:* [R.FOR] **
 ;
-L10058:
-	.byte L10058_END-L10058-1
+L10069:
+	.byte L10069_END-L10069-1
 	.byte $a3,$05
-L10058_END:
+L10069_END:
 ;
 ;		** r-|:W [R-w] **
 ;
-L10059:
-	.byte L10059_END-L10059-1
+L10070:
+	.byte L10070_END-L10070-1
 	sec
 	sbc  #$63
 	pha
@@ -513,22 +651,22 @@ L10059:
 	sbc  #$73
 	tax
 	pla
-L10059_END:
+L10070_END:
 ;
 ;		** r-|:S [R-s] **
 ;
-L10060:
-	.byte L10060_END-L10060-1
+L10071:
+	.byte L10071_END-L10071-1
 	sec
 	sbc  $63
 	bcs  *+3
 	dex
-L10060_END:
+L10071_END:
 ;
 ;		** r - |[y]:L [R-l[Y]] **
 ;
-L10061:
-	.byte L10061_END-L10061-1
+L10072:
+	.byte L10072_END-L10072-1
 	sec
 	sbc  ($7363& $ff),y
 	pha
@@ -538,12 +676,12 @@ L10061:
 	dey
 	tax
 	pla
-L10061_END:
+L10072_END:
 ;
 ;		** r-|:L [R-l] **
 ;
-L10062:
-	.byte L10062_END-L10062-1
+L10073:
+	.byte L10073_END-L10073-1
 	sec
 	sbc  $7363
 	pha
@@ -551,12 +689,12 @@ L10062:
 	sbc  $7383
 	tax
 	pla
-L10062_END:
+L10073_END:
 ;
 ;		** r - |[y]:I [R-i[Y]] **
 ;
-L10063:
-	.byte L10063_END-L10063-1
+L10074:
+	.byte L10074_END-L10074-1
 	sec
 	sbc  ($63& $ff),y
 	pha
@@ -566,12 +704,12 @@ L10063:
 	dey
 	tax
 	pla
-L10063_END:
+L10074_END:
 ;
 ;		** r-|:I [R-i] **
 ;
-L10064:
-	.byte L10064_END-L10064-1
+L10075:
+	.byte L10075_END-L10075-1
 	sec
 	sbc  $63
 	pha
@@ -579,49 +717,49 @@ L10064:
 	sbc  $83
 	tax
 	pla
-L10064_END:
+L10075_END:
 ;
 ;		** r-|:C [R-c] **
 ;
-L10065:
-	.byte L10065_END-L10065-1
+L10076:
+	.byte L10076_END-L10076-1
 	sec
 	sbc  $7363
 	bcs  *+3
 	dex
-L10065_END:
+L10076_END:
 ;
 ;		** r-|:B [R-b] **
 ;
-L10066:
-	.byte L10066_END-L10066-1
+L10077:
+	.byte L10077_END-L10077-1
 	sec
 	sbc  #$63
 	bcs  *+3
 	dex
-L10066_END:
+L10077_END:
 ;
 ;		** r-?:* [R-?] **
 ;
-L10067:
-	.byte L10067_END-L10067-1
+L10078:
+	.byte L10078_END-L10078-1
 	cpx #0
 	.byte $93
 	bmi *
-L10067_END:
+L10078_END:
 ;
 ;		** r->s:* [R->S] **
 ;
-L10068:
-	.byte L10068_END-L10068-1
+L10079:
+	.byte L10079_END-L10079-1
 	pha
 	phx
-L10068_END:
+L10079_END:
 ;
 ;		** r+|:W [R+w] **
 ;
-L10069:
-	.byte L10069_END-L10069-1
+L10080:
+	.byte L10080_END-L10080-1
 	clc
 	adc  #$63
 	pha
@@ -629,22 +767,22 @@ L10069:
 	adc  #$73
 	tax
 	pla
-L10069_END:
+L10080_END:
 ;
 ;		** r+|:S [R+s] **
 ;
-L10070:
-	.byte L10070_END-L10070-1
+L10081:
+	.byte L10081_END-L10081-1
 	clc
 	adc  $63
 	bcc  *+3
 	inx
-L10070_END:
+L10081_END:
 ;
 ;		** r + |[y]:L [R+l[Y]] **
 ;
-L10071:
-	.byte L10071_END-L10071-1
+L10082:
+	.byte L10082_END-L10082-1
 	clc
 	adc  ($7363& $ff),y
 	pha
@@ -654,12 +792,12 @@ L10071:
 	dey
 	tax
 	pla
-L10071_END:
+L10082_END:
 ;
 ;		** r+|:L [R+l] **
 ;
-L10072:
-	.byte L10072_END-L10072-1
+L10083:
+	.byte L10083_END-L10083-1
 	clc
 	adc  $7363
 	pha
@@ -667,12 +805,12 @@ L10072:
 	adc  $7383
 	tax
 	pla
-L10072_END:
+L10083_END:
 ;
 ;		** r + |[y]:I [R+i[Y]] **
 ;
-L10073:
-	.byte L10073_END-L10073-1
+L10084:
+	.byte L10084_END-L10084-1
 	clc
 	adc  ($63& $ff),y
 	pha
@@ -682,12 +820,12 @@ L10073:
 	dey
 	tax
 	pla
-L10073_END:
+L10084_END:
 ;
 ;		** r+|:I [R+i] **
 ;
-L10074:
-	.byte L10074_END-L10074-1
+L10085:
+	.byte L10085_END-L10085-1
 	clc
 	adc  $63
 	pha
@@ -695,60 +833,60 @@ L10074:
 	adc  $83
 	tax
 	pla
-L10074_END:
+L10085_END:
 ;
 ;		** r+|:C [R+c] **
 ;
-L10075:
-	.byte L10075_END-L10075-1
+L10086:
+	.byte L10086_END-L10086-1
 	clc
 	adc  $7363
 	bcc  *+3
 	inx
-L10075_END:
+L10086_END:
 ;
 ;		** r+|:B [R+b] **
 ;
-L10076:
-	.byte L10076_END-L10076-1
+L10087:
+	.byte L10087_END-L10087-1
 	clc
 	adc  #$63
 	bcc  *+3
 	inx
-L10076_END:
+L10087_END:
 ;
 ;		** r+?:* [R+?] **
 ;
-L10077:
-	.byte L10077_END-L10077-1
+L10088:
+	.byte L10088_END-L10088-1
 	cpx #0
 	.byte $93
 	bpl *
-L10077_END:
+L10088_END:
 ;
 ;		** r*|:W [R*w] **
 ;
-L10078:
-	.byte L10078_END-L10078-1
+L10089:
+	.byte L10089_END-L10089-1
 	eor  #$63
 	pha
 	txa
 	eor  #$73
 	tax
 	pla
-L10078_END:
+L10089_END:
 ;
 ;		** r*|:S [R*s] **
 ;
-L10079:
-	.byte L10079_END-L10079-1
+L10090:
+	.byte L10090_END-L10090-1
 	eor  $63
-L10079_END:
+L10090_END:
 ;
 ;		** r * |[y]:L [R*l[Y]] **
 ;
-L10080:
-	.byte L10080_END-L10080-1
+L10091:
+	.byte L10091_END-L10091-1
 	eor  ($7363 & $ff),y
 	pha
 	txa
@@ -757,24 +895,24 @@ L10080:
 	dey
 	tax
 	pla
-L10080_END:
+L10091_END:
 ;
 ;		** r*|:L [R*l] **
 ;
-L10081:
-	.byte L10081_END-L10081-1
+L10092:
+	.byte L10092_END-L10092-1
 	eor  $7363
 	pha
 	txa
 	eor  $7383
 	tax
 	pla
-L10081_END:
+L10092_END:
 ;
 ;		** r * |[y]:I [R*i[Y]] **
 ;
-L10082:
-	.byte L10082_END-L10082-1
+L10093:
+	.byte L10093_END-L10093-1
 	eor  ($63 & $ff),y
 	pha
 	txa
@@ -783,58 +921,58 @@ L10082:
 	dey
 	tax
 	pla
-L10082_END:
+L10093_END:
 ;
 ;		** r*|:I [R*i] **
 ;
-L10083:
-	.byte L10083_END-L10083-1
+L10094:
+	.byte L10094_END-L10094-1
 	eor  $63
 	pha
 	txa
 	eor  $83
 	tax
 	pla
-L10083_END:
+L10094_END:
 ;
 ;		** r*|:C [R*c] **
 ;
-L10084:
-	.byte L10084_END-L10084-1
+L10095:
+	.byte L10095_END-L10095-1
 	eor  $7363
-L10084_END:
+L10095_END:
 ;
 ;		** r*|:B [R*b] **
 ;
-L10085:
-	.byte L10085_END-L10085-1
+L10096:
+	.byte L10096_END-L10096-1
 	eor  #$63
-L10085_END:
+L10096_END:
 ;
 ;		** r&|:W [R&w] **
 ;
-L10086:
-	.byte L10086_END-L10086-1
+L10097:
+	.byte L10097_END-L10097-1
 	and  #$63
 	pha
 	txa
 	and  #$73
 	tax
 	pla
-L10086_END:
+L10097_END:
 ;
 ;		** r&|:S [R&s] **
 ;
-L10087:
-	.byte L10087_END-L10087-1
+L10098:
+	.byte L10098_END-L10098-1
 	and  $63
 	ldx  #0
-L10087_END:
+L10098_END:
 ;
 ;		** r & |[y]:L [R&l[Y]] **
 ;
-L10088:
-	.byte L10088_END-L10088-1
+L10099:
+	.byte L10099_END-L10099-1
 	and  ($7363& $ff),y
 	pha
 	txa
@@ -843,24 +981,24 @@ L10088:
 	dey
 	tax
 	pla
-L10088_END:
+L10099_END:
 ;
 ;		** r&|:L [R&l] **
 ;
-L10089:
-	.byte L10089_END-L10089-1
+L10100:
+	.byte L10100_END-L10100-1
 	and  $7363
 	pha
 	txa
 	and  $7383
 	tax
 	pla
-L10089_END:
+L10100_END:
 ;
 ;		** r & |[y]:I [R&i[Y]] **
 ;
-L10090:
-	.byte L10090_END-L10090-1
+L10101:
+	.byte L10101_END-L10101-1
 	and  ($63& $ff),y
 	pha
 	txa
@@ -869,601 +1007,602 @@ L10090:
 	dey
 	tax
 	pla
-L10090_END:
+L10101_END:
 ;
 ;		** r&|:I [R&i] **
 ;
-L10091:
-	.byte L10091_END-L10091-1
+L10102:
+	.byte L10102_END-L10102-1
 	and  $63
 	pha
 	txa
 	and  $83
 	tax
 	pla
-L10091_END:
+L10102_END:
 ;
 ;		** r&|:C [R&c] **
 ;
-L10092:
-	.byte L10092_END-L10092-1
+L10103:
+	.byte L10103_END-L10103-1
 	and  $7363
 	ldx  #0
-L10092_END:
+L10103_END:
 ;
 ;		** r&|:B [R&b] **
 ;
-L10093:
-	.byte L10093_END-L10093-1
+L10104:
+	.byte L10104_END-L10104-1
 	and  #$63
 	ldx  #0
-L10093_END:
+L10104_END:
 ;
 ;		** proc:* [PROC] **
 ;
-L10094:
-	.byte L10094_END-L10094-1
+L10105:
+	.byte L10105_END-L10105-1
 	.byte $a3,$06
-L10094_END:
+L10105_END:
 ;
 ;		** next:* [NEXT] **
 ;
-L10095:
-	.byte L10095_END-L10095-1
+L10106:
+	.byte L10106_END-L10106-1
 	.byte $a3,$07
-L10095_END:
+L10106_END:
 ;
 ;		** if:* [IF] **
 ;
-L10096:
-	.byte L10096_END-L10096-1
+L10107:
+	.byte L10107_END-L10107-1
 	.byte $a3,$08
-L10096_END:
+L10107_END:
 ;
 ;		** endproc:* [ENDPROC] **
 ;
-L10097:
-	.byte L10097_END-L10097-1
+L10108:
+	.byte L10108_END-L10108-1
 	.byte $a3,$09
-L10097_END:
+L10108_END:
 ;
 ;		** endif:* [ENDIF] **
 ;
-L10098:
-	.byte L10098_END-L10098-1
+L10109:
+	.byte L10109_END-L10109-1
 	.byte $a3,$0a
-L10098_END:
+L10109_END:
 ;
 ;		** else:* [ELSE] **
 ;
-L10099:
-	.byte L10099_END-L10099-1
+L10110:
+	.byte L10110_END-L10110-1
 	.byte $a3,$0b
-L10099_END:
+L10110_END:
 ;
 ;		** cs?:* [CS?] **
 ;
-L10100:
-	.byte L10100_END-L10100-1
+L10111:
+	.byte L10111_END-L10111-1
 	.byte $93
 	bcs  *
-L10100_END:
+L10111_END:
 ;
 ;		** cc?:* [CC?] **
 ;
-L10101:
-	.byte L10101_END-L10101-1
+L10112:
+	.byte L10112_END-L10112-1
 	.byte $93
 	bcc  *
-L10101_END:
+L10112_END:
 ;
 ;		** byte:* [BYTE] **
 ;
-L10102:
-	.byte L10102_END-L10102-1
+L10113:
+	.byte L10113_END-L10113-1
 	.byte $a3,$0c
-L10102_END:
+L10113_END:
 ;
 ;		** break:* [BREAK] **
 ;
-L10103:
-	.byte L10103_END-L10103-1
+L10114:
+	.byte L10114_END-L10114-1
 	.byte  $ff
-L10103_END:
+L10114_END:
 ;
 ;		** a>=|?:S [A>=s?] **
 ;
-L10104:
-	.byte L10104_END-L10104-1
+L10115:
+	.byte L10115_END-L10115-1
 	cmp  $63
 	.byte $93
 	bcs *
-L10104_END:
+L10115_END:
 ;
 ;		** a>=|?:C [A>=c?] **
 ;
-L10105:
-	.byte L10105_END-L10105-1
+L10116:
+	.byte L10116_END-L10116-1
 	cmp  $7363
 	.byte $93
 	bcs *
-L10105_END:
+L10116_END:
 ;
 ;		** a>=|?:B [A>=b?] **
 ;
-L10106:
-	.byte L10106_END-L10106-1
+L10117:
+	.byte L10117_END-L10117-1
 	cmp  #$63
 	.byte $93
 	bcs *
-L10106_END:
-;
-;		** a=|?:S [A=s?] **
-;
-L10107:
-	.byte L10107_END-L10107-1
-	cmp  $63
-	.byte $93
-	beq *
-L10107_END:
-;
-;		** a = |:S [A=s] **
-;
-L10108:
-	.byte L10108_END-L10108-1
-	lda  $63
-L10108_END:
-;
-;		** a = |[y]:L [A=l[Y]] **
-;
-L10109:
-	.byte L10109_END-L10109-1
-	lda  ($7363& $ff),y
-L10109_END:
-;
-;		** a = |[y]:I [A=i[Y]] **
-;
-L10110:
-	.byte L10110_END-L10110-1
-	lda  ($63& $ff),y
-L10110_END:
-;
-;		** a=|?:C [A=c?] **
-;
-L10111:
-	.byte L10111_END-L10111-1
-	cmp  $7363
-	.byte $93
-	beq *
-L10111_END:
-;
-;		** a = |:C [A=c] **
-;
-L10112:
-	.byte L10112_END-L10112-1
-	lda  $7363
-L10112_END:
-;
-;		** a=|?:B [A=b?] **
-;
-L10113:
-	.byte L10113_END-L10113-1
-	cmp  #$63
-	.byte $93
-	beq *
-L10113_END:
-;
-;		** a = |:B [A=b] **
-;
-L10114:
-	.byte L10114_END-L10114-1
-	lda  #$63
-L10114_END:
-;
-;		** a=y:* [A=Y] **
-;
-L10115:
-	.byte L10115_END-L10115-1
-	tya
-L10115_END:
-;
-;		** a=r:* [A=R] **
-;
-L10116:
-	.byte L10116_END-L10116-1
-L10116_END:
-;
-;		** a=?:* [A=?] **
-;
-L10117:
-	.byte L10117_END-L10117-1
-	cmp #0
-	.byte $93
-	beq *
 L10117_END:
 ;
-;		** a<|?:S [A<s?] **
+;		** a=|?:S [A=s?] **
 ;
 L10118:
 	.byte L10118_END-L10118-1
 	cmp  $63
 	.byte $93
-	bcc *
+	beq *
 L10118_END:
 ;
-;		** a<|?:C [A<c?] **
+;		** a = |:S [A=s] **
 ;
 L10119:
 	.byte L10119_END-L10119-1
-	cmp  $7363
-	.byte $93
-	bcc *
+	lda  $63
 L10119_END:
 ;
-;		** a<|?:B [A<b?] **
+;		** a = |[y]:L [A=l[Y]] **
 ;
 L10120:
 	.byte L10120_END-L10120-1
-	cmp  #$63
-	.byte $93
-	bcc *
+	lda  ($7363& $ff),y
 L10120_END:
 ;
-;		** a<>|?:S [A<>s?] **
+;		** a = |[y]:I [A=i[Y]] **
 ;
 L10121:
 	.byte L10121_END-L10121-1
-	cmp  $63
-	.byte $93
-	bne *
+	lda  ($63& $ff),y
 L10121_END:
 ;
-;		** a<>|?:C [A<>c?] **
+;		** a=|?:C [A=c?] **
 ;
 L10122:
 	.byte L10122_END-L10122-1
 	cmp  $7363
 	.byte $93
-	bne *
+	beq *
 L10122_END:
 ;
-;		** a<>|?:B [A<>b?] **
+;		** a = |:C [A=c] **
 ;
 L10123:
 	.byte L10123_END-L10123-1
-	cmp  #$63
-	.byte $93
-	bne *
+	lda  $7363
 L10123_END:
 ;
-;		** a<>?:* [A<>?] **
+;		** a=|?:B [A=b?] **
 ;
 L10124:
 	.byte L10124_END-L10124-1
-	cmp #0
+	cmp  #$63
 	.byte $93
-	bne *
+	beq *
 L10124_END:
 ;
-;		** a:|:S [A:s] **
+;		** a = |:B [A=b] **
 ;
 L10125:
 	.byte L10125_END-L10125-1
-	ora  $63
+	lda  #$63
 L10125_END:
 ;
-;		** a : |[y]:L [A:l[Y]] **
+;		** a=y:* [A=Y] **
 ;
 L10126:
 	.byte L10126_END-L10126-1
-	ora  ($7363& $ff),y
+	tya
 L10126_END:
 ;
-;		** a : |[y]:I [A:i[Y]] **
+;		** a=r:* [A=R] **
 ;
 L10127:
 	.byte L10127_END-L10127-1
-	ora  ($63& $ff),y
 L10127_END:
 ;
-;		** a:|:C [A:c] **
+;		** a=?:* [A=?] **
 ;
 L10128:
 	.byte L10128_END-L10128-1
-	ora  $7363
+	cmp #0
+	.byte $93
+	beq *
 L10128_END:
 ;
-;		** a:|:B [A:b] **
+;		** a<|?:S [A<s?] **
 ;
 L10129:
 	.byte L10129_END-L10129-1
-	ora  #$63
+	cmp  $63
+	.byte $93
+	bcc *
 L10129_END:
 ;
-;		** a.for:* [A.FOR] **
+;		** a<|?:C [A<c?] **
 ;
 L10130:
 	.byte L10130_END-L10130-1
-	.byte $a3,$0d
+	cmp  $7363
+	.byte $93
+	bcc *
 L10130_END:
 ;
-;		** a-|:S [A-s] **
+;		** a<|?:B [A<b?] **
 ;
 L10131:
 	.byte L10131_END-L10131-1
-	sec
-	sbc  $63
+	cmp  #$63
+	.byte $93
+	bcc *
 L10131_END:
 ;
-;		** a - |[y]:L [A-l[Y]] **
+;		** a<>|?:S [A<>s?] **
 ;
 L10132:
 	.byte L10132_END-L10132-1
-	sec
-	sbc  ($7363& $ff),y
+	cmp  $63
+	.byte $93
+	bne *
 L10132_END:
 ;
-;		** a - |[y]:I [A-i[Y]] **
+;		** a<>|?:C [A<>c?] **
 ;
 L10133:
 	.byte L10133_END-L10133-1
-	sec
-	sbc  ($63& $ff),y
+	cmp  $7363
+	.byte $93
+	bne *
 L10133_END:
 ;
-;		** a-|:C [A-c] **
+;		** a<>|?:B [A<>b?] **
 ;
 L10134:
 	.byte L10134_END-L10134-1
-	sec
-	sbc  $7363
+	cmp  #$63
+	.byte $93
+	bne *
 L10134_END:
 ;
-;		** a-|:B [A-b] **
+;		** a<>?:* [A<>?] **
 ;
 L10135:
 	.byte L10135_END-L10135-1
-	sec
-	sbc  #$63
+	cmp #0
+	.byte $93
+	bne *
 L10135_END:
 ;
-;		** a-?:* [A-?] **
+;		** a:|:S [A:s] **
 ;
 L10136:
 	.byte L10136_END-L10136-1
-	cmp #0
-	.byte $93
-	bmi *
+	ora  $63
 L10136_END:
 ;
-;		** a->s:* [A->S] **
+;		** a : |[y]:L [A:l[Y]] **
 ;
 L10137:
 	.byte L10137_END-L10137-1
-	pha
+	ora  ($7363& $ff),y
 L10137_END:
 ;
-;		** a+|:S [A+s] **
+;		** a : |[y]:I [A:i[Y]] **
 ;
 L10138:
 	.byte L10138_END-L10138-1
-	clc
-	adc  $63
+	ora  ($63& $ff),y
 L10138_END:
 ;
-;		** a + |[y]:L [A+l[Y]] **
+;		** a:|:C [A:c] **
 ;
 L10139:
 	.byte L10139_END-L10139-1
-	clc
-	adc  ($7363& $ff),y
+	ora  $7363
 L10139_END:
 ;
-;		** a + |[y]:I [A+i[Y]] **
+;		** a:|:B [A:b] **
 ;
 L10140:
 	.byte L10140_END-L10140-1
-	clc
-	adc  ($63& $ff),y
+	ora  #$63
 L10140_END:
 ;
-;		** a+|:C [A+c] **
+;		** a.for:* [A.FOR] **
 ;
 L10141:
 	.byte L10141_END-L10141-1
-	clc
-	adc  $7363
+	.byte $a3,$0d
 L10141_END:
 ;
-;		** a+|:B [A+b] **
+;		** a-|:S [A-s] **
 ;
 L10142:
 	.byte L10142_END-L10142-1
-	clc
-	adc  #$63
+	sec
+	sbc  $63
 L10142_END:
 ;
-;		** a+?:* [A+?] **
+;		** a - |[y]:L [A-l[Y]] **
 ;
 L10143:
 	.byte L10143_END-L10143-1
-	cmp #0
-	.byte $93
-	bpl *
+	sec
+	sbc  ($7363& $ff),y
 L10143_END:
 ;
-;		** a*|:S [A*s] **
+;		** a - |[y]:I [A-i[Y]] **
 ;
 L10144:
 	.byte L10144_END-L10144-1
-	eor  $63
+	sec
+	sbc  ($63& $ff),y
 L10144_END:
 ;
-;		** a * |[y]:L [A*l[Y]] **
+;		** a-|:C [A-c] **
 ;
 L10145:
 	.byte L10145_END-L10145-1
-	eor  ($7363 & $ff),y
+	sec
+	sbc  $7363
 L10145_END:
 ;
-;		** a * |[y]:I [A*i[Y]] **
+;		** a-|:B [A-b] **
 ;
 L10146:
 	.byte L10146_END-L10146-1
-	eor  ($63 & $ff),y
+	sec
+	sbc  #$63
 L10146_END:
 ;
-;		** a*|:C [A*c] **
+;		** a-?:* [A-?] **
 ;
 L10147:
 	.byte L10147_END-L10147-1
-	eor  $7363
+	cmp #0
+	.byte $93
+	bmi *
 L10147_END:
 ;
-;		** a*|:B [A*b] **
+;		** a->s:* [A->S] **
 ;
 L10148:
 	.byte L10148_END-L10148-1
-	eor  #$63
+	pha
 L10148_END:
 ;
-;		** a&|:S [A&s] **
+;		** a+|:S [A+s] **
 ;
 L10149:
 	.byte L10149_END-L10149-1
-	and  $63
+	clc
+	adc  $63
 L10149_END:
 ;
-;		** a & |[y]:L [A&l[Y]] **
+;		** a + |[y]:L [A+l[Y]] **
 ;
 L10150:
 	.byte L10150_END-L10150-1
-	and  ($7363& $ff),y
+	clc
+	adc  ($7363& $ff),y
 L10150_END:
 ;
-;		** a & |[y]:I [A&i[Y]] **
+;		** a + |[y]:I [A+i[Y]] **
 ;
 L10151:
 	.byte L10151_END-L10151-1
-	and  ($63& $ff),y
+	clc
+	adc  ($63& $ff),y
 L10151_END:
 ;
-;		** a&|:C [A&c] **
+;		** a+|:C [A+c] **
 ;
 L10152:
 	.byte L10152_END-L10152-1
-	and  $7363
+	clc
+	adc  $7363
 L10152_END:
 ;
-;		** a&|:B [A&b] **
+;		** a+|:B [A+b] **
 ;
 L10153:
 	.byte L10153_END-L10153-1
-	and  #$63
+	clc
+	adc  #$63
 L10153_END:
 ;
-;		** >>|:S [>>s] **
+;		** a+?:* [A+?] **
 ;
 L10154:
 	.byte L10154_END-L10154-1
-	lsr  $63
+	cmp #0
+	.byte $93
+	bpl *
 L10154_END:
 ;
-;		** >>|:L [>>l] **
+;		** a*|:S [A*s] **
 ;
 L10155:
 	.byte L10155_END-L10155-1
-	lsr  $7383
-	ror  $7363
+	eor  $63
 L10155_END:
 ;
-;		** >>|:I [>>i] **
+;		** a * |[y]:L [A*l[Y]] **
 ;
 L10156:
 	.byte L10156_END-L10156-1
-	lsr  $83
-	ror  $63
+	eor  ($7363 & $ff),y
 L10156_END:
 ;
-;		** >>|:C [>>c] **
+;		** a * |[y]:I [A*i[Y]] **
 ;
 L10157:
 	.byte L10157_END-L10157-1
-	lsr  $7363
+	eor  ($63 & $ff),y
 L10157_END:
 ;
-;		** >>r:* [>>R] **
+;		** a*|:C [A*c] **
 ;
 L10158:
 	.byte L10158_END-L10158-1
+	eor  $7363
+L10158_END:
+;
+;		** a*|:B [A*b] **
+;
+L10159:
+	.byte L10159_END-L10159-1
+	eor  #$63
+L10159_END:
+;
+;		** a&|:S [A&s] **
+;
+L10160:
+	.byte L10160_END-L10160-1
+	and  $63
+L10160_END:
+;
+;		** a & |[y]:L [A&l[Y]] **
+;
+L10161:
+	.byte L10161_END-L10161-1
+	and  ($7363& $ff),y
+L10161_END:
+;
+;		** a & |[y]:I [A&i[Y]] **
+;
+L10162:
+	.byte L10162_END-L10162-1
+	and  ($63& $ff),y
+L10162_END:
+;
+;		** a&|:C [A&c] **
+;
+L10163:
+	.byte L10163_END-L10163-1
+	and  $7363
+L10163_END:
+;
+;		** a&|:B [A&b] **
+;
+L10164:
+	.byte L10164_END-L10164-1
+	and  #$63
+L10164_END:
+;
+;		** >>|:S [>>s] **
+;
+L10165:
+	.byte L10165_END-L10165-1
+	lsr  $63
+L10165_END:
+;
+;		** >>|:L [>>l] **
+;
+L10166:
+	.byte L10166_END-L10166-1
+	lsr  $7383
+	ror  $7363
+L10166_END:
+;
+;		** >>|:I [>>i] **
+;
+L10167:
+	.byte L10167_END-L10167-1
+	lsr  $83
+	ror  $63
+L10167_END:
+;
+;		** >>|:C [>>c] **
+;
+L10168:
+	.byte L10168_END-L10168-1
+	lsr  $7363
+L10168_END:
+;
+;		** >>r:* [>>R] **
+;
+L10169:
+	.byte L10169_END-L10169-1
 	pha
 	txa
 	lsr  a
 	tax
 	pla
 	ror  a
-L10158_END:
+L10169_END:
 ;
 ;		** >>a:* [>>A] **
 ;
-L10159:
-	.byte L10159_END-L10159-1
+L10170:
+	.byte L10170_END-L10170-1
 	lsr  a
-L10159_END:
+L10170_END:
 ;
 ;		** <<|:S [<<s] **
 ;
-L10160:
-	.byte L10160_END-L10160-1
+L10171:
+	.byte L10171_END-L10171-1
 	asl  $63
-L10160_END:
+L10171_END:
 ;
 ;		** <<|:L [<<l] **
 ;
-L10161:
-	.byte L10161_END-L10161-1
+L10172:
+	.byte L10172_END-L10172-1
 	asl  $7363
 	rol  $7383
-L10161_END:
+L10172_END:
 ;
 ;		** <<|:I [<<i] **
 ;
-L10162:
-	.byte L10162_END-L10162-1
+L10173:
+	.byte L10173_END-L10173-1
 	asl  $63
 	rol  $83
-L10162_END:
+L10173_END:
 ;
 ;		** <<|:C [<<c] **
 ;
-L10163:
-	.byte L10163_END-L10163-1
+L10174:
+	.byte L10174_END-L10174-1
 	asl  $7363
-L10163_END:
+L10174_END:
 ;
 ;		** <<r:* [<<R] **
 ;
-L10164:
-	.byte L10164_END-L10164-1
+L10175:
+	.byte L10175_END-L10175-1
 	asl  a
 	pha
 	txa
 	rol  a
 	tax
 	pla
-L10164_END:
+L10175_END:
 ;
 ;		** <<a:* [<<A] **
 ;
-L10165:
-	.byte L10165_END-L10165-1
+L10176:
+	.byte L10176_END-L10176-1
 	asl  a
-L10165_END:
+L10176_END:
 ;
-;		** -r  pha:* [-RPHA] **
+;		** -r:* [-R] **
 ;
-L10166:
-	.byte L10166_END-L10166-1
+L10177:
+	.byte L10177_END-L10177-1
+	pha
 	txa
 	eor  #$ff
 	tax
@@ -1472,27 +1611,27 @@ L10166:
 	inc  a
 	bne  *+3
 	inx
-L10166_END:
+L10177_END:
 ;
 ;		** -a:* [-A] **
 ;
-L10167:
-	.byte L10167_END-L10167-1
+L10178:
+	.byte L10178_END-L10178-1
 	eor  #$ff
 	inc  a
-L10167_END:
+L10178_END:
 ;
 ;		** --|:S [--s] **
 ;
-L10168:
-	.byte L10168_END-L10168-1
+L10179:
+	.byte L10179_END-L10179-1
 	dec  $63
-L10168_END:
+L10179_END:
 ;
 ;		** --|:L [--l] **
 ;
-L10169:
-	.byte L10169_END-L10169-1
+L10180:
+	.byte L10180_END-L10180-1
 	pha
 	lda  $7363
 	bne  _noborrow
@@ -1500,12 +1639,12 @@ L10169:
 _noborrow:
 	dec  $7363
 	pla
-L10169_END:
+L10180_END:
 ;
 ;		** --|:I [--i] **
 ;
-L10170:
-	.byte L10170_END-L10170-1
+L10181:
+	.byte L10181_END-L10181-1
 	pha
 	lda  $63
 	bne  _noborrow
@@ -1513,95 +1652,95 @@ L10170:
 _noborrow:
 	dec  $63
 	pla
-L10170_END:
+L10181_END:
 ;
 ;		** --|:C [--c] **
 ;
-L10171:
-	.byte L10171_END-L10171-1
+L10182:
+	.byte L10182_END-L10182-1
 	dec  $7363
-L10171_END:
+L10182_END:
 ;
 ;		** --y:* [--Y] **
 ;
-L10172:
-	.byte L10172_END-L10172-1
+L10183:
+	.byte L10183_END-L10183-1
 	dey
-L10172_END:
+L10183_END:
 ;
 ;		** --r:* [--R] **
 ;
-L10173:
-	.byte L10173_END-L10173-1
+L10184:
+	.byte L10184_END-L10184-1
 	cmp  #0
 	bne  *+3
 	dex
 	dec  a
-L10173_END:
+L10184_END:
 ;
 ;		** --a:* [--A] **
 ;
-L10174:
-	.byte L10174_END-L10174-1
+L10185:
+	.byte L10185_END-L10185-1
 	dec  a
-L10174_END:
+L10185_END:
 ;
 ;		** ++|:S [++s] **
 ;
-L10175:
-	.byte L10175_END-L10175-1
+L10186:
+	.byte L10186_END-L10186-1
 	inc  $63
-L10175_END:
+L10186_END:
 ;
 ;		** ++|:L [++l] **
 ;
-L10176:
-	.byte L10176_END-L10176-1
+L10187:
+	.byte L10187_END-L10187-1
 	inc  $7363
 	bne  _nocarry
 	inc  $7383
 _nocarry:
-L10176_END:
+L10187_END:
 ;
 ;		** ++|:I [++i] **
 ;
-L10177:
-	.byte L10177_END-L10177-1
+L10188:
+	.byte L10188_END-L10188-1
 	inc  $63
 	bne  _nocarry
 	inc  $83
 _nocarry:
-L10177_END:
+L10188_END:
 ;
 ;		** ++|:C [++c] **
 ;
-L10178:
-	.byte L10178_END-L10178-1
+L10189:
+	.byte L10189_END-L10189-1
 	inc  $7363
-L10178_END:
+L10189_END:
 ;
 ;		** ++y:* [++Y] **
 ;
-L10179:
-	.byte L10179_END-L10179-1
+L10190:
+	.byte L10190_END-L10190-1
 	iny
-L10179_END:
+L10190_END:
 ;
 ;		** ++r:* [++R] **
 ;
-L10180:
-	.byte L10180_END-L10180-1
+L10191:
+	.byte L10191_END-L10191-1
 	inc  a
 	bne  *+3
 	inx
-L10180_END:
+L10191_END:
 ;
 ;		** ++a:* [++A] **
 ;
-L10181:
-	.byte L10181_END-L10181-1
+L10192:
+	.byte L10192_END-L10192-1
 	inc  a
-L10181_END:
+L10192_END:
 ;
 ;		Vector Table for executable commands
 ;
@@ -1793,14 +1932,14 @@ SystemDictionary:
 	.byte	1
 	.byte	$e2
 ;
-;		**** ^RPHA ****
+;		**** ^R ****
 ;
-	.byte	11
+	.byte	8
 	.byte	'M'
 	.word	L10019
 	.byte	0
-	.byte	5
-	.byte	$de,$52,$50,$48,$c1
+	.byte	2
+	.byte	$de,$d2
 ;
 ;		**** ^A ****
 ;
@@ -1955,11 +2094,38 @@ SystemDictionary:
 	.byte	5
 	.byte	$d2,$be,$bd,$f7,$bf
 ;
+;		**** R>=l? ****
+;
+	.byte	11
+	.byte	'M'
+	.word	L10037
+	.byte	0
+	.byte	5
+	.byte	$d2,$be,$bd,$ec,$bf
+;
+;		**** R>=i? ****
+;
+	.byte	11
+	.byte	'M'
+	.word	L10038
+	.byte	0
+	.byte	5
+	.byte	$d2,$be,$bd,$e9,$bf
+;
+;		**** R=w? ****
+;
+	.byte	10
+	.byte	'M'
+	.word	L10039
+	.byte	0
+	.byte	4
+	.byte	$d2,$bd,$f7,$bf
+;
 ;		**** R=w ****
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10037
+	.word	L10040
 	.byte	0
 	.byte	3
 	.byte	$d2,$bd,$f7
@@ -1968,7 +2134,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10038
+	.word	L10041
 	.byte	0
 	.byte	3
 	.byte	$d2,$bd,$f3
@@ -1977,16 +2143,25 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10039
+	.word	L10042
 	.byte	0
 	.byte	6
 	.byte	$d2,$bd,$ec,$db,$d9,$dd
+;
+;		**** R=l? ****
+;
+	.byte	10
+	.byte	'M'
+	.word	L10043
+	.byte	0
+	.byte	4
+	.byte	$d2,$bd,$ec,$bf
 ;
 ;		**** R=l ****
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10040
+	.word	L10044
 	.byte	0
 	.byte	3
 	.byte	$d2,$bd,$ec
@@ -1995,16 +2170,25 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10041
+	.word	L10045
 	.byte	0
 	.byte	6
 	.byte	$d2,$bd,$e9,$db,$d9,$dd
+;
+;		**** R=i? ****
+;
+	.byte	10
+	.byte	'M'
+	.word	L10046
+	.byte	0
+	.byte	4
+	.byte	$d2,$bd,$e9,$bf
 ;
 ;		**** R=i ****
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10042
+	.word	L10047
 	.byte	0
 	.byte	3
 	.byte	$d2,$bd,$e9
@@ -2013,7 +2197,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10043
+	.word	L10048
 	.byte	0
 	.byte	3
 	.byte	$d2,$bd,$e3
@@ -2022,7 +2206,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10044
+	.word	L10049
 	.byte	0
 	.byte	3
 	.byte	$d2,$bd,$e2
@@ -2031,7 +2215,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10045
+	.word	L10050
 	.byte	0
 	.byte	3
 	.byte	$d2,$bd,$d9
@@ -2040,7 +2224,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10046
+	.word	L10051
 	.byte	0
 	.byte	3
 	.byte	$d2,$bd,$c1
@@ -2049,16 +2233,70 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10047
+	.word	L10052
 	.byte	0
 	.byte	3
 	.byte	$d2,$bd,$bf
+;
+;		**** R<w? ****
+;
+	.byte	10
+	.byte	'M'
+	.word	L10053
+	.byte	0
+	.byte	4
+	.byte	$d2,$bc,$f7,$bf
+;
+;		**** R<l? ****
+;
+	.byte	10
+	.byte	'M'
+	.word	L10054
+	.byte	0
+	.byte	4
+	.byte	$d2,$bc,$ec,$bf
+;
+;		**** R<i? ****
+;
+	.byte	10
+	.byte	'M'
+	.word	L10055
+	.byte	0
+	.byte	4
+	.byte	$d2,$bc,$e9,$bf
+;
+;		**** R<>w? ****
+;
+	.byte	11
+	.byte	'M'
+	.word	L10056
+	.byte	0
+	.byte	5
+	.byte	$d2,$bc,$be,$f7,$bf
+;
+;		**** R<>l? ****
+;
+	.byte	11
+	.byte	'M'
+	.word	L10057
+	.byte	0
+	.byte	5
+	.byte	$d2,$bc,$be,$ec,$bf
+;
+;		**** R<>i? ****
+;
+	.byte	11
+	.byte	'M'
+	.word	L10058
+	.byte	0
+	.byte	5
+	.byte	$d2,$bc,$be,$e9,$bf
 ;
 ;		**** R<>? ****
 ;
 	.byte	10
 	.byte	'M'
-	.word	L10048
+	.word	L10059
 	.byte	0
 	.byte	4
 	.byte	$d2,$bc,$be,$bf
@@ -2067,7 +2305,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10049
+	.word	L10060
 	.byte	0
 	.byte	3
 	.byte	$d2,$ba,$f7
@@ -2076,7 +2314,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10050
+	.word	L10061
 	.byte	0
 	.byte	3
 	.byte	$d2,$ba,$f3
@@ -2085,7 +2323,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10051
+	.word	L10062
 	.byte	0
 	.byte	6
 	.byte	$d2,$ba,$ec,$db,$d9,$dd
@@ -2094,7 +2332,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10052
+	.word	L10063
 	.byte	0
 	.byte	3
 	.byte	$d2,$ba,$ec
@@ -2103,7 +2341,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10053
+	.word	L10064
 	.byte	0
 	.byte	6
 	.byte	$d2,$ba,$e9,$db,$d9,$dd
@@ -2112,7 +2350,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10054
+	.word	L10065
 	.byte	0
 	.byte	3
 	.byte	$d2,$ba,$e9
@@ -2121,7 +2359,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10055
+	.word	L10066
 	.byte	0
 	.byte	3
 	.byte	$d2,$ba,$e3
@@ -2130,7 +2368,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10056
+	.word	L10067
 	.byte	0
 	.byte	3
 	.byte	$d2,$ba,$e2
@@ -2139,7 +2377,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10057
+	.word	L10068
 	.byte	0
 	.byte	6
 	.byte	$52,$2e,$53,$57,$41,$d0
@@ -2148,7 +2386,7 @@ SystemDictionary:
 ;
 	.byte	11
 	.byte	'M'
-	.word	L10058
+	.word	L10069
 	.byte	0
 	.byte	5
 	.byte	$52,$2e,$46,$4f,$d2
@@ -2157,7 +2395,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10059
+	.word	L10070
 	.byte	0
 	.byte	3
 	.byte	$d2,$ad,$f7
@@ -2166,7 +2404,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10060
+	.word	L10071
 	.byte	0
 	.byte	3
 	.byte	$d2,$ad,$f3
@@ -2175,7 +2413,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10061
+	.word	L10072
 	.byte	0
 	.byte	6
 	.byte	$d2,$ad,$ec,$db,$d9,$dd
@@ -2184,7 +2422,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10062
+	.word	L10073
 	.byte	0
 	.byte	3
 	.byte	$d2,$ad,$ec
@@ -2193,7 +2431,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10063
+	.word	L10074
 	.byte	0
 	.byte	6
 	.byte	$d2,$ad,$e9,$db,$d9,$dd
@@ -2202,7 +2440,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10064
+	.word	L10075
 	.byte	0
 	.byte	3
 	.byte	$d2,$ad,$e9
@@ -2211,7 +2449,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10065
+	.word	L10076
 	.byte	0
 	.byte	3
 	.byte	$d2,$ad,$e3
@@ -2220,7 +2458,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10066
+	.word	L10077
 	.byte	0
 	.byte	3
 	.byte	$d2,$ad,$e2
@@ -2229,7 +2467,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10067
+	.word	L10078
 	.byte	0
 	.byte	3
 	.byte	$d2,$ad,$bf
@@ -2238,7 +2476,7 @@ SystemDictionary:
 ;
 	.byte	10
 	.byte	'M'
-	.word	L10068
+	.word	L10079
 	.byte	0
 	.byte	4
 	.byte	$d2,$ad,$be,$d3
@@ -2247,7 +2485,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10069
+	.word	L10080
 	.byte	0
 	.byte	3
 	.byte	$d2,$ab,$f7
@@ -2256,7 +2494,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10070
+	.word	L10081
 	.byte	0
 	.byte	3
 	.byte	$d2,$ab,$f3
@@ -2265,7 +2503,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10071
+	.word	L10082
 	.byte	0
 	.byte	6
 	.byte	$d2,$ab,$ec,$db,$d9,$dd
@@ -2274,7 +2512,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10072
+	.word	L10083
 	.byte	0
 	.byte	3
 	.byte	$d2,$ab,$ec
@@ -2283,7 +2521,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10073
+	.word	L10084
 	.byte	0
 	.byte	6
 	.byte	$d2,$ab,$e9,$db,$d9,$dd
@@ -2292,7 +2530,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10074
+	.word	L10085
 	.byte	0
 	.byte	3
 	.byte	$d2,$ab,$e9
@@ -2301,7 +2539,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10075
+	.word	L10086
 	.byte	0
 	.byte	3
 	.byte	$d2,$ab,$e3
@@ -2310,7 +2548,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10076
+	.word	L10087
 	.byte	0
 	.byte	3
 	.byte	$d2,$ab,$e2
@@ -2319,7 +2557,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10077
+	.word	L10088
 	.byte	0
 	.byte	3
 	.byte	$d2,$ab,$bf
@@ -2328,7 +2566,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10078
+	.word	L10089
 	.byte	0
 	.byte	3
 	.byte	$d2,$aa,$f7
@@ -2337,7 +2575,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10079
+	.word	L10090
 	.byte	0
 	.byte	3
 	.byte	$d2,$aa,$f3
@@ -2346,7 +2584,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10080
+	.word	L10091
 	.byte	0
 	.byte	6
 	.byte	$d2,$aa,$ec,$db,$d9,$dd
@@ -2355,7 +2593,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10081
+	.word	L10092
 	.byte	0
 	.byte	3
 	.byte	$d2,$aa,$ec
@@ -2364,7 +2602,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10082
+	.word	L10093
 	.byte	0
 	.byte	6
 	.byte	$d2,$aa,$e9,$db,$d9,$dd
@@ -2373,7 +2611,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10083
+	.word	L10094
 	.byte	0
 	.byte	3
 	.byte	$d2,$aa,$e9
@@ -2382,7 +2620,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10084
+	.word	L10095
 	.byte	0
 	.byte	3
 	.byte	$d2,$aa,$e3
@@ -2391,7 +2629,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10085
+	.word	L10096
 	.byte	0
 	.byte	3
 	.byte	$d2,$aa,$e2
@@ -2400,7 +2638,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10086
+	.word	L10097
 	.byte	0
 	.byte	3
 	.byte	$d2,$a6,$f7
@@ -2409,7 +2647,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10087
+	.word	L10098
 	.byte	0
 	.byte	3
 	.byte	$d2,$a6,$f3
@@ -2418,7 +2656,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10088
+	.word	L10099
 	.byte	0
 	.byte	6
 	.byte	$d2,$a6,$ec,$db,$d9,$dd
@@ -2427,7 +2665,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10089
+	.word	L10100
 	.byte	0
 	.byte	3
 	.byte	$d2,$a6,$ec
@@ -2436,7 +2674,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10090
+	.word	L10101
 	.byte	0
 	.byte	6
 	.byte	$d2,$a6,$e9,$db,$d9,$dd
@@ -2445,7 +2683,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10091
+	.word	L10102
 	.byte	0
 	.byte	3
 	.byte	$d2,$a6,$e9
@@ -2454,7 +2692,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10092
+	.word	L10103
 	.byte	0
 	.byte	3
 	.byte	$d2,$a6,$e3
@@ -2463,7 +2701,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10093
+	.word	L10104
 	.byte	0
 	.byte	3
 	.byte	$d2,$a6,$e2
@@ -2472,7 +2710,7 @@ SystemDictionary:
 ;
 	.byte	10
 	.byte	'M'
-	.word	L10094
+	.word	L10105
 	.byte	0
 	.byte	4
 	.byte	$50,$52,$4f,$c3
@@ -2481,7 +2719,7 @@ SystemDictionary:
 ;
 	.byte	10
 	.byte	'M'
-	.word	L10095
+	.word	L10106
 	.byte	0
 	.byte	4
 	.byte	$4e,$45,$58,$d4
@@ -2490,7 +2728,7 @@ SystemDictionary:
 ;
 	.byte	8
 	.byte	'M'
-	.word	L10096
+	.word	L10107
 	.byte	0
 	.byte	2
 	.byte	$49,$c6
@@ -2499,7 +2737,7 @@ SystemDictionary:
 ;
 	.byte	13
 	.byte	'M'
-	.word	L10097
+	.word	L10108
 	.byte	0
 	.byte	7
 	.byte	$45,$4e,$44,$50,$52,$4f,$c3
@@ -2508,7 +2746,7 @@ SystemDictionary:
 ;
 	.byte	11
 	.byte	'M'
-	.word	L10098
+	.word	L10109
 	.byte	0
 	.byte	5
 	.byte	$45,$4e,$44,$49,$c6
@@ -2517,7 +2755,7 @@ SystemDictionary:
 ;
 	.byte	10
 	.byte	'M'
-	.word	L10099
+	.word	L10110
 	.byte	0
 	.byte	4
 	.byte	$45,$4c,$53,$c5
@@ -2526,7 +2764,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10100
+	.word	L10111
 	.byte	0
 	.byte	3
 	.byte	$43,$d3,$bf
@@ -2535,7 +2773,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10101
+	.word	L10112
 	.byte	0
 	.byte	3
 	.byte	$43,$c3,$bf
@@ -2544,7 +2782,7 @@ SystemDictionary:
 ;
 	.byte	10
 	.byte	'M'
-	.word	L10102
+	.word	L10113
 	.byte	0
 	.byte	4
 	.byte	$42,$59,$54,$c5
@@ -2553,7 +2791,7 @@ SystemDictionary:
 ;
 	.byte	11
 	.byte	'M'
-	.word	L10103
+	.word	L10114
 	.byte	0
 	.byte	5
 	.byte	$42,$52,$45,$41,$cb
@@ -2562,7 +2800,7 @@ SystemDictionary:
 ;
 	.byte	11
 	.byte	'M'
-	.word	L10104
+	.word	L10115
 	.byte	0
 	.byte	5
 	.byte	$c1,$be,$bd,$f3,$bf
@@ -2571,7 +2809,7 @@ SystemDictionary:
 ;
 	.byte	11
 	.byte	'M'
-	.word	L10105
+	.word	L10116
 	.byte	0
 	.byte	5
 	.byte	$c1,$be,$bd,$e3,$bf
@@ -2580,7 +2818,7 @@ SystemDictionary:
 ;
 	.byte	11
 	.byte	'M'
-	.word	L10106
+	.word	L10117
 	.byte	0
 	.byte	5
 	.byte	$c1,$be,$bd,$e2,$bf
@@ -2589,7 +2827,7 @@ SystemDictionary:
 ;
 	.byte	10
 	.byte	'M'
-	.word	L10107
+	.word	L10118
 	.byte	0
 	.byte	4
 	.byte	$c1,$bd,$f3,$bf
@@ -2598,7 +2836,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10108
+	.word	L10119
 	.byte	0
 	.byte	3
 	.byte	$c1,$bd,$f3
@@ -2607,7 +2845,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10109
+	.word	L10120
 	.byte	0
 	.byte	6
 	.byte	$c1,$bd,$ec,$db,$d9,$dd
@@ -2616,7 +2854,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10110
+	.word	L10121
 	.byte	0
 	.byte	6
 	.byte	$c1,$bd,$e9,$db,$d9,$dd
@@ -2625,7 +2863,7 @@ SystemDictionary:
 ;
 	.byte	10
 	.byte	'M'
-	.word	L10111
+	.word	L10122
 	.byte	0
 	.byte	4
 	.byte	$c1,$bd,$e3,$bf
@@ -2634,7 +2872,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10112
+	.word	L10123
 	.byte	0
 	.byte	3
 	.byte	$c1,$bd,$e3
@@ -2643,7 +2881,7 @@ SystemDictionary:
 ;
 	.byte	10
 	.byte	'M'
-	.word	L10113
+	.word	L10124
 	.byte	0
 	.byte	4
 	.byte	$c1,$bd,$e2,$bf
@@ -2652,7 +2890,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10114
+	.word	L10125
 	.byte	0
 	.byte	3
 	.byte	$c1,$bd,$e2
@@ -2661,7 +2899,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10115
+	.word	L10126
 	.byte	0
 	.byte	3
 	.byte	$c1,$bd,$d9
@@ -2670,7 +2908,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10116
+	.word	L10127
 	.byte	0
 	.byte	3
 	.byte	$c1,$bd,$d2
@@ -2679,7 +2917,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10117
+	.word	L10128
 	.byte	0
 	.byte	3
 	.byte	$c1,$bd,$bf
@@ -2688,7 +2926,7 @@ SystemDictionary:
 ;
 	.byte	10
 	.byte	'M'
-	.word	L10118
+	.word	L10129
 	.byte	0
 	.byte	4
 	.byte	$c1,$bc,$f3,$bf
@@ -2697,7 +2935,7 @@ SystemDictionary:
 ;
 	.byte	10
 	.byte	'M'
-	.word	L10119
+	.word	L10130
 	.byte	0
 	.byte	4
 	.byte	$c1,$bc,$e3,$bf
@@ -2706,7 +2944,7 @@ SystemDictionary:
 ;
 	.byte	10
 	.byte	'M'
-	.word	L10120
+	.word	L10131
 	.byte	0
 	.byte	4
 	.byte	$c1,$bc,$e2,$bf
@@ -2715,7 +2953,7 @@ SystemDictionary:
 ;
 	.byte	11
 	.byte	'M'
-	.word	L10121
+	.word	L10132
 	.byte	0
 	.byte	5
 	.byte	$c1,$bc,$be,$f3,$bf
@@ -2724,7 +2962,7 @@ SystemDictionary:
 ;
 	.byte	11
 	.byte	'M'
-	.word	L10122
+	.word	L10133
 	.byte	0
 	.byte	5
 	.byte	$c1,$bc,$be,$e3,$bf
@@ -2733,7 +2971,7 @@ SystemDictionary:
 ;
 	.byte	11
 	.byte	'M'
-	.word	L10123
+	.word	L10134
 	.byte	0
 	.byte	5
 	.byte	$c1,$bc,$be,$e2,$bf
@@ -2742,7 +2980,7 @@ SystemDictionary:
 ;
 	.byte	10
 	.byte	'M'
-	.word	L10124
+	.word	L10135
 	.byte	0
 	.byte	4
 	.byte	$c1,$bc,$be,$bf
@@ -2751,7 +2989,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10125
+	.word	L10136
 	.byte	0
 	.byte	3
 	.byte	$c1,$ba,$f3
@@ -2760,7 +2998,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10126
+	.word	L10137
 	.byte	0
 	.byte	6
 	.byte	$c1,$ba,$ec,$db,$d9,$dd
@@ -2769,7 +3007,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10127
+	.word	L10138
 	.byte	0
 	.byte	6
 	.byte	$c1,$ba,$e9,$db,$d9,$dd
@@ -2778,7 +3016,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10128
+	.word	L10139
 	.byte	0
 	.byte	3
 	.byte	$c1,$ba,$e3
@@ -2787,7 +3025,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10129
+	.word	L10140
 	.byte	0
 	.byte	3
 	.byte	$c1,$ba,$e2
@@ -2796,7 +3034,7 @@ SystemDictionary:
 ;
 	.byte	11
 	.byte	'M'
-	.word	L10130
+	.word	L10141
 	.byte	0
 	.byte	5
 	.byte	$41,$2e,$46,$4f,$d2
@@ -2805,7 +3043,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10131
+	.word	L10142
 	.byte	0
 	.byte	3
 	.byte	$c1,$ad,$f3
@@ -2814,7 +3052,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10132
+	.word	L10143
 	.byte	0
 	.byte	6
 	.byte	$c1,$ad,$ec,$db,$d9,$dd
@@ -2823,7 +3061,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10133
+	.word	L10144
 	.byte	0
 	.byte	6
 	.byte	$c1,$ad,$e9,$db,$d9,$dd
@@ -2832,7 +3070,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10134
+	.word	L10145
 	.byte	0
 	.byte	3
 	.byte	$c1,$ad,$e3
@@ -2841,7 +3079,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10135
+	.word	L10146
 	.byte	0
 	.byte	3
 	.byte	$c1,$ad,$e2
@@ -2850,7 +3088,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10136
+	.word	L10147
 	.byte	0
 	.byte	3
 	.byte	$c1,$ad,$bf
@@ -2859,7 +3097,7 @@ SystemDictionary:
 ;
 	.byte	10
 	.byte	'M'
-	.word	L10137
+	.word	L10148
 	.byte	0
 	.byte	4
 	.byte	$c1,$ad,$be,$d3
@@ -2868,7 +3106,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10138
+	.word	L10149
 	.byte	0
 	.byte	3
 	.byte	$c1,$ab,$f3
@@ -2877,7 +3115,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10139
+	.word	L10150
 	.byte	0
 	.byte	6
 	.byte	$c1,$ab,$ec,$db,$d9,$dd
@@ -2886,7 +3124,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10140
+	.word	L10151
 	.byte	0
 	.byte	6
 	.byte	$c1,$ab,$e9,$db,$d9,$dd
@@ -2895,7 +3133,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10141
+	.word	L10152
 	.byte	0
 	.byte	3
 	.byte	$c1,$ab,$e3
@@ -2904,7 +3142,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10142
+	.word	L10153
 	.byte	0
 	.byte	3
 	.byte	$c1,$ab,$e2
@@ -2913,7 +3151,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10143
+	.word	L10154
 	.byte	0
 	.byte	3
 	.byte	$c1,$ab,$bf
@@ -2922,7 +3160,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10144
+	.word	L10155
 	.byte	0
 	.byte	3
 	.byte	$c1,$aa,$f3
@@ -2931,7 +3169,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10145
+	.word	L10156
 	.byte	0
 	.byte	6
 	.byte	$c1,$aa,$ec,$db,$d9,$dd
@@ -2940,7 +3178,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10146
+	.word	L10157
 	.byte	0
 	.byte	6
 	.byte	$c1,$aa,$e9,$db,$d9,$dd
@@ -2949,7 +3187,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10147
+	.word	L10158
 	.byte	0
 	.byte	3
 	.byte	$c1,$aa,$e3
@@ -2958,7 +3196,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10148
+	.word	L10159
 	.byte	0
 	.byte	3
 	.byte	$c1,$aa,$e2
@@ -2967,7 +3205,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10149
+	.word	L10160
 	.byte	0
 	.byte	3
 	.byte	$c1,$a6,$f3
@@ -2976,7 +3214,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10150
+	.word	L10161
 	.byte	0
 	.byte	6
 	.byte	$c1,$a6,$ec,$db,$d9,$dd
@@ -2985,7 +3223,7 @@ SystemDictionary:
 ;
 	.byte	12
 	.byte	'M'
-	.word	L10151
+	.word	L10162
 	.byte	0
 	.byte	6
 	.byte	$c1,$a6,$e9,$db,$d9,$dd
@@ -2994,7 +3232,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10152
+	.word	L10163
 	.byte	0
 	.byte	3
 	.byte	$c1,$a6,$e3
@@ -3003,7 +3241,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10153
+	.word	L10164
 	.byte	0
 	.byte	3
 	.byte	$c1,$a6,$e2
@@ -3012,7 +3250,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10154
+	.word	L10165
 	.byte	0
 	.byte	3
 	.byte	$be,$be,$f3
@@ -3021,7 +3259,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10155
+	.word	L10166
 	.byte	0
 	.byte	3
 	.byte	$be,$be,$ec
@@ -3030,7 +3268,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10156
+	.word	L10167
 	.byte	0
 	.byte	3
 	.byte	$be,$be,$e9
@@ -3039,7 +3277,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10157
+	.word	L10168
 	.byte	0
 	.byte	3
 	.byte	$be,$be,$e3
@@ -3048,7 +3286,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10158
+	.word	L10169
 	.byte	0
 	.byte	3
 	.byte	$be,$be,$d2
@@ -3057,7 +3295,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10159
+	.word	L10170
 	.byte	0
 	.byte	3
 	.byte	$be,$be,$c1
@@ -3066,7 +3304,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10160
+	.word	L10171
 	.byte	0
 	.byte	3
 	.byte	$bc,$bc,$f3
@@ -3075,7 +3313,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10161
+	.word	L10172
 	.byte	0
 	.byte	3
 	.byte	$bc,$bc,$ec
@@ -3084,7 +3322,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10162
+	.word	L10173
 	.byte	0
 	.byte	3
 	.byte	$bc,$bc,$e9
@@ -3093,7 +3331,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10163
+	.word	L10174
 	.byte	0
 	.byte	3
 	.byte	$bc,$bc,$e3
@@ -3102,7 +3340,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10164
+	.word	L10175
 	.byte	0
 	.byte	3
 	.byte	$bc,$bc,$d2
@@ -3111,25 +3349,25 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10165
+	.word	L10176
 	.byte	0
 	.byte	3
 	.byte	$bc,$bc,$c1
 ;
-;		**** -RPHA ****
+;		**** -R ****
 ;
-	.byte	11
+	.byte	8
 	.byte	'M'
-	.word	L10166
+	.word	L10177
 	.byte	0
-	.byte	5
-	.byte	$ad,$52,$50,$48,$c1
+	.byte	2
+	.byte	$ad,$d2
 ;
 ;		**** -A ****
 ;
 	.byte	8
 	.byte	'M'
-	.word	L10167
+	.word	L10178
 	.byte	0
 	.byte	2
 	.byte	$ad,$c1
@@ -3138,7 +3376,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10168
+	.word	L10179
 	.byte	0
 	.byte	3
 	.byte	$ad,$ad,$f3
@@ -3147,7 +3385,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10169
+	.word	L10180
 	.byte	0
 	.byte	3
 	.byte	$ad,$ad,$ec
@@ -3156,7 +3394,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10170
+	.word	L10181
 	.byte	0
 	.byte	3
 	.byte	$ad,$ad,$e9
@@ -3165,7 +3403,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10171
+	.word	L10182
 	.byte	0
 	.byte	3
 	.byte	$ad,$ad,$e3
@@ -3174,7 +3412,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10172
+	.word	L10183
 	.byte	0
 	.byte	3
 	.byte	$ad,$ad,$d9
@@ -3183,7 +3421,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10173
+	.word	L10184
 	.byte	0
 	.byte	3
 	.byte	$ad,$ad,$d2
@@ -3192,7 +3430,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10174
+	.word	L10185
 	.byte	0
 	.byte	3
 	.byte	$ad,$ad,$c1
@@ -3201,7 +3439,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10175
+	.word	L10186
 	.byte	0
 	.byte	3
 	.byte	$ab,$ab,$f3
@@ -3210,7 +3448,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10176
+	.word	L10187
 	.byte	0
 	.byte	3
 	.byte	$ab,$ab,$ec
@@ -3219,7 +3457,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10177
+	.word	L10188
 	.byte	0
 	.byte	3
 	.byte	$ab,$ab,$e9
@@ -3228,7 +3466,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10178
+	.word	L10189
 	.byte	0
 	.byte	3
 	.byte	$ab,$ab,$e3
@@ -3237,7 +3475,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10179
+	.word	L10190
 	.byte	0
 	.byte	3
 	.byte	$ab,$ab,$d9
@@ -3246,7 +3484,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10180
+	.word	L10191
 	.byte	0
 	.byte	3
 	.byte	$ab,$ab,$d2
@@ -3255,7 +3493,7 @@ SystemDictionary:
 ;
 	.byte	9
 	.byte	'M'
-	.word	L10181
+	.word	L10192
 	.byte	0
 	.byte	3
 	.byte	$ab,$ab,$c1

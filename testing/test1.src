@@ -70,20 +70,28 @@ proc vera.graphic()
 endproc
 
 word p@$10
+word temp@$0E
 word free.mem
 byte count,current
 
-proc set.ptr()
+proc balls.self()
+	vera.select()
 	<<A <<A R=A R+free.mem p=R
 endproc
 
+proc ball.getx() y=0 R=p[y] endproc
+proc ball.setx() y=0 p[y]=R endproc
+proc ball.getxi() y=2 R=p[y] endproc
+proc ball.setxi() y=2 p[y]=R endproc
+
 proc xi.flip()
 	.vera.access(6)
-	Y=2 
-	0 R-p[Y] 
-	p[Y]=R
-	R-? 
-	if A=13 else A=12 endif vera.data=A
+	ball.getxi() -R ball.setxi()
+	R-? if A=13 else A=12 endif vera.data=A
+endproc
+
+proc times.16() 
+	<<R <<R <<R <<R
 endproc
 
 proc main()
@@ -91,24 +99,22 @@ proc main()
 	A=24 count=A
 	vera.sprites.enable(1,0)
 	A=count a.for
-		current=A
-		set.ptr()
-		Y=0 R=32 p[y] = R
-		Y=2 R=current ++R p[y] = R
-		A=current vera.select()
+		current=A balls.self(current)
+		ball.setx(32)
+		R=current ++R ball.setxi()
 		vera.create($0F)
 		vera.graphic($1000)
-		R=current <<R <<R <<R <<R vera.y()
+		R=current times.16() vera.y()
 	next
 
 	10000 r.for
 		A=count a.for
-			current = A set.ptr()
-			A=current vera.select()
-			Y=0 R=p[y] vera.x()
-			Y=2 R+p[y] Y=0 p[y]=R
-			Y=0 R=p[Y] R>=608? if xi.flip() endif
-		//	300 r.for next
+			current = A 
+			balls.self()
+			ball.getx() vera.x() temp=R
+			ball.getxi() R+temp ball.setx()
+			R>=608? if xi.flip() endif
+			200 r.for next
 		next
 	next
 endproc

@@ -119,3 +119,61 @@ W 	R>=<const>?
 	sbc 	#<high>
 	pla
 	[data] ; bcs *
+
+W 	R<<const>?
+	cmp 	#<low>
+	pha
+	txa
+	sbc 	#<high>
+	pla
+	[data] ; bcc *
+
+W 	R=<const>?
+	cmp 	#<low>
+	bne 	_Skip1
+	cpx 	#<high>
+	_Skip1:
+	[data] ; beq *
+
+W 	R<><const>?
+	cmp 	#<low>
+	bne 	_Skip1
+	cpx 	#<high>
+	_Skip1:
+	[data] ; bne *
+
+// ******************************************************************************
+//
+//								Long variable checks
+//
+// ******************************************************************************
+
+I 	R>=<var>?
+	cmp 	<addr>
+	pha
+	txa
+	sbc 	<next>
+	pla
+	[data] ; bcs *
+
+I	R<<var>?
+	cmp 	<addr>
+	pha
+	txa
+	sbc 	<next>
+	pla
+	[data] ; bcc *
+
+I 	R=<var>?
+	cmp 	<addr>
+	bne 	_Skip1
+	cpx 	<next>
+	_Skip1:
+	[data] ; beq *
+
+I 	R<><var>?
+	cmp 	<addr>
+	bne 	_Skip1
+	cpx 	<next>
+	_Skip1:
+	[data] ; bne *

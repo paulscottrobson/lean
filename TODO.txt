@@ -1,7 +1,6 @@
 TODO
 ====
 	-R doesn't compile ?
--	Complete comparisons vs constants/variables
 -	First 2 bytes are call address
 - 	Some sort of case type thing.
 - 	Strings (process bit)
