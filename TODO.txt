@@ -4,7 +4,6 @@ TODO
 -	First 2 bytes are call address
 - 	Some sort of case type thing.
 - 	Strings (process bit)
--	Mark
-		if = current mark, do nothing
-		if != current mark, record as mark (variable ptr, code ptr, dict ptr)
+-	Forget command ?
+
 

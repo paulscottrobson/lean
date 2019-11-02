@@ -10,6 +10,7 @@
 # ******************************************************************************
 
 from makeprogram import *
+import os
 
 # ******************************************************************************
 #
@@ -23,6 +24,8 @@ class SelfBoot(BasicProgram):
 	#
 	def startCode(self):
 		self.addLine(chr(0x9E)+"01108")										# dummy SYS, will be patched.
+		if os.path.exists("SPRITES.BIN"):									# load sprites if any.
+			self.addLine(chr(0xCE)+chr(0x85)+' "SPRITES.BIN",1,1,0')
 		BasicProgram.startCode(self)										# standard code
 		self.addLine(chr(0x9E)+"3")
 	#
