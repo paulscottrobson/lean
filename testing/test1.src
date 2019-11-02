@@ -69,19 +69,47 @@ proc vera.graphic()
 	S->RAY
 endproc
 
-proc never.called()
+word p@$10
+word free.mem
+byte count,current
+
+proc set.ptr()
+	<<A <<A R=A R+free.mem p=R
+endproc
+
+proc xi.flip()
+	.vera.access(6)
+	Y=2 
+	0 R-p[Y] 
+	p[Y]=R
+	R-? 
+	if A=13 else A=12 endif vera.data=A
 endproc
 
 proc main()
+	free.mem = R 
+	A=24 count=A
 	vera.sprites.enable(1,0)
-	12 a.for
-		R->S 
-		vera.select()
+	A=count a.for
+		current=A
+		set.ptr()
+		Y=0 R=32 p[y] = R
+		Y=2 R=current ++R p[y] = R
+		A=current vera.select()
 		vera.create($0F)
 		vera.graphic($1000)
-		S->R <<R <<R <<R <<R <<R
-		vera.x() 
-		vera.y()
+		R=current <<R <<R <<R <<R vera.y()
+	next
+
+	10000 r.for
+		A=count a.for
+			current = A set.ptr()
+			A=current vera.select()
+			Y=0 R=p[y] vera.x()
+			Y=2 R+p[y] Y=0 p[y]=R
+			Y=0 R=p[Y] R>=608? if xi.flip() endif
+		//	300 r.for next
+		next
 	next
 endproc
 

@@ -69,12 +69,12 @@ proc vera.graphic()
 	S->RAY
 endproc
 
-proc never.called()
-endproc
+byte count
+word p@$10,free.memory
 
 proc main()
-	vera.palette($F80,1)
-	vera.palette($000,6)
+	break
+	free.memory = R
 	vera.sprites.enable(1,$00)
 
 	vera.set($4000,$01)
