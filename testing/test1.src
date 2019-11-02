@@ -1,3 +1,6 @@
+//
+//		Dave's Balls in LEAN.
+//
 word vera.low@$9f20
 byte vera.high@$9f22
 byte vera.data@$9f23
@@ -8,10 +11,10 @@ byte count
 byte current
 word seed
 //
-//			set write location to R
+//			set write location to R. R and A are the same, just R is 16 bit, A is 8 bit.
 //
 proc vera.set()
-	R->S
+	R->S 
 	vera.low=R 						// write low address
 	A=$10 vera.high = A 			// write high address
 	S->R
@@ -27,31 +30,29 @@ endproc
 //
 proc random()
 	Y->S
-	byte limit,n
-	limit = A 						// must be < this
+	byte limit
+	limit = A 												// must be < this
 	repeat
-		R=seed R=?  				// if zero set seed
-		if R=$A2B7 seed=R endif
-		R=seed >>seed 				// Galois LFSR
+		R=seed R=?  										// if zero set seed non-zero
+		if ++R endif
+		R=seed >>seed 										// Galois LFSR
 		A&1 A=? if R=seed R*$B400 seed=R endif
-		R=seed R.Swap R*Seed n=A 	// Eor MSB/LSB together
-		A-limit 	
-	CC? until 						// until in range.
-	A=n R=A
-	S->Y
+		R=seed R.Swap R*Seed 							 	// Eor MSB/LSB together
+	A<limit? until 											// until in range. We have no modulus.
+	S->Y 													// You'd do random()&64+random()&16 for 80 in practice.
 endproc
 //
 //			Random Direction
 //
 proc random.dir()
-	random(127) A&1  				// 0 or 1
-	A=? if A=255 endif 				// 255 or 1
+	random(127) A&1  										// 0 or 1
+	A=? if A=255 endif 										// 255 or 1
 endproc
 //
 //			Create ball Y
 //
 proc ball.create()
-	random(80) x.ptr[y]=A 			// Put random values in array elements
+	random(80) x.ptr[y]=A 									// Put random values in array elements
 	random(60) y.ptr[y]=A
 	random.dir() xi.ptr[y]=A 
 	random.dir() yi.ptr[y]=A
@@ -61,55 +62,60 @@ endproc
 //			Draw ball Y
 //
 proc ball.draw()
-	A->S 
-	A=y.ptr[y] R=A 
-	R.swap A+x.ptr[y] A+x.ptr[y] vera.set()
-	S->A vera.write()
-	A=col.ptr[y] vera.write()
+	A->S  													// Push A on stack 
+	A=y.ptr[y] R=A  										// Get Y into A, make it 16 bit
+															// (doing R=y.ptr[y] loads a word in)
+	R.swap A+x.ptr[y] A+x.ptr[y] vera.set() 				// Put into MSB and add 2 x X to it
+	S->A vera.write()										// Pop the graphic off and write it
+	A=col.ptr[y] vera.write() 								// Write the colour byte
 endproc	
 //
 //			Move Ball Y
 //
 proc ball.move()
-	A=x.ptr[y] A=? if A=1 xi.ptr[y]=A endif
-	A=y.ptr[y] A=? if A=1 yi.ptr[y]=A endif
-	A=x.ptr[y] A-79 A=? if A=255 xi.ptr[y]=A endif
-	A=y.ptr[y] A-59 A=? if A=255 yi.ptr[y]=A endif
+	//
+	// 	The conditions are like FORTH, so this line loads A from the array
+	//	checks if it is zero, and if it is, sets the xi.ptr[y] element to 1.
+	//
+	A=x.ptr[y] A=0? if A=1 xi.ptr[y]=A endif 		
+	A=y.ptr[y] A=0? if A=1 yi.ptr[y]=A endif
+	A=x.ptr[y] A=79? if A=255 xi.ptr[y]=A endif
+	A=y.ptr[y] A=59? if A=255 yi.ptr[y]=A endif
 
-	A=x.ptr[y] A+xi.ptr[y] x.ptr[y]=A
+	A=x.ptr[y] A+xi.ptr[y] x.ptr[y]=A 						// Move the ball positions
 	A=y.ptr[y] A+yi.ptr[y] y.ptr[y]=A
 endproc
 //
 //			Main Program
 //
 proc main()
-	x.ptr=R 						// Set four pointers to point to 1/4k each.
-	R+256 y.ptr=R 
-	R+256 xi.ptr=R 	
+	x.ptr=R 						// Set five pointers to point to 1/4k each.
+	R+256 y.ptr=R  					// the main procedure (last one defined)
+	R+256 xi.ptr=R 	 				// receives free ram pointer in R
 	R+256 yi.ptr=R
 	R+256 col.ptr=R
 
-	vera.set(0) 					// Clear the screen.
-	$1E00 r.for
+	vera.set(0) 					// Clear the screen. Bodge :)
+	$1E00 r.for  					// R.For is a 16 bit loop A.For (as below) is an 8 bit loop
 		vera.write(32) vera.write(1)
 	next
 
 	A=100 count=a 					// Count of balls (no input ... yet)
+
 	A=count a.for 					// Create the balls.
-		Y=A
+		Y=A 						// At the start of a FOR, A (or R) contains the index.
 		ball.create()
 		ball.draw(81)
 	next
 
-	1000 r.for
+	1000 r.for 						// do 1000 frames of movement.
 		A=count a.for
 			Y=A
 			ball.draw(32)
 			ball.move()
 			ball.draw(81)
-			100 r.for next
+			100 r.for next 			// slow down. without it does about 200 fps :)
 		next
-
 	next
 endproc
 
